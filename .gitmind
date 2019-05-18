@@ -1,0 +1,2 @@
+issue: https://github.com/FantasticFiasco/aws-signature-version-4/issues/{0} #(\d+)
+tag: https://github.com/FantasticFiasco/aws-signature-version-4/releases/tag/{0} (v\d+\.\d+\.\d+)
