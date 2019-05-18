@@ -1,0 +1,8 @@
+image: ubuntu
+
+stack: node 10
+
+build_script:
+- ./build/build.sh
+
+test: off
