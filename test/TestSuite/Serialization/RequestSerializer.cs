@@ -40,6 +40,14 @@ namespace AWS.SignatureVersion4.TestSuite.Serialization
                 // the responsibility of the signing algorithm to add it to the request
                 if (name == HeaderKeys.XAmzDateHeader) continue;
 
+                // The following headers are specified in some scenarios, but are irrelevant for
+                // .NET. The HttpClient will add these headers based on the attached Content, and
+                // in fact throws an exception if you try to add them to the HttpRequestMessage.
+                // We will have to skip unit tests that are based on scenarios with these headers,
+                // and instead rely on integration tests.
+                if (name == "Content-Type") continue;
+                if (name == "Content-Length") continue;
+
                 to.Headers.Add(name, value);
             }
 
