@@ -1,0 +1,250 @@
+﻿using System.Threading;
+using System.Threading.Tasks;
+using Amazon.Runtime;
+using AWS.SignatureVersion4.Private;
+
+// ReSharper disable once CheckNamespace
+namespace System.Net.Http
+{
+    /// <summary>
+    /// Extensions to <see cref="HttpClient"/> extending it to support AWS Signature Version 4.
+    /// </summary>
+    public static class SendAsyncExtensions
+    {
+        internal const HttpCompletionOption DefaultCompletionOption = HttpCompletionOption.ResponseContentRead;
+
+        /// <summary>
+        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// </summary>
+        /// <param name="self">
+        /// The extension target.
+        /// </param>
+        /// <param name="request">
+        /// The HTTP request message to send.
+        /// </param>
+        /// <param name="regionName">
+        /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
+        /// </param>
+        /// <param name="serviceName">
+        /// The signing name of the service, e.g. "s3".
+        /// </param>
+        /// <param name="credentials">
+        /// AWS credentials containing the following parameters:
+        /// - The AWS public key for the account making the service call.
+        /// - The AWS secret key for the account making the call, in clear text.
+        /// - The session token obtained from STS if request is authenticated using temporary
+        ///   security credentials, e.g. a role. Default value is null.
+        /// </param>
+        /// <returns>
+        /// The task object representing the asynchronous operation.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="request"/> is null.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// The request message was already sent by the <see cref="HttpClient"/> instance.
+        /// </exception>
+        /// <exception cref="HttpRequestException">
+        /// The request failed due to an underlying issue such as network connectivity, DNS
+        /// failure, server certificate validation or timeout.
+        /// </exception>
+        /// <remarks>
+        /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
+        /// complete once the entire response including content is read.
+        /// </remarks>
+        public static Task<HttpResponseMessage> SendAsync(
+            this HttpClient self,
+            HttpRequestMessage request,
+            string regionName,
+            string serviceName,
+            ImmutableCredentials credentials) =>
+            self.SendAsync(
+                request,
+                DefaultCompletionOption,
+                CancellationToken.None,
+                regionName,
+                serviceName,
+                credentials);
+
+        /// <summary>
+        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// </summary>
+        /// <param name="self">
+        /// The extension target.
+        /// </param>
+        /// <param name="request">
+        /// The HTTP request message to send.
+        /// </param>
+        /// <param name="completionOption">
+        /// When the operation should complete (as soon as a response is available or after reading
+        /// the whole response content).
+        /// </param>
+        /// <param name="regionName">
+        /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
+        /// </param>
+        /// <param name="serviceName">
+        /// The signing name of the service, e.g. "s3".
+        /// </param>
+        /// <param name="credentials">
+        /// AWS credentials containing the following parameters:
+        /// - The AWS public key for the account making the service call.
+        /// - The AWS secret key for the account making the call, in clear text.
+        /// - The session token obtained from STS if request is authenticated using temporary
+        ///   security credentials, e.g. a role. Default value is null.
+        /// </param>
+        /// <returns>
+        /// The task object representing the asynchronous operation.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="request"/> is null.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// The request message was already sent by the <see cref="HttpClient"/> instance.
+        /// </exception>
+        /// <exception cref="HttpRequestException">
+        /// The request failed due to an underlying issue such as network connectivity, DNS
+        /// failure, server certificate validation or timeout.
+        /// </exception>
+        /// <remarks>
+        /// This operation will not block. Depending on the value of the
+        /// <paramref name="completionOption"/> parameter, the returned <see cref="Task{TResult}"/>
+        /// object will complete as soon as a response is available or the entire response
+        /// including content is read.
+        /// </remarks>
+        public static Task<HttpResponseMessage> SendAsync(
+            this HttpClient self,
+            HttpRequestMessage request,
+            HttpCompletionOption completionOption,
+            string regionName,
+            string serviceName,
+            ImmutableCredentials credentials) =>
+            self.SendAsync(
+                request,
+                completionOption,
+                CancellationToken.None,
+                regionName,
+                serviceName,
+                credentials);
+
+        /// <summary>
+        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// </summary>
+        /// <param name="self">
+        /// The extension target.
+        /// </param>
+        /// <param name="request">
+        /// The HTTP request message to send.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token to cancel operation.
+        /// </param>
+        /// <param name="regionName">
+        /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
+        /// </param>
+        /// <param name="serviceName">
+        /// The signing name of the service, e.g. "s3".
+        /// </param>
+        /// <param name="credentials">
+        /// AWS credentials containing the following parameters:
+        /// - The AWS public key for the account making the service call.
+        /// - The AWS secret key for the account making the call, in clear text.
+        /// - The session token obtained from STS if request is authenticated using temporary
+        ///   security credentials, e.g. a role. Default value is null.
+        /// </param>
+        /// <returns>
+        /// The task object representing the asynchronous operation.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="request"/> is null.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// The request message was already sent by the <see cref="HttpClient"/> instance.
+        /// </exception>
+        /// <exception cref="HttpRequestException">
+        /// The request failed due to an underlying issue such as network connectivity, DNS
+        /// failure, server certificate validation or timeout.
+        /// </exception>
+        /// <remarks>
+        /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
+        /// complete once the entire response including content is read.
+        /// </remarks>
+        public static Task<HttpResponseMessage> SendAsync(
+            this HttpClient self,
+            HttpRequestMessage request,
+            CancellationToken cancellationToken,
+            string regionName,
+            string serviceName,
+            ImmutableCredentials credentials) =>
+            self.SendAsync(
+                request,
+                DefaultCompletionOption,
+                cancellationToken,
+                regionName,
+                serviceName,
+                credentials);
+
+        /// <summary>
+        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// </summary>
+        /// <param name="self">
+        /// The extension target.
+        /// </param>
+        /// <param name="request">
+        /// The HTTP request message to send.
+        /// </param>
+        /// <param name="completionOption">
+        /// When the operation should complete (as soon as a response is available or after reading
+        /// the whole response content).
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token to cancel operation.
+        /// </param>
+        /// <param name="regionName">
+        /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
+        /// </param>
+        /// <param name="serviceName">
+        /// The signing name of the service, e.g. "s3".
+        /// </param>
+        /// <param name="credentials">
+        /// AWS credentials containing the following parameters:
+        /// - The AWS public key for the account making the service call.
+        /// - The AWS secret key for the account making the call, in clear text.
+        /// - The session token obtained from STS if request is authenticated using temporary
+        ///   security credentials, e.g. a role. Default value is null.
+        /// </param>
+        /// <returns>
+        /// The task object representing the asynchronous operation.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The <paramref name="request"/> is null.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// The request message was already sent by the <see cref="HttpClient"/> instance.
+        /// </exception>
+        /// <exception cref="HttpRequestException">
+        /// The request failed due to an underlying issue such as network connectivity, DNS
+        /// failure, server certificate validation or timeout.
+        /// </exception>
+        /// <remarks>
+        /// This operation will not block. Depending on the value of the
+        /// <paramref name="completionOption"/> parameter, the returned <see cref="Task{TResult}"/>
+        /// object will complete as soon as a response is available or the entire response
+        /// including content is read.
+        /// </remarks>
+        public static async Task<HttpResponseMessage> SendAsync(
+            this HttpClient self,
+            HttpRequestMessage request,
+            HttpCompletionOption completionOption,
+            CancellationToken cancellationToken,
+            string regionName,
+            string serviceName,
+            ImmutableCredentials credentials)
+        {
+            if (self == null) throw new ArgumentNullException(nameof(self));
+
+            await Signer.SignAsync(self, request, DateTime.UtcNow, regionName, serviceName, credentials);
+
+            return await self.SendAsync(request, completionOption, cancellationToken);
+        }
+    }
+}
