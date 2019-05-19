@@ -55,6 +55,9 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
+# Code coverage result
+coverage.opencover.xml
+
 # GhostDoc plugin setting file
 *.GhostDoc.xml
 
