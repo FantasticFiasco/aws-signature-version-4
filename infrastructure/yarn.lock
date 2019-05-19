@@ -285,12 +285,7 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
-"@types/node@8.10.45":
-  version "8.10.45"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.45.tgz#4c49ba34106bc7dced77ff6bae8eb6543cde8351"
-  integrity sha512-tGVTbA+i3qfXsLbq9rEq/hezaHY55QxQLeXQL2ejNgFAxxrgu8eMmYIOsRcl7hN1uTLVsKOOYacV/rcJM3sfgQ==
-
-"@types/node@^8.0.7":
+"@types/node@8.10.48", "@types/node@^8.0.7":
   version "8.10.48"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.48.tgz#e385073561643a9ba6199a1985ffc03530f90781"
   integrity sha512-c35YEBTkL4rzXY2ucpSKy+UYHjUBIIkuJbWYbsGIrKLEWU5dgJMmLkkIb3qeC3O3Tpb1ZQCwecscvJTDjDjkRw==
