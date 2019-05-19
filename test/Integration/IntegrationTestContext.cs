@@ -31,9 +31,9 @@ namespace AWS.SignatureVersion4.Integration
         public async Task InitializeAsync()
         {
             var credentials = new Credentials(
-                RoleCredentials.AccessKey,
-                RoleCredentials.SecretKey,
-                RoleCredentials.Token,
+                IntegrationTestEnvironmentVariables.AwsRoleAccessKeyId,
+                IntegrationTestEnvironmentVariables.AwsRoleSecretAccessKey,
+                null,
                 DateTime.MaxValue);
 
             using (var client = new AmazonSecurityTokenServiceClient(credentials))
