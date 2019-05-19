@@ -1,6 +1,7 @@
 image: ubuntu
 
 environment:
+  AWS_DEFAULT_REGION: eu-west-1
   AWS_USER_ACCESS_KEY_ID:
     secure: jUbG28C9e2NVM3vfJDrJy3IIXev84HN9Bq96KsgBKwk=
   AWS_USER_SECRET_ACCESS_KEY:
