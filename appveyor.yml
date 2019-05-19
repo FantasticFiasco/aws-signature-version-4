@@ -11,7 +11,7 @@ environment:
   AWS_ROLE_SECRET_ACCESS_KEY:
     secure: DZmueR92vHC+uibKBfoXmn+3vFnqvXUDABYGHh2eSCsoAEu+NuLgccUifvOfWfDb
   AWS_ROLE_ARN:
-    secret: CVjaIRrwBKMLa+ZIqgA4E4oiK9sUOGZncU78nup5xam1Lrl0RQgOTiEqTlfonNKP
+    secure: CVjaIRrwBKMLa+ZIqgA4E4oiK9sUOGZncU78nup5xam1Lrl0RQgOTiEqTlfonNKP
   AWS_API_GATEWAY_URL:
     secure: iqkjlCh6U/blAPKNHpMJsVo6GuPQlkG9GtK/gii5G4238C2r1Jz9DMUoQqUlVzkdtwY3cLTpLoQwKQP92Fn3BQ==
   CODECOV_TOKEN:
