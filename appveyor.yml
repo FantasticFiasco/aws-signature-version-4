@@ -1,10 +1,5 @@
 image: ubuntu
 
-stack: node 10
-
-install:
-- dotnet tool install --global coverlet.console
-
 environment:
   CODECOV_TOKEN:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34

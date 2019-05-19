@@ -8,6 +8,7 @@ echo "build: dotnet cli v$(dotnet --version)"
 dotnet build -c Release
 
 echo "test: test started"
+dotnet tool install --global coverlet.console
 coverlet ./test/bin/Release/netcoreapp2.1/AWS.SignatureVersion4.Test.dll \
     --target "dotnet" \
     --targetargs "test --configuration Release --no-build" \
