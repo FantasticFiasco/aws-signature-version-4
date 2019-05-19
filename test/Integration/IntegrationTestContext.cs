@@ -1,6 +1,10 @@
 using System;
+using System.Threading.Tasks;
 using Amazon.Runtime;
+using Amazon.SecurityToken;
+using Amazon.SecurityToken.Model;
 using AWS.SignatureVersion4.TestSuite;
+using Xunit;
 
 namespace AWS.SignatureVersion4.Integration
 {
@@ -9,22 +13,42 @@ namespace AWS.SignatureVersion4.Integration
     /// API Gateway. The values are not static but is retrieved from environment variables in the
     /// environment the tests are running in.
     /// </summary>
-    public class IntegrationTestContext : Context
+    public class IntegrationTestContext : Context, IAsyncLifetime
     {
-        public string RegionName { get; } = Environment.GetEnvironmentVariable("AWS_DEFAULT_REGION");
+        public string RegionName { get; } = IntegrationTestEnvironmentVariables.AwsRegion;
 
         public string ServiceName { get; } = "execute-api";
 
         public ImmutableCredentials UserCredentials { get; } = new ImmutableCredentials(
-            Environment.GetEnvironmentVariable("AWS_USER_ACCESS_KEY_ID"),
-            Environment.GetEnvironmentVariable("AWS_USER_SECRET_ACCESS_KEY"),
+            IntegrationTestEnvironmentVariables.AwsUserAccessKeyId,
+            IntegrationTestEnvironmentVariables.AwsUserSecretAccessKey,
             null);
 
-        public ImmutableCredentials RoleCredentials { get; } = new ImmutableCredentials(
-            Environment.GetEnvironmentVariable("AWS_ROLE_ACCESS_KEY_ID"),
-            Environment.GetEnvironmentVariable("AWS_ROLE_SECRET_ACCESS_KEY"),
-            Environment.GetEnvironmentVariable("AWS_ROLE_SESSION_TOKEN"));
+        public ImmutableCredentials RoleCredentials { get; private set; }
 
-        public Uri ApiGatewayUrl { get; } = new Uri(Environment.GetEnvironmentVariable("API_GATEWAY_URL"));
+        public Uri ApiGatewayUrl { get; } = new Uri(IntegrationTestEnvironmentVariables.AwsApiGatewayUrl);
+
+        public async Task InitializeAsync()
+        {
+            var credentials = new Credentials(
+                RoleCredentials.AccessKey,
+                RoleCredentials.SecretKey,
+                RoleCredentials.Token,
+                DateTime.MaxValue);
+
+            using (var client = new AmazonSecurityTokenServiceClient(credentials))
+            {
+                var request = new AssumeRoleRequest
+                {
+                    RoleArn = Environment.GetEnvironmentVariable("AWS_ROLE_ARN")
+                };
+
+                var response = await client.AssumeRoleAsync(request);
+
+                RoleCredentials = response.Credentials.GetCredentials();
+            }
+        }
+
+        public Task DisposeAsync() => Task.CompletedTask;
     }
 }
