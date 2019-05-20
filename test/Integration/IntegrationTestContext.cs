@@ -48,8 +48,7 @@ namespace AWS.SignatureVersion4.Integration
         {
             var stsClient = new AmazonSecurityTokenServiceClient(
                 variables.GetValue("AWS_ROLE_ACCESS_KEY_ID"),
-                variables.GetValue("AWS_ROLE_SECRET_ACCESS_KEY"),
-                (string)null);
+                variables.GetValue("AWS_ROLE_SECRET_ACCESS_KEY"));
 
             using (stsClient)
             {

@@ -6,29 +6,36 @@ namespace AWS.SignatureVersion4.Integration
 {
     public class IntegrationTestVariables
     {
-        private const string FileName = "local-variables.txt";
+        private const string FileName = "local-integration-test-variables.txt";
 
-        private readonly IDictionary<string, string> variables;
+        private readonly Lazy<IDictionary<string, string>> variables;
 
         public IntegrationTestVariables()
         {
-            variables = new Dictionary<string, string>();
-        }
-
-        public void Load()
-        {
-            if (!File.Exists(FileName)) return;
-
-            foreach (var line in File.ReadAllLines(FileName))
-            {
-                var parts = line.Split('=');
-                variables.Add(parts[0], parts[1]);
-            }
+            variables = new Lazy<IDictionary<string, string>>(LoadVariables);
         }
 
         public string GetValue(string variableName) =>
-            variables.ContainsKey(variableName)
-                ? variables[variableName]
+            variables.Value.ContainsKey(variableName)
+                ? variables.Value[variableName]
                 : Environment.GetEnvironmentVariable(variableName);
+
+        private static IDictionary<string, string> LoadVariables()
+        {
+            var variables = new Dictionary<string, string>();
+
+            if (File.Exists(FileName))
+            {
+                foreach (var line in File.ReadAllLines(FileName))
+                {
+                    if (line == string.Empty) continue;
+
+                    var parts = line.Split('=');
+                    variables.Add(parts[0], parts[1]);
+                }
+            }
+
+            return variables;
+        }
     }
 }

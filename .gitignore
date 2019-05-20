@@ -63,3 +63,6 @@ coverage.opencover.xml
 
 # JetBrains
 .idea
+
+# Local integration test variables
+local-integration-test-variables.txt
