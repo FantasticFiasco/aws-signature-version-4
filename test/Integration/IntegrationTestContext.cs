@@ -15,40 +15,50 @@ namespace AWS.SignatureVersion4.Integration
     /// </summary>
     public class IntegrationTestContext : Context, IAsyncLifetime
     {
-        public string RegionName { get; } = IntegrationTestEnvironmentVariables.AwsRegion;
+        public IntegrationTestContext()
+        {
+            RegionName = IntegrationTestEnvironmentVariables.AwsRegion;
+            ServiceName = "execute-api";
+            UserCredentials = new ImmutableCredentials(
+                IntegrationTestEnvironmentVariables.AwsUserAccessKeyId,
+                IntegrationTestEnvironmentVariables.AwsUserSecretAccessKey,
+                null);
+            ApiGatewayUrl = new Uri(IntegrationTestEnvironmentVariables.AwsApiGatewayUrl);
+        }
 
-        public string ServiceName { get; } = "execute-api";
+        public string RegionName { get; }
 
-        public ImmutableCredentials UserCredentials { get; } = new ImmutableCredentials(
-            IntegrationTestEnvironmentVariables.AwsUserAccessKeyId,
-            IntegrationTestEnvironmentVariables.AwsUserSecretAccessKey,
-            null);
+        public string ServiceName { get; }
+
+        public ImmutableCredentials UserCredentials { get; }
 
         public ImmutableCredentials RoleCredentials { get; private set; }
 
-        public Uri ApiGatewayUrl { get; } = new Uri(IntegrationTestEnvironmentVariables.AwsApiGatewayUrl);
+        public Uri ApiGatewayUrl { get; }
 
-        public async Task InitializeAsync()
+        public async Task InitializeAsync() => RoleCredentials = await CreateRoleCredentials();
+
+        public Task DisposeAsync() => Task.CompletedTask;
+
+        private static async Task<ImmutableCredentials> CreateRoleCredentials()
         {
-            var credentials = new Credentials(
+            var stsClient = new AmazonSecurityTokenServiceClient(
                 IntegrationTestEnvironmentVariables.AwsRoleAccessKeyId,
                 IntegrationTestEnvironmentVariables.AwsRoleSecretAccessKey,
-                null,
-                DateTime.MaxValue);
+                (string)null);
 
-            using (var client = new AmazonSecurityTokenServiceClient(credentials))
+            using (stsClient)
             {
                 var request = new AssumeRoleRequest
                 {
-                    RoleArn = Environment.GetEnvironmentVariable("AWS_ROLE_ARN")
+                    RoleArn = Environment.GetEnvironmentVariable("AWS_ROLE_ARN"),
+                    RoleSessionName = "signature-version-4-integration-tests"
                 };
 
-                var response = await client.AssumeRoleAsync(request);
+                var response = await stsClient.AssumeRoleAsync(request);
 
-                RoleCredentials = response.Credentials.GetCredentials();
+                return response.Credentials.GetCredentials();
             }
         }
-
-        public Task DisposeAsync() => Task.CompletedTask;
     }
 }
