@@ -95,7 +95,7 @@ namespace AWS.SignatureVersion4.Private
 
             foreach (var header in sortedHeaders)
             {
-                builder.Append($"{header.Key}:{string.Join(",", header.Value)}\n");
+                builder.Append($"{header.Key}:{string.Join(", ", header.Value)}\n");
             }
 
             builder.Append('\n');
