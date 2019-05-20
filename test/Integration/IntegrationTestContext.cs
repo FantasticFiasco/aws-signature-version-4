@@ -15,15 +15,19 @@ namespace AWS.SignatureVersion4.Integration
     /// </summary>
     public class IntegrationTestContext : Context, IAsyncLifetime
     {
+        private readonly IntegrationTestVariables variables;
+
         public IntegrationTestContext()
         {
-            RegionName = IntegrationTestEnvironmentVariables.AwsRegion;
+            variables = new IntegrationTestVariables();
+
+            RegionName = variables.GetValue("AWS_REGION");
             ServiceName = "execute-api";
             UserCredentials = new ImmutableCredentials(
-                IntegrationTestEnvironmentVariables.AwsUserAccessKeyId,
-                IntegrationTestEnvironmentVariables.AwsUserSecretAccessKey,
+                variables.GetValue("AWS_USER_ACCESS_KEY_ID"),
+                variables.GetValue("AWS_USER_SECRET_ACCESS_KEY"),
                 null);
-            ApiGatewayUrl = new Uri(IntegrationTestEnvironmentVariables.AwsApiGatewayUrl);
+            ApiGatewayUrl = new Uri(variables.GetValue("AWS_API_GATEWAY_URL"));
         }
 
         public string RegionName { get; }
@@ -40,18 +44,18 @@ namespace AWS.SignatureVersion4.Integration
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        private static async Task<ImmutableCredentials> CreateRoleCredentials()
+        private async Task<ImmutableCredentials> CreateRoleCredentials()
         {
             var stsClient = new AmazonSecurityTokenServiceClient(
-                IntegrationTestEnvironmentVariables.AwsRoleAccessKeyId,
-                IntegrationTestEnvironmentVariables.AwsRoleSecretAccessKey,
+                variables.GetValue("AWS_ROLE_ACCESS_KEY_ID"),
+                variables.GetValue("AWS_ROLE_SECRET_ACCESS_KEY"),
                 (string)null);
 
             using (stsClient)
             {
                 var request = new AssumeRoleRequest
                 {
-                    RoleArn = Environment.GetEnvironmentVariable("AWS_ROLE_ARN"),
+                    RoleArn = variables.GetValue("AWS_ROLE_ARN"),
                     RoleSessionName = "signature-version-4-integration-tests"
                 };
 
