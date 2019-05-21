@@ -8,18 +8,9 @@ namespace AWS.SignatureVersion4.TestSuite
     /// Class setting up a context that is valid when we run tests towards the AWS Test Suite. The
     /// values found in this class can also be found in the test suite.
     /// </summary>
-    public class TestSuiteContext : Context, IDisposable
+    public class TestSuiteContext : Context
     {
-        private readonly string defaultHeaderValueSeparator;
-
-        public TestSuiteContext()
-        {
-            // The header value separator chosen by Microsoft in .NET is ", " and not "," as
-            // defined by the test suite. This means that we have to change the default behavior to
-            // match the test suite.
-            defaultHeaderValueSeparator = CanonicalRequest.HeaderValueSeparator;
-            CanonicalRequest.HeaderValueSeparator = ",";
-        }
+        private string defaultHeaderValueSeparator;
 
         public string RegionName { get; } = "us-east-1";
 
@@ -39,8 +30,21 @@ namespace AWS.SignatureVersion4.TestSuite
             "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
             null);
 
-        // Lets reset the default header value separator before we continue with the rest of the
-        // tests.
-        public void Dispose() => CanonicalRequest.HeaderValueSeparator = defaultHeaderValueSeparator;
+        /// <summary>
+        /// The header value separator chosen by Microsoft in .NET is ", " and not "," as defined
+        /// by the test suite. This means that we have to change the default behavior to match the
+        /// test suite.
+        /// </summary>
+        public void AdjustHeaderValueSeparator()
+        {
+            defaultHeaderValueSeparator = CanonicalRequest.HeaderValueSeparator;
+            CanonicalRequest.HeaderValueSeparator = ",";
+        }
+
+        /// <summary>
+        /// Lets reset the default header value separator before we continue with the rest of the
+        /// tests.
+        /// </summary>
+        public void ResetHeaderValueSeparator() => CanonicalRequest.HeaderValueSeparator = defaultHeaderValueSeparator;
     }
 }

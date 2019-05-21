@@ -11,7 +11,7 @@ using Xunit;
 
 namespace AWS.SignatureVersion4.Unit.Private
 {
-    public class SignatureVersion4Should : IClassFixture<TestSuiteContext>
+    public class SignatureVersion4Should : IClassFixture<TestSuiteContext>, IDisposable
     {
         private readonly TestSuiteContext context;
         private readonly HttpClient httpClient;
@@ -21,6 +21,8 @@ namespace AWS.SignatureVersion4.Unit.Private
             this.context = context;
 
             httpClient = new HttpClient();
+
+            context.AdjustHeaderValueSeparator();
         }
 
         [Theory]
@@ -206,6 +208,12 @@ namespace AWS.SignatureVersion4.Unit.Private
 
             // Assert
             await actual.ShouldThrowAsync<NotSupportedException>();
+        }
+
+        public void Dispose()
+        {
+            httpClient?.Dispose();
+            context.ResetHeaderValueSeparator();
         }
     }
 }

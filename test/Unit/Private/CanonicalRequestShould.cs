@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Util;
 using AWS.SignatureVersion4.Private;
@@ -8,13 +9,15 @@ using Xunit;
 
 namespace AWS.SignatureVersion4.Unit.Private
 {
-    public class CanonicalRequestShould : IClassFixture<TestSuiteContext>
+    public class CanonicalRequestShould : IClassFixture<TestSuiteContext>, IDisposable
     {
         private readonly TestSuiteContext context;
 
         public CanonicalRequestShould(TestSuiteContext context)
         {
             this.context = context;
+
+            context.AdjustHeaderValueSeparator();
         }
 
         [Theory]
@@ -189,5 +192,7 @@ namespace AWS.SignatureVersion4.Unit.Private
             // Assert
             actual[parameterName].ShouldBe(expected);
         }
+
+        public void Dispose() => context.ResetHeaderValueSeparator();
     }
 }

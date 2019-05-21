@@ -2,17 +2,117 @@ using System.Threading.Tasks;
 using AWS.SignatureVersion4.Private;
 using AWS.SignatureVersion4.Integration;
 using AWS.SignatureVersion4.Integration.Authentication;
+using AWS.SignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 
 // ReSharper disable once CheckNamespace
 namespace System.Net.Http
 {
-    public class SendAsyncShould : IntegrationBase
+    public class SendAsyncShould : IntegrationBase, IClassFixture<TestSuiteContext>
     {
-        public SendAsyncShould(IntegrationTestContext context)
+        private readonly TestSuiteContext testSuiteContext;
+
+        public SendAsyncShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
             : base(context)
         {
+            this.testSuiteContext = testSuiteContext;
+        }
+
+        [Theory]
+        [InlineData("get-header-key-duplicate")]
+        [InlineData("get-header-value-multiline")]
+        [InlineData("get-header-value-order")]
+        [InlineData("get-header-value-trim")]
+        [InlineData("get-unreserved")]
+        [InlineData("get-utf8")]
+        [InlineData("get-vanilla")]
+        [InlineData("get-vanilla-empty-query-key")]
+        [InlineData("get-vanilla-query")]
+        [InlineData("get-vanilla-query-order-key")]
+        [InlineData("get-vanilla-query-order-key-case")]
+        [InlineData("get-vanilla-query-order-value")]
+        [InlineData("get-vanilla-query-unreserved")]
+        [InlineData("get-vanilla-utf8-query")]
+        [InlineData("normalize-path", "get-relative")]
+        [InlineData("normalize-path", "get-relative-relative")]
+        [InlineData("normalize-path", "get-slash")]
+        [InlineData("normalize-path", "get-slash-dot-slash")]
+        [InlineData("normalize-path", "get-slashes")]
+        [InlineData("normalize-path", "get-slash-pointless-dot")]
+        [InlineData("normalize-path", "get-space")]
+        [InlineData("post-header-key-case")]
+        [InlineData("post-header-key-sort")]
+        [InlineData("post-header-value-case")]
+        [InlineData("post-sts-token", "post-sts-header-after")]
+        [InlineData("post-sts-token", "post-sts-header-before")]
+        [InlineData("post-vanilla")]
+        [InlineData("post-vanilla-empty-query-value")]
+        [InlineData("post-vanilla-query")]
+        [InlineData("post-x-www-form-urlencoded")]
+        [InlineData("post-x-www-form-urlencoded-parameters")]
+        public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
+        {
+            // Arrange
+            var scenario = testSuiteContext.LoadScenario(scenarioName);
+
+            // Act
+            var response = await HttpClient.SendAsync(
+                scenario.Request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(IamAuthenticationType.User));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("get-header-key-duplicate")]
+        [InlineData("get-header-value-multiline")]
+        [InlineData("get-header-value-order")]
+        [InlineData("get-header-value-trim")]
+        [InlineData("get-unreserved")]
+        [InlineData("get-utf8")]
+        [InlineData("get-vanilla")]
+        [InlineData("get-vanilla-empty-query-key")]
+        [InlineData("get-vanilla-query")]
+        [InlineData("get-vanilla-query-order-key")]
+        [InlineData("get-vanilla-query-order-key-case")]
+        [InlineData("get-vanilla-query-order-value")]
+        [InlineData("get-vanilla-query-unreserved")]
+        [InlineData("get-vanilla-utf8-query")]
+        [InlineData("normalize-path", "get-relative")]
+        [InlineData("normalize-path", "get-relative-relative")]
+        [InlineData("normalize-path", "get-slash")]
+        [InlineData("normalize-path", "get-slash-dot-slash")]
+        [InlineData("normalize-path", "get-slashes")]
+        [InlineData("normalize-path", "get-slash-pointless-dot")]
+        [InlineData("normalize-path", "get-space")]
+        [InlineData("post-header-key-case")]
+        [InlineData("post-header-key-sort")]
+        [InlineData("post-header-value-case")]
+        [InlineData("post-sts-token", "post-sts-header-after")]
+        [InlineData("post-sts-token", "post-sts-header-before")]
+        [InlineData("post-vanilla")]
+        [InlineData("post-vanilla-empty-query-value")]
+        [InlineData("post-vanilla-query")]
+        [InlineData("post-x-www-form-urlencoded")]
+        [InlineData("post-x-www-form-urlencoded-parameters")]
+        public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
+        {
+            // Arrange
+            var scenario = testSuiteContext.LoadScenario(scenarioName);
+
+            // Act
+            var response = await HttpClient.SendAsync(
+                scenario.Request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(IamAuthenticationType.Role));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
         [Theory]
