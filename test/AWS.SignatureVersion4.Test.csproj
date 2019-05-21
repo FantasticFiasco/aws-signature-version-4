@@ -20,4 +20,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup Condition="Exists('local-integration-test-variables.txt')">
+    <None Update="local-integration-test-variables.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
