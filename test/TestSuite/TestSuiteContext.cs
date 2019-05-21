@@ -12,23 +12,31 @@ namespace AWS.SignatureVersion4.TestSuite
     {
         private string defaultHeaderValueSeparator;
 
-        public string RegionName { get; } = "us-east-1";
+        public TestSuiteContext()
+        {
+            RegionName = "us-east-1";
+            ServiceName = "service";
+            UtcNow = new DateTime(
+                2015,
+                8,
+                30,
+                12,
+                36,
+                00,
+                DateTimeKind.Utc);
+            Credentials = new ImmutableCredentials(
+                "AKIDEXAMPLE",
+                "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
+                null);
+        }
 
-        public string ServiceName { get; } = "service";
+        public string RegionName { get; }
 
-        public DateTime UtcNow { get; } = new DateTime(
-            2015,
-            8,
-            30,
-            12,
-            36,
-            00,
-            DateTimeKind.Utc);
+        public string ServiceName { get; }
 
-        public ImmutableCredentials Credentials { get; } = new ImmutableCredentials(
-            "AKIDEXAMPLE",
-            "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
-            null);
+        public DateTime UtcNow { get; }
+
+        public ImmutableCredentials Credentials { get; }
 
         /// <summary>
         /// The header value separator chosen by Microsoft in .NET is ", " and not "," as defined
