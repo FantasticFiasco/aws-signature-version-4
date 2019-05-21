@@ -55,13 +55,14 @@ namespace System.Net.Http
         {
             // Arrange
             var scenario = testSuiteContext.LoadScenario(scenarioName);
+            var authenticationType = IamAuthenticationType.User;
 
             // Act
             var response = await HttpClient.SendAsync(
                 scenario.Request,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(IamAuthenticationType.User));
+                ResolveCredentials(authenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -103,13 +104,14 @@ namespace System.Net.Http
         {
             // Arrange
             var scenario = testSuiteContext.LoadScenario(scenarioName);
+            var authenticationType = IamAuthenticationType.Role;
 
             // Act
             var response = await HttpClient.SendAsync(
                 scenario.Request,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(IamAuthenticationType.Role));
+                ResolveCredentials(authenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
