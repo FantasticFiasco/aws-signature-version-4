@@ -1,5 +1,6 @@
 using System;
 using Amazon.Runtime;
+using AWS.SignatureVersion4.Private;
 
 namespace AWS.SignatureVersion4.TestSuite
 {
@@ -7,8 +8,19 @@ namespace AWS.SignatureVersion4.TestSuite
     /// Class setting up a context that is valid when we run tests towards the AWS Test Suite. The
     /// values found in this class can also be found in the test suite.
     /// </summary>
-    public class TestSuiteContext : Context
+    public class TestSuiteContext : Context, IDisposable
     {
+        private readonly string defaultHeaderValueSeparator;
+
+        public TestSuiteContext()
+        {
+            // The header value separator chosen by Microsoft in .NET is ", " and not "," as
+            // defined by the test suite. This means that we have to change the default behavior to
+            // match the test suite.
+            defaultHeaderValueSeparator = CanonicalRequest.HeaderValueSeparator;
+            CanonicalRequest.HeaderValueSeparator = ",";
+        }
+
         public string RegionName { get; } = "us-east-1";
 
         public string ServiceName { get; } = "service";
@@ -26,5 +38,9 @@ namespace AWS.SignatureVersion4.TestSuite
             "AKIDEXAMPLE",
             "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
             null);
+
+        // Lets reset the default header value separator before we continue with the rest of the
+        // tests.
+        public void Dispose() => CanonicalRequest.HeaderValueSeparator = defaultHeaderValueSeparator;
     }
 }

@@ -18,6 +18,15 @@ namespace AWS.SignatureVersion4.Private
     /// </summary>
     public static class CanonicalRequest
     {
+        /// <summary>
+        /// Gets or sets the header value separator. The default value is ", " and it is defined in
+        /// <see href="https://github.com/dotnet/corefx/blob/master/src/System.Net.Http/src/System/Net/Http/Headers/HttpHeaderParser.cs">
+        /// HttpHeaderParser</see> in the .NET source code. It is used when serializing a header
+        /// with multiple values into a HTTP request. For some other languages this separator is
+        /// plainly ",", but Microsoft has chosen to go with ", ".
+        /// </summary>
+        public static string HeaderValueSeparator { get; set; } = ", ";
+
         /// <returns>
         /// The first value is the canonical request, the second value is the signed headers.
         /// </returns>
@@ -90,12 +99,14 @@ namespace AWS.SignatureVersion4.Private
             // - Append the lowercase header name followed by a colon.
             // - Append a comma-separated list of values for that header. Do not sort the values in
             //   headers that have multiple values.
+            //   PLEASE NOTE: Microsoft has chosen to separate the header values with ", ", not ","
+            //   as defined by the Canonical Request algorithm.
             // - Append a new line ('\n').
             var sortedHeaders = SortHeaders(request.Headers);
 
             foreach (var header in sortedHeaders)
             {
-                builder.Append($"{header.Key}:{string.Join(", ", header.Value)}\n");
+                builder.Append($"{header.Key}:{string.Join(HeaderValueSeparator, header.Value)}\n");
             }
 
             builder.Append('\n');
