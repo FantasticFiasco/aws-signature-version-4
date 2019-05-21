@@ -54,12 +54,12 @@ namespace System.Net.Http
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            var scenario = testSuiteContext.LoadScenario(scenarioName);
+            var request = BuildRequest(scenarioName);
             var authenticationType = IamAuthenticationType.User;
 
             // Act
             var response = await HttpClient.SendAsync(
-                scenario.Request,
+                request,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(authenticationType));
@@ -103,12 +103,12 @@ namespace System.Net.Http
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            var scenario = testSuiteContext.LoadScenario(scenarioName);
+            var request = BuildRequest(scenarioName);
             var authenticationType = IamAuthenticationType.Role;
 
             // Act
             var response = await HttpClient.SendAsync(
-                scenario.Request,
+                request,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(authenticationType));
@@ -295,6 +295,23 @@ namespace System.Net.Http
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        private HttpRequestMessage BuildRequest(string[] scenarioName)
+        {
+            var request = testSuiteContext.LoadScenario(scenarioName).Request;
+
+            // Redirect the request to the API Gateway
+            request.RequestUri = request.RequestUri
+                .ToString()
+                .Replace("https://example.amazonaws.com", Context.ApiGatewayUrl.ToString())
+                .ToUri();
+
+            // The "Host" header is now invalid since we redirected the request to the API Gateway.
+            // Lets remove the header and have the signature implementation re-add it correctly.
+            request.Headers.Remove("Host");
+
+            return request;
         }
     }
 }
