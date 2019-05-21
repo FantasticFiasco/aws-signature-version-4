@@ -26,5 +26,9 @@ export class IamAuthenticationStack extends Stack {
         api.root.addMethod('ANY', undefined, {
             authorizationType: AuthorizationType.IAM,
         });
+
+        api.root.addResource('{proxy+}').addMethod('ANY', undefined, {
+            authorizationType: AuthorizationType.IAM,
+        });
     }
 }
