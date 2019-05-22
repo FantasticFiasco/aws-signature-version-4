@@ -24,5 +24,8 @@
             "This scenario is based on the fact that the signing algorithm should support STS " +
             "tokens, e.g. by assuming a role. This scenario is already covered by numerous other " +
             "integration tests and can because of this safely be ignored.";
+
+        public const string UnsupportedByApiGateway =
+            "This scenario defines a request URI that isn't supported by API Gateway.";
     }
 }

@@ -80,7 +80,7 @@ namespace AWS.SignatureVersion4.Private
             var parameters = SortQueryParameters(request.RequestUri.Query)
                 .SelectMany(
                     parameter => parameter.Value.Select(
-                        parameterValue => $"{Uri.EscapeUriString(parameter.Key)}={Uri.EscapeUriString(parameterValue)}"));
+                        parameterValue => $"{AWSSDKUtils.UrlEncode(parameter.Key, false)}={AWSSDKUtils.UrlEncode(parameterValue, false)}"));
 
             builder.Append($"{string.Join("&", parameters)}\n");
 
