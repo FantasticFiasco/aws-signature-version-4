@@ -2,6 +2,11 @@
 {
     public static class SkipReasons
     {
+        public const string PlausibleTestSuiteError =
+            "The header 'Content-Length' is specified in the canonical request file, but not in " +
+            "the authorization header file, nor the signed request file. AWS Technical Writers " +
+            "have been notified, awaiting answer.";
+
         public const string RedundantStsTokenScenario =
             "This scenario is based on the fact that the signing algorithm should support STS " +
             "tokens, e.g. by assuming a role. This scenario is already covered by numerous other " +
