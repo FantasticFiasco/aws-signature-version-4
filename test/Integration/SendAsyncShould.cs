@@ -51,7 +51,7 @@ namespace System.Net.Http
         [InlineData("post-vanilla-empty-query-value")]
         [InlineData("post-vanilla-query")]
         [InlineData("post-x-www-form-urlencoded", Skip = SkipReasons.PlausibleTestSuiteError)]
-        [InlineData("post-x-www-form-urlencoded-parameters")]
+        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
@@ -100,7 +100,7 @@ namespace System.Net.Http
         [InlineData("post-vanilla-empty-query-value")]
         [InlineData("post-vanilla-query")]
         [InlineData("post-x-www-form-urlencoded", Skip = SkipReasons.PlausibleTestSuiteError)]
-        [InlineData("post-x-www-form-urlencoded-parameters")]
+        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange

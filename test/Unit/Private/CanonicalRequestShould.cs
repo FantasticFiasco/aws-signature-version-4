@@ -51,7 +51,7 @@ namespace AWS.SignatureVersion4.Unit.Private
         [InlineData("post-vanilla-empty-query-value")]
         [InlineData("post-vanilla-query")]
         [InlineData("post-x-www-form-urlencoded", Skip = SkipReasons.PlausibleTestSuiteError)]
-        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.UnsupportedHeaders)]
+        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
         public async Task PassTestSuite(params string[] scenarioName)
         {
             // Arrange
