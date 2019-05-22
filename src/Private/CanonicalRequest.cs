@@ -47,10 +47,10 @@ namespace AWS.SignatureVersion4.Private
             // URI-encoded twice (
             // <see href="https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html">
             // except for Amazon S3 which only gets URI-encoded once</see>).
-            var pathSegments = request.RequestUri.LocalPath
+            var pathSegments = request.RequestUri.AbsolutePath
                 .Replace("//", "/")
                 .Split('/')
-                .Select(Uri.EscapeUriString);
+                .Select(pathSegment => AWSSDKUtils.UrlEncode(pathSegment, false));
 
             builder.Append($"{string.Join("/", pathSegments)}\n");
 

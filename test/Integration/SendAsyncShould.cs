@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using AWS.SignatureVersion4;
 using AWS.SignatureVersion4.Private;
 using AWS.SignatureVersion4.Integration;
 using AWS.SignatureVersion4.Integration.Authentication;
@@ -45,7 +46,7 @@ namespace System.Net.Http
         [InlineData("post-header-key-sort")]
         [InlineData("post-header-value-case")]
         [InlineData("post-sts-token", "post-sts-header-after")]
-        [InlineData("post-sts-token", "post-sts-header-before")]
+        [InlineData("post-sts-token", "post-sts-header-before", Skip = SkipReasons.RedundantStsTokenScenario)]
         [InlineData("post-vanilla")]
         [InlineData("post-vanilla-empty-query-value")]
         [InlineData("post-vanilla-query")]
@@ -94,7 +95,7 @@ namespace System.Net.Http
         [InlineData("post-header-key-sort")]
         [InlineData("post-header-value-case")]
         [InlineData("post-sts-token", "post-sts-header-after")]
-        [InlineData("post-sts-token", "post-sts-header-before")]
+        [InlineData("post-sts-token", "post-sts-header-before", Skip = SkipReasons.RedundantStsTokenScenario)]
         [InlineData("post-vanilla")]
         [InlineData("post-vanilla-empty-query-value")]
         [InlineData("post-vanilla-query")]

@@ -1,7 +1,12 @@
-﻿namespace AWS.SignatureVersion4.Unit.Private
+﻿namespace AWS.SignatureVersion4
 {
     public static class SkipReasons
     {
+        public const string RedundantStsTokenScenario =
+            "This scenario is based on the fact that the signing algorithm should support STS " +
+            "tokens, e.g. by assuming a role. This scenario is already covered by numerous other " +
+            "integration tests and can because of this safely be ignored.";
+
         public const string UnsupportedHeaders =
             "This scenario depends on the fact that the headers 'Content-Type' and 'Content-Length' " +
             "both should be used in the signing process. This will never be true in .NET since the " +
