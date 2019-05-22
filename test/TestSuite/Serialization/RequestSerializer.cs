@@ -127,7 +127,7 @@ namespace AWS.SignatureVersion4.TestSuite.Serialization
 
             if (!match.Success)
             {
-                header = default;
+                header = default(KeyValuePair<string, string>);
                 return false;
             }
 
