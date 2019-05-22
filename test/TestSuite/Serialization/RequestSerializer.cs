@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using Amazon.Util;
 
@@ -70,7 +71,7 @@ namespace AWS.SignatureVersion4.TestSuite.Serialization
             return (method, pathAndQuery);
         }
 
-        private static HttpContent ParseContent(FileBuffer buffer)
+        private HttpContent ParseContent(FileBuffer buffer)
         {
             // If the second last row is a empty string, then the last row is the request content
             if (buffer.Length >= 2 && buffer[buffer.Length - 2] == string.Empty)
@@ -80,7 +81,10 @@ namespace AWS.SignatureVersion4.TestSuite.Serialization
                 // Lets also remove the empty row
                 buffer.PopLast();
 
-                return new StringContent(content);
+                var contentTypeRow = buffer.TryPopStartingWith("Content-Type");
+                TryParseHeader(contentTypeRow, out var header);
+
+                return new StringContent(content, Encoding.UTF8, header.Value);
             }
 
             return null;
@@ -94,14 +98,13 @@ namespace AWS.SignatureVersion4.TestSuite.Serialization
 
             while (!string.IsNullOrEmpty(row = buffer.TryPopFirst()))
             {
-                var match = headerRegex.Match(row);
+                var success = TryParseHeader(row, out var header);
 
-                if (match.Success)
+                if (success)
                 {
-                    headerName = match.Groups["headerName"].Value;
-                    var headerValue = match.Groups["headerValue"].Value;
+                    headerName = header.Key;
 
-                    headers.Add(new KeyValuePair<string, string>(headerName, headerValue));
+                    headers.Add(header);
                 }
                 else if (headerName != null)
                 {
@@ -116,6 +119,23 @@ namespace AWS.SignatureVersion4.TestSuite.Serialization
             }
 
             return headers.ToArray();
+        }
+
+        private bool TryParseHeader(string row, out KeyValuePair<string, string> header)
+        {
+            var match = headerRegex.Match(row);
+
+            if (!match.Success)
+            {
+                header = default;
+                return false;
+            }
+
+            var headerName = match.Groups["headerName"].Value;
+            var headerValue = match.Groups["headerValue"].Value;
+
+            header = new KeyValuePair<string, string>(headerName, headerValue);
+            return true;
         }
     }
 }
