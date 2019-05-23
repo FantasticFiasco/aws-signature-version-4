@@ -18,6 +18,7 @@ echo "test: test started"
 # Exclude integration tests if we run as part of a pull requests, because integration tests rely on
 # secrets omitted by AppVeyor on pull requests
 if [ $APPVEYOR_PULL_REQUEST_NUMBER ]; then
+    echo "test: skip integration tests on pull requests"
     TEST_FILTER="--filter Category!=Integration"
 fi
 
