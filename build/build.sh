@@ -18,7 +18,7 @@ echo "[build] build started"
 echo "[build] dotnet cli v$(dotnet --version)"
 [ "$TAGGED_BUILD" = false ] && VERSION_SUFFIX_ARG="--version-suffix=$GIT_SHA"
 dotnet build -c Release "$VERSION_SUFFIX_ARG"
-dotnet pack -c Release --include-symbols -o ../../artifacts --no-build "$VERSION_SUFFIX_ARG"
+dotnet pack -c Release --include-symbols -o ./artifacts --no-build "$VERSION_SUFFIX_ARG"
 
 # --- TEST STAGE ---
 echo "[test] test started"
