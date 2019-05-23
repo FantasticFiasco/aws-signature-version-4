@@ -20,10 +20,6 @@ environment:
 build_script:
   - ./build/build.sh
 
-after_build:
-  - ls ./
-  - ls ./artifacts/
-
 test: off
 
 artifacts:
