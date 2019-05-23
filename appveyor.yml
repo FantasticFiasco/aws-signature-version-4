@@ -21,3 +21,6 @@ build_script:
 - ./build/build.sh
 
 test: off
+
+artifacts:
+- path: artifacts/*.nupkg
