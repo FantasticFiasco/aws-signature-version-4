@@ -5,7 +5,7 @@
         public const string PlausibleSignedHeadersTestSuiteError =
             "The header 'Content-Length' is specified in the canonical request file, but not in " +
             "the authorization header file, nor the signed request file. AWS Technical Writers " +
-            "have been notified, awaiting answer.";
+            "have been notified, and we are awaiting answer.";
 
         public const string PlausibleCanonicalUriTestSuiteError =
             "The signing algorithm states the following: 'Each path segment must be URI-encoded " +
@@ -18,7 +18,6 @@
             "charset=utf-8'. This is not necessary because .NET will add this encoding if " +
             "omitted by us. We can safely skip this test and rely on integration tests " +
             "where actual content is sent to an API Gateway.";
-
 
         public const string RedundantStsTokenScenario =
             "This scenario is based on the fact that the signing algorithm should support STS " +
