@@ -9,14 +9,14 @@ echo
 
 # --- VARIABLES ---
 GIT_SHA="${APPVEYOR_REPO_COMMIT:0:7}"
-TAGGED_BUILD=$(( "$APPVEYOR_REPO_TAG" == "true" ? true : false ))
+[ ! -z "$APPVEYOR_REPO_TAG" ] && TAGGED_BUILD=true || TAGGED_BUILD=false
 echo "[info] git sha: $GIT_SHA"
 echo "[info] triggered by git tag: $TAGGED_BUILD"
 
 # --- BUILD STAGE ---
 echo "[build] build started"
 echo "[build] dotnet cli v$(dotnet --version)"
-VERSION_SUFFIX_ARG=$(( "$TAGGED_BUILD" == false ? "--version-suffix=$GIT_SHA" : "" ))
+[ "$TAGGED_BUILD" = false ] && VERSION_SUFFIX_ARG="--version-suffix=$GIT_SHA"
 dotnet build -c Release "$VERSION_SUFFIX_ARG"
 dotnet pack -c Release --include-symbols -o ../../artifacts --no-build "$VERSION_SUFFIX_ARG"
 
@@ -25,7 +25,7 @@ echo "[test] test started"
 
 # Exclude integration tests if we run as part of a pull requests. Integration tests rely on
 # secrets, which are omitted by AppVeyor on pull requests.
-TEST_FILTER=$(( "$APPVEYOR_PULL_REQUEST_NUMBER" != "" ? "--filter Category!=Integration" : "" ))
+[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ] && TEST_FILTER="--filter Category!=Integration"
 echo "[test] test filter: $TEST_FILTER"
 
 dotnet tool install --global coverlet.console
