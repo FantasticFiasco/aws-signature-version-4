@@ -25,7 +25,7 @@
             "tokens, e.g. by assuming a role. This scenario is already covered by numerous other " +
             "integration tests and can because of this safely be ignored.";
 
-        public const string UnsupportedByApiGateway =
+        public const string NotSupportedByApiGateway =
             "This scenario defines a request URI that isn't supported by API Gateway.";
     }
 }
