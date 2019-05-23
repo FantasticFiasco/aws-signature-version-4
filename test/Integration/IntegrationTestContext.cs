@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.SecurityToken;
@@ -27,7 +26,7 @@ namespace AWS.SignatureVersion4.Integration
                 variables.GetValue("AWS_USER_ACCESS_KEY_ID"),
                 variables.GetValue("AWS_USER_SECRET_ACCESS_KEY"),
                 null);
-            ApiGatewayUrl = new Uri(variables.GetValue("AWS_API_GATEWAY_URL"));
+            ApiGatewayUrl = variables.GetValue("AWS_API_GATEWAY_URL");
         }
 
         public string RegionName { get; }
@@ -38,7 +37,7 @@ namespace AWS.SignatureVersion4.Integration
 
         public ImmutableCredentials RoleCredentials { get; private set; }
 
-        public Uri ApiGatewayUrl { get; }
+        public string ApiGatewayUrl { get; }
 
         public async Task InitializeAsync() => RoleCredentials = await CreateRoleCredentials();
 

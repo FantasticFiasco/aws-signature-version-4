@@ -337,7 +337,7 @@ namespace System.Net.Http
             // Redirect the request to the API Gateway
             request.RequestUri = request.RequestUri
                 .ToString()
-                .Replace("https://example.amazonaws.com", Context.ApiGatewayUrl.ToString())
+                .Replace("https://example.amazonaws.com", Context.ApiGatewayUrl)
                 .ToUri();
 
             // The "Host" header is now invalid since we redirected the request to the API Gateway.
