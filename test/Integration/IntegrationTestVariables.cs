@@ -7,6 +7,13 @@ namespace AWS.SignatureVersion4.Integration
     /// <summary>
     /// The integration test values are not static but is retrieved from either environment or from
     /// a local file called "local-integration-test-variables.txt" in the output directory.
+    /// <para/>
+    /// A variable in the file should have the following format:
+    /// <code>
+    /// SOME_VARIABLE1=some-value1
+    /// SOME_VARIABLE2=some-value2
+    /// ...
+    /// </code>
     /// </summary>
     public class IntegrationTestVariables
     {
