@@ -9,7 +9,7 @@ echo
 
 # --- VARIABLES ---
 GIT_SHA="${APPVEYOR_REPO_COMMIT:0:7}"
-[ ! -z "$APPVEYOR_REPO_TAG" ] && TAGGED_BUILD=true || TAGGED_BUILD=false
+[ "$APPVEYOR_REPO_TAG" = "true" ] && TAGGED_BUILD=true || TAGGED_BUILD=false
 echo "[info] git sha: $GIT_SHA"
 echo "[info] triggered by git tag: $TAGGED_BUILD"
 
