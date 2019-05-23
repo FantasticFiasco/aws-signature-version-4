@@ -9,7 +9,7 @@
     <PackageTags>sigv4;aws-sigv4;aws-signature-v4;aws-signature;aws-signer;aws;amazon-web-services</PackageTags>
     <PackageIconUrl>http://media.amazonwebservices.com/aws_singlebox_01.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/FantasticFiasco/aws-signature-version-4</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/FantasticFiasco/aws-signature-version-4/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReleaseNotes>For release notes, please see the change log on GitHub.</PackageReleaseNotes>
     <!-- Embed symbols in NuGet package -->
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
