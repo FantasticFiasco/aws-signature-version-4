@@ -33,34 +33,12 @@ namespace System.Net.Http
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenQueryParameter(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=value1"
-            };
-
-            // Act
-            var response = await HttpClient.DeleteAsync(
-                uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
-
-            // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        }
-
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenQueryParameters(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-            {
-                Query = "Param2=value2&Param1=value1"
             };
 
             // Act
