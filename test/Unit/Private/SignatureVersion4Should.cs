@@ -11,7 +11,7 @@ using Xunit;
 
 namespace AWS.SignatureVersion4.Unit.Private
 {
-    public class SignatureVersion4Should : IClassFixture<TestSuiteContext>
+    public class SignatureVersion4Should : IClassFixture<TestSuiteContext>, IDisposable
     {
         private readonly TestSuiteContext context;
         private readonly HttpClient httpClient;
@@ -21,6 +21,8 @@ namespace AWS.SignatureVersion4.Unit.Private
             this.context = context;
 
             httpClient = new HttpClient();
+
+            context.AdjustHeaderValueSeparator();
         }
 
         [Theory]
@@ -29,7 +31,7 @@ namespace AWS.SignatureVersion4.Unit.Private
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
-        [InlineData("get-utf8")]
+        [InlineData("get-utf8", Skip = SkipReasons.PlausibleCanonicalUriTestSuiteError)]
         [InlineData("get-vanilla")]
         [InlineData("get-vanilla-empty-query-key")]
         [InlineData("get-vanilla-query")]
@@ -44,7 +46,7 @@ namespace AWS.SignatureVersion4.Unit.Private
         [InlineData("normalize-path", "get-slash-dot-slash")]
         [InlineData("normalize-path", "get-slashes")]
         [InlineData("normalize-path", "get-slash-pointless-dot")]
-        [InlineData("normalize-path", "get-space")]
+        [InlineData("normalize-path", "get-space", Skip = SkipReasons.PlausibleCanonicalUriTestSuiteError)]
         [InlineData("post-header-key-case")]
         [InlineData("post-header-key-sort")]
         [InlineData("post-header-value-case")]
@@ -53,8 +55,8 @@ namespace AWS.SignatureVersion4.Unit.Private
         [InlineData("post-vanilla")]
         [InlineData("post-vanilla-empty-query-value")]
         [InlineData("post-vanilla-query")]
-        [InlineData("post-x-www-form-urlencoded")]
-        [InlineData("post-x-www-form-urlencoded-parameters")]
+        [InlineData("post-x-www-form-urlencoded", Skip = SkipReasons.PlausibleSignedHeadersTestSuiteError)]
+        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
         public async Task PassTestSuite(params string[] scenarioName)
         {
             // Arrange
@@ -206,6 +208,12 @@ namespace AWS.SignatureVersion4.Unit.Private
 
             // Assert
             await actual.ShouldThrowAsync<NotSupportedException>();
+        }
+
+        public void Dispose()
+        {
+            httpClient?.Dispose();
+            context.ResetHeaderValueSeparator();
         }
     }
 }

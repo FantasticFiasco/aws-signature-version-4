@@ -47,5 +47,18 @@ namespace AWS.SignatureVersion4.TestSuite.Serialization
             rows.RemoveAt(index);
             return row;
         }
+
+        public string TryPopStartingWith(string prefix)
+        {
+            for (var index = 0; index < rows.Count; index++)
+            {
+                if (rows[index].StartsWith(prefix))
+                {
+                    return Pop(index);
+                }
+            }
+
+            return null;
+        }
     }
 }

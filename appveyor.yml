@@ -1,6 +1,19 @@
 image: ubuntu
 
 environment:
+  AWS_REGION: eu-west-1
+  AWS_USER_ACCESS_KEY_ID:
+    secure: jUbG28C9e2NVM3vfJDrJy3IIXev84HN9Bq96KsgBKwk=
+  AWS_USER_SECRET_ACCESS_KEY:
+    secure: KYfaPrVUZDM7POeMwy24nnzFZjCb9K15LBtXlkn8tPpM9OdIrAZ97cbuSmyYy6rT
+  AWS_ROLE_ACCESS_KEY_ID:
+    secure: 6t1gIUUSO7UBUKXzHbaIOTuLy2xIYnob7Nd8TUuQLLM=
+  AWS_ROLE_SECRET_ACCESS_KEY:
+    secure: DZmueR92vHC+uibKBfoXmn+3vFnqvXUDABYGHh2eSCsoAEu+NuLgccUifvOfWfDb
+  AWS_ROLE_ARN:
+    secure: CVjaIRrwBKMLa+ZIqgA4E4oiK9sUOGZncU78nup5xam1Lrl0RQgOTiEqTlfonNKP
+  AWS_API_GATEWAY_URL:
+    secure: iqkjlCh6U/blAPKNHpMJsVo6GuPQlkG9GtK/gii5G4238C2r1Jz9DMUoQqUlVzkdtwY3cLTpLoQwKQP92Fn3BQ==
   CODECOV_TOKEN:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
 
