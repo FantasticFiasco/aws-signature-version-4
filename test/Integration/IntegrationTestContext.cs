@@ -9,8 +9,7 @@ namespace AWS.SignatureVersion4.Integration
 {
     /// <summary>
     /// Class setting up a context that is valid when we run integration tests towards a real AWS
-    /// API Gateway. The values are not static but is retrieved from environment variables in the
-    /// environment the tests are running in.
+    /// API Gateway.
     /// </summary>
     public class IntegrationTestContext : Context, IAsyncLifetime
     {

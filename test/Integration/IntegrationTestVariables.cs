@@ -4,6 +4,10 @@ using System.IO;
 
 namespace AWS.SignatureVersion4.Integration
 {
+    /// <summary>
+    /// The integration test values are not static but is retrieved from either environment or from
+    /// a local file called "local-integration-test-variables.txt" in the output directory.
+    /// </summary>
     public class IntegrationTestVariables
     {
         private const string FileName = "local-integration-test-variables.txt";
