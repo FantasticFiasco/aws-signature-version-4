@@ -211,7 +211,7 @@ namespace System.Net.Http
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenQuery(
+        public async Task SucceedGivenQueryParameter(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -219,6 +219,38 @@ namespace System.Net.Http
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=value1"
+            };
+
+            var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
+
+            // Act
+            var response = await HttpClient.SendAsync(
+                request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenQueryParameters(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            {
+                Query = "Param2=value2&Param1=value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);

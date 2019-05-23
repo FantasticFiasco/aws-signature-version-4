@@ -25,7 +25,7 @@ namespace System.Net.Http
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
-                contentType.ToContent(),
+                contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -39,7 +39,7 @@ namespace System.Net.Http
         [InlineData(IamAuthenticationType.User, typeof(RichContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
         [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
-        public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
+        public async Task SucceedGivenQueryParameter(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
@@ -50,7 +50,32 @@ namespace System.Net.Http
             // Act
             var response = await HttpClient.PostAsync(
                 uriBuilder.Uri,
-                contentType.ToContent(),
+                contentType.ToJsonContent(),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        public async Task SucceedGivenQueryParameters(IamAuthenticationType iamAuthenticationType, Type contentType)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            {
+                Query = "Param2=value2&Param1=value1"
+            };
+
+            // Act
+            var response = await HttpClient.PostAsync(
+                uriBuilder.Uri,
+                contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -75,7 +100,7 @@ namespace System.Net.Http
             // Act
             var response = await HttpClient.PostAsync(
                 uriBuilder.Uri,
-                contentType.ToContent(),
+                contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -100,7 +125,7 @@ namespace System.Net.Http
             // Act
             var response = await HttpClient.PostAsync(
                 uriBuilder.Uri,
-                contentType.ToContent(),
+                contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
