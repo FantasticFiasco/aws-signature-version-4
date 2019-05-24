@@ -1,4 +1,4 @@
-namespace AWS.SignatureVersion4.Private
+namespace AwsSignatureVersion4.Private
 {
     public class Result
     {

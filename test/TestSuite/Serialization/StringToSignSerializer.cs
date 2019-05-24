@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace AWS.SignatureVersion4.TestSuite.Serialization
+namespace AwsSignatureVersion4.TestSuite.Serialization
 {
     public class StringToSignSerializer : StringContentSerializer
     {

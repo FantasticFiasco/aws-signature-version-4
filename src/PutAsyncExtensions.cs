@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime;
-using AWS.SignatureVersion4.Private;
+using AwsSignatureVersion4.Private;
 
 // ReSharper disable once CheckNamespace
 namespace System.Net.Http

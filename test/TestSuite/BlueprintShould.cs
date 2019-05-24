@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
 
-namespace AWS.SignatureVersion4.TestSuite
+namespace AwsSignatureVersion4.TestSuite
 {
     public class BlueprintShould : IDisposable
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Amazon.Util;
 
-namespace AWS.SignatureVersion4.TestSuite.Serialization
+namespace AwsSignatureVersion4.TestSuite.Serialization
 {
     public class RequestSerializer
     {

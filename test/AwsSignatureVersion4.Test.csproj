@@ -2,11 +2,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <IsPackable>false</IsPackable>
-    <RootNamespace>AWS.SignatureVersion4</RootNamespace>
+    <RootNamespace>AwsSignatureVersion4</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\AWS.SignatureVersion4.csproj" />
+    <ProjectReference Include="..\src\AwsSignatureVersion4.csproj" />
   </ItemGroup>
 
   <ItemGroup>

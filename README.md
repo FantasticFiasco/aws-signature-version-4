@@ -1,4 +1,4 @@
-# AWS.SignatureVersion4 - The serious SigV4 implementation in .NET
+# AwsSignatureVersion4 - The serious SigV4 implementation in .NET
 
 [![Build status](https://ci.appveyor.com/api/projects/status/bh71gd22ogf2ogvl/branch/master?svg=true)](https://ci.appveyor.com/project/FantasticFiasco/aws-signature-version-4)
 [![codecov](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg)](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4)

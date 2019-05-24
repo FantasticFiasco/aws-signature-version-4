@@ -1,4 +1,4 @@
-﻿namespace AWS.SignatureVersion4
+﻿namespace AwsSignatureVersion4
 {
     public static class SkipReasons
     {

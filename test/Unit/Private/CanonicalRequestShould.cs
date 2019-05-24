@@ -2,12 +2,12 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Util;
-using AWS.SignatureVersion4.Private;
-using AWS.SignatureVersion4.TestSuite;
+using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 
-namespace AWS.SignatureVersion4.Unit.Private
+namespace AwsSignatureVersion4.Unit.Private
 {
     public class CanonicalRequestShould : IClassFixture<TestSuiteContext>, IDisposable
     {

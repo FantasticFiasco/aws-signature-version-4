@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace AWS.SignatureVersion4.TestSuite
+namespace AwsSignatureVersion4.TestSuite
 {
     public abstract class Context
     {

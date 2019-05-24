@@ -9,7 +9,7 @@ using System.Web;
 using Amazon.Runtime.Internal.Auth;
 using Amazon.Util;
 
-namespace AWS.SignatureVersion4.Private
+namespace AwsSignatureVersion4.Private
 {
     /// <summary>
     /// Building the authorization header is one of the steps in the Signature Version 4 process. For

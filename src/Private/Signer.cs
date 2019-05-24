@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.Util;
 
-namespace AWS.SignatureVersion4.Private
+namespace AwsSignatureVersion4.Private
 {
     public static class Signer
     {
