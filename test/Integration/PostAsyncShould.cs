@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using AWS.SignatureVersion4.Integration;
-using AWS.SignatureVersion4.Integration.Authentication;
-using AWS.SignatureVersion4.Integration.Contents;
+using AwsSignatureVersion4.Integration;
+using AwsSignatureVersion4.Integration.Authentication;
+using AwsSignatureVersion4.Integration.Contents;
 using Shouldly;
 using Xunit;
 

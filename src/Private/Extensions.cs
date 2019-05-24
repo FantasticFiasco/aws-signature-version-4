@@ -4,7 +4,7 @@ using System.Net.Http;
 using Amazon.Runtime.Internal.Auth;
 using Amazon.Util;
 
-namespace AWS.SignatureVersion4.Private
+namespace AwsSignatureVersion4.Private
 {
     public static class Extensions
     {

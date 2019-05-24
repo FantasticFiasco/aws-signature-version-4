@@ -1,4 +1,4 @@
-﻿namespace AWS.SignatureVersion4.Integration.Contents
+﻿namespace AwsSignatureVersion4.Integration.Contents
 {
     public class RichContent
     {

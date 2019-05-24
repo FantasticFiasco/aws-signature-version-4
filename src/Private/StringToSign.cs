@@ -3,7 +3,7 @@ using System.Text;
 using Amazon.Runtime.Internal.Auth;
 using Amazon.Util;
 
-namespace AWS.SignatureVersion4.Private
+namespace AwsSignatureVersion4.Private
 {
     /// <summary>
     /// Building the string to sign is one of the steps in the Signature Version 4 process. For

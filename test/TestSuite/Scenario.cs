@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Net.Http;
-using AWS.SignatureVersion4.TestSuite.Serialization;
+using AwsSignatureVersion4.TestSuite.Serialization;
 
-namespace AWS.SignatureVersion4.TestSuite
+namespace AwsSignatureVersion4.TestSuite
 {
     /// <summary>
     /// A scenario is a test from the AWS Test Suite that is verifying a specific behavior of the

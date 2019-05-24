@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace AWS.SignatureVersion4.Integration.Contents
+namespace AwsSignatureVersion4.Integration.Contents
 {
     public static class Extensions
     {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace AWS.SignatureVersion4.TestSuite.Serialization
+namespace AwsSignatureVersion4.TestSuite.Serialization
 {
     public class FileBuffer
     {

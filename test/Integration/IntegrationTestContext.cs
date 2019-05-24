@@ -2,10 +2,10 @@ using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
-using AWS.SignatureVersion4.TestSuite;
+using AwsSignatureVersion4.TestSuite;
 using Xunit;
 
-namespace AWS.SignatureVersion4.Integration
+namespace AwsSignatureVersion4.Integration
 {
     /// <summary>
     /// Class setting up a context that is valid when we run integration tests towards a real AWS

@@ -1,8 +1,8 @@
 using System;
 using Amazon.Runtime;
-using AWS.SignatureVersion4.Private;
+using AwsSignatureVersion4.Private;
 
-namespace AWS.SignatureVersion4.TestSuite
+namespace AwsSignatureVersion4.TestSuite
 {
     /// <summary>
     /// Class setting up a context that is valid when we run tests towards the AWS Test Suite. The

@@ -7,29 +7,35 @@ set -e
 echo -e "$(curl --silent https://raw.githubusercontent.com/FantasticFiasco/logo/master/logo.ansi)"
 echo
 
+# --- VARIABLES ---
+GIT_SHA="${APPVEYOR_REPO_COMMIT:0:7}"
+[ "$APPVEYOR_REPO_TAG" = "true" ] && TAGGED_BUILD=true || TAGGED_BUILD=false
+echo "[info] git sha: $GIT_SHA"
+echo "[info] triggered by git tag: $TAGGED_BUILD"
+
 # --- BUILD STAGE ---
-echo "build: build started"
-echo "build: dotnet cli v$(dotnet --version)"
-dotnet build -c Release
+echo "[build] build started"
+echo "[build] dotnet cli v$(dotnet --version)"
+[ "$TAGGED_BUILD" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-$GIT_SHA"
+dotnet build -c Release "$VERSION_SUFFIX_ARG"
+dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "$VERSION_SUFFIX_ARG"
 
 # --- TEST STAGE ---
-echo "test: test started"
+echo "[test] test started"
 
 # Exclude integration tests if we run as part of a pull requests. Integration tests rely on
 # secrets, which are omitted by AppVeyor on pull requests.
-if [ $APPVEYOR_PULL_REQUEST_NUMBER ]; then
-    echo "test: skip integration tests on pull requests"
-    TEST_FILTER="--filter Category!=Integration"
-fi
+[ ! -z "$APPVEYOR_PULL_REQUEST_NUMBER" ] && TEST_FILTER="--filter Category!=Integration"
+echo "[test] test filter: $TEST_FILTER"
 
 dotnet tool install --global coverlet.console
-coverlet ./test/bin/Release/netcoreapp2.1/AWS.SignatureVersion4.Test.dll \
+coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll \
     --target "dotnet" \
     --targetargs "test --configuration Release --no-build $TEST_FILTER" \
     --exclude "[xunit.*]*" \
     --format opencover
 
-echo "test: upload coverage report"
+echo "[test] upload coverage report"
 
 # Codecov expects environment variables CI and APPVEYOR to be "True", while it on AppVeyor Ubuntu
 # images are specified as "true" (see https://www.appveyor.com/docs/environment-variables/ for

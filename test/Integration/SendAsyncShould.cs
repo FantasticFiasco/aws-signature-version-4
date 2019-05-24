@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using AWS.SignatureVersion4;
-using AWS.SignatureVersion4.Private;
-using AWS.SignatureVersion4.Integration;
-using AWS.SignatureVersion4.Integration.Authentication;
-using AWS.SignatureVersion4.TestSuite;
+using AwsSignatureVersion4;
+using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.Integration;
+using AwsSignatureVersion4.Integration.Authentication;
+using AwsSignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 

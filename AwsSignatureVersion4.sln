@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{72464F74-187E-4389-89A1-1CC1C0B92DEB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.SignatureVersion4", "src\AWS.SignatureVersion4.csproj", "{08416EA8-DE38-4676-A846-3F7D9D4E6945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsSignatureVersion4", "src\AwsSignatureVersion4.csproj", "{08416EA8-DE38-4676-A846-3F7D9D4E6945}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F73A9A3F-178B-4D3D-B854-65797EBD2113}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AWS.SignatureVersion4.Test", "test\AWS.SignatureVersion4.Test.csproj", "{606E4921-3C64-442D-B99E-6E46526C29F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsSignatureVersion4.Test", "test\AwsSignatureVersion4.Test.csproj", "{606E4921-3C64-442D-B99E-6E46526C29F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

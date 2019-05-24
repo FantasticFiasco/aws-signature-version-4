@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace AWS.SignatureVersion4.Integration
+namespace AwsSignatureVersion4.Integration
 {
     /// <summary>
     /// The integration test values are not static but is retrieved from either environment or from
