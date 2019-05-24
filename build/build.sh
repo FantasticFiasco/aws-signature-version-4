@@ -47,4 +47,4 @@ bash <(curl -s https://codecov.io/bash)
 
 # --- INFRASTRUCTURE STAGE ---
 yarn --cwd ./infrastructure
-yarn build --cwd ./infrastructure
+yarn --cwd ./infrastructure build
