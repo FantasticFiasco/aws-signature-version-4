@@ -44,7 +44,6 @@ export CI="True"
 export APPVEYOR="True"
 bash <(curl -s https://codecov.io/bash)
 
-
 # --- INFRASTRUCTURE STAGE ---
 yarn --cwd ./infrastructure
 yarn --cwd ./infrastructure build
