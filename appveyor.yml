@@ -1,5 +1,7 @@
 image: ubuntu
 
+stack: node 10
+
 environment:
   AWS_REGION: eu-west-1
   AWS_USER_ACCESS_KEY_ID:
