@@ -109,7 +109,15 @@
     "@aws-cdk/aws-iam" "^0.31.0"
     "@aws-cdk/cdk" "^0.31.0"
 
-"@aws-cdk/aws-iam@0.31.0", "@aws-cdk/aws-iam@^0.31.0":
+"@aws-cdk/aws-iam@0.32.0":
+  version "0.32.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-iam/-/aws-iam-0.32.0.tgz#3bd1cb6ccbc4629927a7c98d2db1507689fd5afc"
+  integrity sha512-oAJSJ6JRG52BFg3tgx+poCvAt0iFUS1dQiMUtZPnxAp/Ij5agOHLW2THjSHwUBtpUWFLQ4o8hElEUL+TQUG3Yw==
+  dependencies:
+    "@aws-cdk/cdk" "^0.32.0"
+    "@aws-cdk/region-info" "^0.32.0"
+
+"@aws-cdk/aws-iam@^0.31.0":
   version "0.31.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-iam/-/aws-iam-0.31.0.tgz#11d0d2575e09b97ffcc909b3171f259162126c41"
   integrity sha512-qaSJFYQrhXQVGzixHMa9BKq0Xsp9ae+Q0p3uUWqpec4oa+qE0xDj71ldn0alf/h9EoN7ekGxXIk9kWJP3XpSuw==
