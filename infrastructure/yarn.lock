@@ -216,19 +216,19 @@
     "@aws-cdk/aws-iam" "^0.31.0"
     "@aws-cdk/cdk" "^0.31.0"
 
-"@aws-cdk/cdk@0.31.0", "@aws-cdk/cdk@^0.31.0":
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/cdk/-/cdk-0.31.0.tgz#263ff51b5df18cc4877eddd0aa8092553016836c"
-  integrity sha512-61JW4pKm9VYomVOq17kR3rz8XF1IhtFEMawCs+kuKAUF8Uwlioitv4J4yo+tgrYDUfskyvG+JG53Umb895DsRQ==
-  dependencies:
-    "@aws-cdk/cx-api" "^0.31.0"
-
-"@aws-cdk/cdk@^0.32.0":
+"@aws-cdk/cdk@0.32.0", "@aws-cdk/cdk@^0.32.0":
   version "0.32.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/cdk/-/cdk-0.32.0.tgz#3301cd80500f2ff875ec8a1fcdc3e481e007782c"
   integrity sha512-/OIp++CSI+BydfgaJeV7YY2oNWzpxQVYjkym/Ydeyzd8Zq0dr0fj0jgY1t0iBLt10QEkaxzlJrIjNxsBWdsn8A==
   dependencies:
     "@aws-cdk/cx-api" "^0.32.0"
+
+"@aws-cdk/cdk@^0.31.0":
+  version "0.31.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/cdk/-/cdk-0.31.0.tgz#263ff51b5df18cc4877eddd0aa8092553016836c"
+  integrity sha512-61JW4pKm9VYomVOq17kR3rz8XF1IhtFEMawCs+kuKAUF8Uwlioitv4J4yo+tgrYDUfskyvG+JG53Umb895DsRQ==
+  dependencies:
+    "@aws-cdk/cx-api" "^0.31.0"
 
 "@aws-cdk/cfnspec@^0.32.0":
   version "0.32.0"
