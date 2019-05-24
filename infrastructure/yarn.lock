@@ -371,7 +371,7 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
 
-aws-cdk@0.32.0:
+aws-cdk@^0.32.0:
   version "0.32.0"
   resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-0.32.0.tgz#a7816e2086931c5e243b5ecbec135cb4c62cdbbf"
   integrity sha512-Q17rK9VFa8O9A/EZIMYb8bA39PTmWw+SAxNj6tLe3Hs4M0xzLdqBDTcixAd1DCZBQIh6xL3aJqC/BLOHNjvrqQ==
