@@ -18,10 +18,10 @@
     "lint": "tslint ./**/*.ts --exclude ./**/*.d.ts"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigateway": "0.31.0",
-    "@aws-cdk/aws-iam": "0.31.0",
-    "@aws-cdk/aws-lambda": "0.31.0",
-    "@aws-cdk/cdk": "0.31.0",
+    "@aws-cdk/aws-apigateway": "0.32.0",
+    "@aws-cdk/aws-iam": "0.32.0",
+    "@aws-cdk/aws-lambda": "0.32.0",
+    "@aws-cdk/cdk": "0.32.0",
     "source-map-support": "0.5.12"
   },
   "devDependencies": {
