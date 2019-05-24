@@ -43,3 +43,8 @@ echo "[test] upload coverage report"
 export CI="True"
 export APPVEYOR="True"
 bash <(curl -s https://codecov.io/bash)
+
+
+# --- INFRASTRUCTURE STAGE ---
+yarn
+yarn build
