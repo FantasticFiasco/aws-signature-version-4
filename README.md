@@ -28,7 +28,21 @@ Stay tuned for updates!
 
 ## Super simple to use
 
+extensions to `HttpClient` `DeleteAsync` `GetAsync` `PostAsync` `PutAsync` `SendAsync`
+
 TODO
+
+```csharp
+var client = new HttpClient();
+var credentials = new ImmutableCredentials("<access key id>", "<secret access key>");
+
+var response = await client.GetAsync(
+    "https://www.acme.com/resources",
+    "us-west-1",
+    "execute-api",
+    credentials);
+
+```
 
 ## Install via NuGet
 
