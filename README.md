@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg)](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4)
 [![NuGet Version](http://img.shields.io/nuget/v/AwsSignatureVersion4.svg?style=flat)](https://www.nuget.org/packages/AwsSignatureVersion4/)
 [![NuGet](https://img.shields.io/nuget/dt/AwsSignatureVersion4.svg)](https://www.nuget.org/packages/AwsSignatureVersion4/)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)]
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://raw.githubusercontent.com/FantasticFiasco/aws-signature-version-4/master/LICENSE)
 
 __Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignatureVersion4)
 | __Platforms__ - .NET Standard 2.0
