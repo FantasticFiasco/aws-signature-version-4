@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration;
 using AwsSignatureVersion4.Integration.Authentication;
 using Shouldly;
@@ -94,6 +95,46 @@ namespace System.Net.Http
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken(true);
+
+            // Act
+            var task = HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            task.Status.ShouldBe(TaskStatus.Canceled);
         }
     }
 }

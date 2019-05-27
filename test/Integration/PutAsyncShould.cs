@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration;
 using AwsSignatureVersion4.Integration.Authentication;
 using AwsSignatureVersion4.Integration.Contents;
@@ -107,6 +108,52 @@ namespace System.Net.Http
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType, Type contentType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.PutAsync(
+                Context.ApiGatewayUrl,
+                contentType.ToJsonContent(),
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType, Type contentType)
+        {
+            // Arrange
+            var ct = new CancellationToken(true);
+
+            // Act
+            var task = HttpClient.PutAsync(
+                Context.ApiGatewayUrl,
+                contentType.ToJsonContent(),
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            task.Status.ShouldBe(TaskStatus.Canceled);
         }
     }
 }

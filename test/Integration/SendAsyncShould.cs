@@ -298,6 +298,29 @@ namespace System.Net.Http
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        public async Task SucceedGivenHttpCompletionOption(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+
+            // Act
+            var response = await HttpClient.SendAsync(
+                request,
+                completionOption,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
         private HttpRequestMessage BuildRequest(string[] scenarioName)
         {
             var request = testSuiteContext.LoadScenario(scenarioName).Request;
