@@ -20,6 +20,12 @@ __Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignature
 
 ## Introduction
 
+This project is unique for me. It's the first one that isn't a labor of love. This code was created with a sense of disappointment towards Amazon for not including a Signature Version 4 signer in their AWS SDK. Every line of code fueled with resentment at other developers that proclaim to have the signing algorithm in a GitLab gist or a full blown GitHub project with numerous stars and thousands of downloads on NuGet. To be frank, their code works for many situations, like when you aren't using headers or multiple query parameters. But my problem with these projects are that they aren't transparent with what they don't support. Open source is built based on the idea of contribution, but I feel that obligation has been misdirected if contribution is based on developers using your code have are being waken up at night because of issues in production due to negligence where certain steps of the signing algorithm have been deliberately skipped, but not disclosed to you consumers of your code. I think this is a violation of trust between author and consumer. This project will aim towards transparency and will disclose all limitations of the algorithm implementation, and let you decide whether you wish to take dependency on this code.
+
+
+
+
+
 TODO
 
 This will be the birthplace for the buttoned up and boring, but deeply analyzed, implementation of Signature Version 4 in .NET.
@@ -81,11 +87,6 @@ BIN
 
 # AWS Signature Version 4
 
-This is the first time I've written open source that is not a labor of love. It is code fueled by anger at AWS for not providing signing functionality in the AWS SDK, and for resentment at those other developers in GitHub Gists or projects that say they provide a signing algorithm, when one clearly can see that always only implement parts of the algorithms. I mean, who doesn't enjoy debugging requests in production that sometimes fail? That was irony, and I hope the developers have felt the same fear when their dashboard of their production site is red due to their own mistakes.
-
-The pledge
-
-What's not part of the deal
 
 ## Disclosure
 
