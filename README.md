@@ -13,6 +13,7 @@ __Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignature
 
 - [Introduction](#introduction)
 - [Super simple to use](#super-simple-to-use)
+- [The pledge](#the-pledge)
 - [Install via NuGet](#install-via-nuget)
 - [Donations](#donations)
 - [Credit](#credit)
@@ -28,21 +29,30 @@ Stay tuned for updates!
 
 ## Super simple to use
 
-extensions to `HttpClient` `DeleteAsync` `GetAsync` `PostAsync` `PutAsync` `SendAsync`
+The most intuitive API is the one you already know. AwsSignatureVersion4 extends `HttpClient` by providing additional overloads to `HttpClient.DeleteAsync`, `HttpClient.GetAsync`, `HttpClient.PostAsync`, `HttpClient.PutAsync` and `HttpClient.SendAsync`. The overloads accept the following additional arguments.
 
-TODO
+- **Region name** - The name of the AWS region, e.g. `us-west-1`
+- **Service name** - The name of the service, e.g. `execute-api` for an API Gateway
+- **Credentials** - The AWS credentials of the entity sending the request
+
+The following example is getting resources from an IAM authenticated API Gateway.
 
 ```csharp
 var client = new HttpClient();
-var credentials = new ImmutableCredentials("<access key id>", "<secret access key>");
+var credentials = new ImmutableCredentials("<access key id>", "<secret access key>", null);
 
 var response = await client.GetAsync(
     "https://www.acme.com/resources",
-    "us-west-1",
-    "execute-api",
-    credentials);
-
+    regionName: "us-west-1",
+    serviceName: "execute-api",
+    credentials: credentials);
 ```
+
+The other overloads follow the same pattern, and are really easy to use!
+
+## The pledge
+
+### Exemption clause
 
 ## Install via NuGet
 
