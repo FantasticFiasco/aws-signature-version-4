@@ -2,7 +2,7 @@ import { AuthorizationType, LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
 import { Construct, Stack, StackProps } from '@aws-cdk/cdk';
 
-export class IamAuthenticationStack extends Stack {
+export class ApiGatewayStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
