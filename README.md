@@ -20,7 +20,15 @@ __Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignature
 
 ## Introduction
 
-This project is unique for me. It's the first one that isn't a labor of love. This code was created with a sense of disappointment towards Amazon for not including a Signature Version 4 signer in their AWS SDK. Every line of code fueled with resentment at other developers that proclaim to have the signing algorithm in a GitLab gist or a full blown GitHub project with numerous stars and thousands of downloads on NuGet. To be frank, their code works for many situations, like when you aren't using headers or multiple query parameters. But my problem with these projects are that they aren't transparent with what they don't support. Open source is built based on the idea of contribution, but I feel that obligation has been misdirected if contribution is based on developers using your code have are being waken up at night because of issues in production due to negligence where certain steps of the signing algorithm have been deliberately skipped, but not disclosed to you consumers of your code. I think this is a violation of trust between author and consumer. This project will aim towards transparency and will disclose all limitations of the algorithm implementation, and let you decide whether you wish to take dependency on this code.
+This project is unique for me. It's the first one that isn't a labor of love.
+
+I started out with sense of disappointment towards Amazon for not including a Signature Version 4 signer in their AWS SDK. The functionality is described in their [Open Feature Requests for the AWS SDK for .NET](https://github.com/aws/aws-sdk-net/blob/master/FEATURE_REQUESTS.md) but I haven't seen any actions towards an implementation.
+
+The feeling of disappointment was soon replaced with resentment. Not towards Amazon but towards developers proclaiming to have a working implementation in as something as small as a GitHub gist, or in a full blown GitHub project with numerous stars and thousands of NuGet downloads. After analyzing their code and comparing it against the [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html), I found them all to be blatantly lacking.
+
+The idea of Open Source for me is not to partially implement something and then rely on others to find and fix the issues with your code. Often in production. That is not my idea of collaboration. Open source for me comes with responsibility, it comes with transparency. It comes with trust in that package authors verifies that their code works as expected. Redirecting responsibility back to the consumers is for me a misdirection of trust.
+
+This project will focus on transparency, disclosing all known limitations of the algorithm implementation. Hopefully that will build trust until the AWS SDK will support signing request, and we can discontionue this project.
 
 
 
