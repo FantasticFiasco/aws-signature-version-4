@@ -38,7 +38,7 @@ The best API is the one you already know. AwsSignatureVersion4 extends the class
 
 The extension methods integrate with `HttpClient` as one would expect, allowing you to set `HttpClient.BaseAddress` and `HttpClient.DefaultRequestHeaders`.
 
-The following code is getting resources from a IAM authenticated API Gateway.
+The following code is getting resources from an IAM authenticated API Gateway.
 
 ```csharp
 var client = new HttpClient();
@@ -58,7 +58,7 @@ This project comes with a pledge, providing transparency on supported and unsupp
 - Amazon S3 (Amazon Simple Storage Service) is currently not supported. Please give [issue #1](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1) a thumbs up if you wish it to be supported.
 - No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
 - About 170 unit tests are run before any release
-- About 180 integration tests targeting a IAM authenticated API Gateway are run before any release
+- About 180 integration tests targeting an IAM authenticated API Gateway are run before any release
 - Implementation is passing the [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios, with the following exceptions:
     - `get-vanilla-query-unreserved` - This scenario defines a request URI that isn't supported by API Gateway
     - `get-utf8` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
