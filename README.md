@@ -51,6 +51,8 @@ var response = await client.GetAsync(
     credentials: credentials);
 ```
 
+For more examples, please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test).
+
 ## The pledge
 
 This project comes with a pledge, providing transparency on supported and unsupported scenarios.
