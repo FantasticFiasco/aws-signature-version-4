@@ -1,13 +1,13 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <VersionPrefix>0.0.3</VersionPrefix>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <!--
       Only increment the assembly version on major version changes to help users reduce binding
       redirects, and how often they're updated. For more information, please read
       https://docs.microsoft.com/en-us/dotnet/standard/library-guidance/strong-naming#create-strong-named-net-libraries
     -->
-    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <Authors>Mattias Kindborg</Authors>
     <Company />
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
