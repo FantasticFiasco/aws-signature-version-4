@@ -65,3 +65,38 @@ If this project has helped you to stay productive and save money, you can buy me
 Thank you [JetBrains](https://www.jetbrains.com/) for your important initiative to support the open source community with free licenses to your products.
 
 ![JetBrains](./doc/resources/jetbrains.png)
+
+
+BIN
+
+# AWS Signature Version 4
+
+This is the first time I've written open source that is not a labor of love. It is code fueled by anger at AWS for not providing signing functionality in the AWS SDK, and for resentment at those other developers in GitHub Gists or projects that say they provide a signing algorithm, when one clearly can see that always only implement parts of the algorithms. I mean, who doesn't enjoy debugging requests in production that sometimes fail? That was irony, and I hope the developers have felt the same fear when their dashboard of their production site is red due to their own mistakes.
+
+The pledge
+
+What's not part of the deal
+
+## Disclosure
+
+- only been tested on HTTP/1.1
+
+- Test suite
+A note about signing requests to Amazon S3:
+
+In exception to this, you do not normalize URI paths for requests to Amazon S3. For example, if you have a bucket with an object named my-object//example//photo.user, use that path. Normalizing the path to my-object/example/photo.user will cause the request to fail. For more information, see Task 1: Create a Canonical Request in the Amazon Simple Storage Service API Reference: http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html#canonical-request
+
+Easier if I say that I dont support s3, or write tests for it I guess
+
+- Authenticating Requests: Using Query Parameters https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html
+
+Does only support HTTP header Authorization, not query string authorization (https://docs.aws.amazon.com/general/latest/gr/sigv4-add-signature-to-request.html)
+
+When you add the X-Amz-Security-Token parameter to the query string, some services require that you include this parameter in the canonical (signed) request. For other services, you add this parameter at the end, after you calculate the signature. For details, see the API reference documentation for that service.
+
+Not supporting funny UTF8 charcters like the scenario get-utf8
+GET /ሴ HTTP/1.1
+Host:example.amazonaws.com
+X-Amz-Date:20150830T123600Z
+
+
