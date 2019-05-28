@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :syringe: Fixed
+
+- Update XML comments
+
 ## [1.0.0] - 2019-05-28
 
 Initial version.
