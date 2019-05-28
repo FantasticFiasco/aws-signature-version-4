@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [1.0.1] - 2019-05-28
+
 ### :syringe: Fixed
 
 - Update XML comments
