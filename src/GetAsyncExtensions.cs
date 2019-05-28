@@ -26,14 +26,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -75,14 +75,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -130,14 +130,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -187,14 +187,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -242,14 +242,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -300,14 +300,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -360,14 +360,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -423,14 +423,14 @@ namespace System.Net.Http
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
         /// <param name="serviceName">
-        /// The signing name of the service, e.g. "s3".
+        /// The signing name of the service, e.g. "execute-api".
         /// </param>
         /// <param name="credentials">
         /// AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
-        ///   security credentials, e.g. a role. Default value is null.
+        ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.

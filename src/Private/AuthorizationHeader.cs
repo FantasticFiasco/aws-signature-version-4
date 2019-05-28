@@ -26,6 +26,7 @@ namespace AwsSignatureVersion4.Private
             //   <algorithm> Credential=<access key id>/<credential scope>, SignedHeaders=<signed headers>, Signature=<signature>
             //
             // Note the following:
+            //
             // - There is no comma between the algorithm and Credential. However, the SignedHeaders
             //   and Signature are separated from the preceding values with a comma.
             // - The Credential value starts with the access key id, which is followed by a forward

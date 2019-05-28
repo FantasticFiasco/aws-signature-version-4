@@ -142,30 +142,6 @@ namespace AwsSignatureVersion4.Private
             return (builder.ToString(), signedHeaders);
         }
 
-        public static SortedDictionary<string, List<string>> SortHeaders(HttpRequestHeaders headers)
-        {
-            var sortedHeaders = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
-
-            foreach (var header in headers)
-            {
-                // Convert header name to lowercase
-                var headerName = header.Key.ToLowerInvariant();
-
-                // Create header if it doesn't already exist
-                if (!sortedHeaders.TryGetValue(headerName, out var headerValues))
-                {
-                    headerValues = new List<string>();
-                    sortedHeaders.Add(headerName, headerValues);
-                }
-
-                // Remove leading and trailing header value spaces, and convert sequential spaces
-                // into a single space
-                headerValues.AddRange(header.Value.Select(headerValue => headerValue.Trim().NormalizeWhiteSpace()));
-            }
-
-            return sortedHeaders;
-        }
-
         public static SortedList<string, List<string>> SortQueryParameters(string query)
         {
             var sortedQueryParameters = new SortedList<string, List<string>>(StringComparer.Ordinal);
@@ -190,6 +166,30 @@ namespace AwsSignatureVersion4.Private
             }
 
             return sortedQueryParameters;
+        }
+        
+        public static SortedDictionary<string, List<string>> SortHeaders(HttpRequestHeaders headers)
+        {
+            var sortedHeaders = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
+
+            foreach (var header in headers)
+            {
+                // Convert header name to lowercase
+                var headerName = header.Key.ToLowerInvariant();
+
+                // Create header if it doesn't already exist
+                if (!sortedHeaders.TryGetValue(headerName, out var headerValues))
+                {
+                    headerValues = new List<string>();
+                    sortedHeaders.Add(headerName, headerValues);
+                }
+
+                // Remove leading and trailing header value spaces, and convert sequential spaces
+                // into a single space
+                headerValues.AddRange(header.Value.Select(headerValue => headerValue.Trim().NormalizeWhiteSpace()));
+            }
+
+            return sortedHeaders;
         }
     }
 }
