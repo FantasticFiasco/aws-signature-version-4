@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 ### :syringe: Fixed
 
 - Update XML comments
+- Update dependencies
 
 ## [1.0.0] - 2019-05-28
 
