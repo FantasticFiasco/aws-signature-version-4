@@ -68,6 +68,7 @@ This project comes with a pledge, providing transparency on supported and unsupp
     - `post-sts-token/post-sts-header-before` - This scenario is based on the fact that the signing algorithm should support STS tokens, e.g. by assuming a role. This scenario is already covered by numerous other integration tests and can because of this safely be ignored.
     - `post-x-www-form-urlencoded` - The header `Content-Length` is specified in the canonical request file, but not in the authorization header file, nor the signed request file. AWS Technical Writers have been notified, and we are awaiting answer.
     - `post-x-www-form-urlencoded-parameters` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, i.e. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an API Gateway.
+- Implementation is reusing as much as possible from [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/), thus the dependency
 - Implementation is supporting authentication using the HTTP header `Authorization`
 - Implementation is not supporting query string authentication
 - Implementation has only been tested using HTTP/1.1
