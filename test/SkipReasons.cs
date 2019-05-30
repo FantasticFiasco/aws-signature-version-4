@@ -17,7 +17,7 @@
             "'Content-Type' header, i.e. 'Content-Type:application/x-www-form-urlencoded; " +
             "charset=utf-8'. This is not necessary because .NET will add this encoding if " +
             "omitted by us. We can safely skip this test and rely on integration tests " +
-            "where actual content is sent to an API Gateway.";
+            "where actual content is sent to an AWS API Gateway.";
 
         public const string RedundantStsTokenScenario =
             "This scenario is based on the fact that the signing algorithm should support STS " +
@@ -25,6 +25,6 @@
             "integration tests and can because of this safely be ignored.";
 
         public const string NotSupportedByApiGateway =
-            "This scenario defines a request URI that isn't supported by API Gateway.";
+            "This scenario defines a request URI that isn't supported by AWS API Gateway.";
     }
 }

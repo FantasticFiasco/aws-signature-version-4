@@ -325,14 +325,15 @@ namespace System.Net.Http
         {
             var request = testSuiteContext.LoadScenario(scenarioName).Request;
 
-            // Redirect the request to the API Gateway
+            // Redirect the request to the AWS API Gateway
             request.RequestUri = request.RequestUri
                 .ToString()
                 .Replace("https://example.amazonaws.com", Context.ApiGatewayUrl)
                 .ToUri();
 
-            // The "Host" header is now invalid since we redirected the request to the API Gateway.
-            // Lets remove the header and have the signature implementation re-add it correctly.
+            // The "Host" header is now invalid since we redirected the request to the AWS API
+            // Gateway. Lets remove the header and have the signature implementation re-add it
+            // correctly.
             request.Headers.Remove("Host");
 
             return request;

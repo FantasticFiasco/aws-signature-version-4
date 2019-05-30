@@ -23,7 +23,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information):**
-- AWS service [e.g. API Gateway]
+- AWS service [e.g. AWS API Gateway]
 - OS: [e.g. Windows 10]
 - .NET version: [e.g. 4.5]
 

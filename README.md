@@ -20,25 +20,25 @@ __Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignature
 
 ## Introduction
 
-This project is unique for me. It's the first that isn't a labor of love.
+This project is unique for me. It's my first that isn't a labor of love.
 
-Having to sign requests in AWS, I went through some emotions. My first was disappointment, directed at Amazon for not including a Signature Version 4 signer in their [AWS SDK for .NET](https://aws.amazon.com/sdk-for-net/). The functionality is listed on [Open Feature Requests for the AWS SDK for .NET](https://github.com/aws/aws-sdk-net/blob/master/FEATURE_REQUESTS.md) but I haven't seen any actions towards an implementation yet.
+Having to sign requests in AWS I went through a series of emotions. My first was disappointment, directed at Amazon for not including a Signature Version 4 signer in their [AWS SDK for .NET](https://aws.amazon.com/sdk-for-net/). The functionality is listed on [Open Feature Requests for the AWS SDK for .NET](https://github.com/aws/aws-sdk-net/blob/master/FEATURE_REQUESTS.md) but I haven't seen any actions towards an implementation yet.
 
-My second emotion was resentment. Not towards Amazon but towards developers proclaiming to have working implementations in their GitHub repositories, of which some had numerous stars and thousands of NuGet downloads. After analyzing their code and comparing it against the [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html), I found them all to be blatantly lacking.
+My second emotion was resentment. Not towards Amazon but towards other developers proclaiming to have working implementations in their GitHub repositories, of which some had numerous stars and thousands of NuGet downloads. After analyzing their code and comparing it against the [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html), I found them all to be blatantly lacking.
 
-So here we are, yet another attempt at implementing the Signature Version 4 algorithm in .NET. Lets try to make sure that this one has fewer bugs than the previous attempts...
+So here we are, yet another attempt at implementing the Signature Version 4 algorithm in .NET. Lets try to make sure that this one has fewer surprises than the previous attempts...
 
 ## Super simple to use
 
-The best API is the one you already know. AwsSignatureVersion4 extends the class `HttpClient` by providing additional overloads to `DeleteAsync`, `GetAsync`, `PostAsync`, `PutAsync` and `SendAsync`. These overloads accept the following additional arguments.
+The best API is the one you already know. This project extends the class `HttpClient` by providing additional overloads to `PostAsync`, `GetAsync`, `PutAsync`, `DeleteAsync` and `SendAsync`. These overloads accept the following additional arguments.
 
-- **Region name** - The name of the AWS region, e.g. `us-west-1`
-- **Service name** - The name of the service, e.g. `execute-api` for an API Gateway
-- **Credentials** - The AWS credentials of the principal sending the request
+- `regionName` - The name of the AWS region, e.g. `us-west-1`
+- `serviceName` - The name of the service, e.g. `execute-api` for an AWS API Gateway
+- `credentials` - The AWS credentials of the principal sending the request
 
-The extension methods integrate with `HttpClient` as one would expect, allowing you to set `HttpClient.BaseAddress` and `HttpClient.DefaultRequestHeaders`.
+These overloads are built to integrate with `HttpClient`, i.e. `HttpClient.BaseAddress` and `HttpClient.DefaultRequestHeaders` will be respected when sending the request.
 
-The following code is getting resources from an IAM authenticated API Gateway.
+The following example is demonstrating how one would send a `GET /resources` request to an IAM authenticated AWS API Gateway on host `www.acme.com`.
 
 ```csharp
 var client = new HttpClient();
@@ -51,27 +51,28 @@ var response = await client.GetAsync(
     credentials: credentials);
 ```
 
-For more examples, please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test).
+Please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test) directory for other examples.
 
 ## The pledge
 
 This project comes with a pledge, providing transparency on supported and unsupported scenarios.
 
-- Amazon S3 (Amazon Simple Storage Service) is currently not supported. Please give [issue #1](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1) a thumbs up if you wish it to be supported.
-- No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
-- About 170 unit tests are run before any release
-- About 180 integration tests targeting an IAM authenticated API Gateway are run before any release
-- Implementation is passing the [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios, with the following exceptions:
-    - `get-vanilla-query-unreserved` - This scenario defines a request URI that isn't supported by API Gateway
-    - `get-utf8` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
-    - `normalize-path/get-space` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
-    - `post-sts-token/post-sts-header-before` - This scenario is based on the fact that the signing algorithm should support STS tokens, e.g. by assuming a role. This scenario is already covered by numerous other integration tests and can because of this safely be ignored.
-    - `post-x-www-form-urlencoded` - The header `Content-Length` is specified in the canonical request file, but not in the authorization header file, nor the signed request file. AWS Technical Writers have been notified, and we are awaiting answer.
-    - `post-x-www-form-urlencoded-parameters` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, i.e. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an API Gateway.
-- Implementation is reusing as much as possible from [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/), thus the dependency
-- Implementation is supporting authentication using the HTTP header `Authorization`
-- Implementation is not supporting query string authentication
-- Implementation has only been tested using HTTP/1.1
+- :heavy_check_mark: Over 170 unit tests are passing before a release
+- :heavy_check_mark: Over 180 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
+- :heavy_check_mark: No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
+- :heavy_check_mark: [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/) is reused as much as possible, thus the dependency
+- :heavy_check_mark: [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios are passing, with the following exceptions:
+  - :x: `get-vanilla-query-unreserved` - This scenario defines a request URI that isn't supported by AWS API Gateway
+  - :x: `get-utf8` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
+  - :x: `normalize-path/get-space` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
+  - :x: `post-sts-token/post-sts-header-before` - This scenario is based on the fact that the signing algorithm should support STS tokens, e.g. by assuming a role. This scenario is already covered by numerous other integration tests and can because of this safely be ignored.
+  - :x: `post-x-www-form-urlencoded` - The header `Content-Length` is specified in the canonical request file, but not in the authorization header file, nor the signed request file. AWS Technical Writers have been notified, and we are awaiting answer.
+  - :x: `post-x-www-form-urlencoded-parameters` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, i.e. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
+- :x: Amazon S3 (Simple Storage Service) is currently not supported. Please give [issue #1](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1) a thumbs up if you wish it to be supported.
+- :heavy_check_mark: HTTP header authentication is supported
+- :x: Query string authentication is not supported
+- :heavy_check_mark: HTTP/1.1 is supported
+- :x: HTTP/2 is not supported, please create an issue if you wish it to be supported
 
 ## Install via NuGet
 
