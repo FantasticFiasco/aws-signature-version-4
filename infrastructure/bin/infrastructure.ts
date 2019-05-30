@@ -7,8 +7,8 @@ import { ApiGatewayStack, UsersStack } from '../lib';
 const app = new App();
 
 new UsersStack(app, 'UsersStack', {
-    stackName: 'Sigv4-Users',
+    stackName: 'SigV4-Users',
  });
 new ApiGatewayStack(app, 'ApiGatewayStack', {
-    stackName: 'Sigv4-ApiGateway',
+    stackName: 'SigV4-ApiGateway',
 });
