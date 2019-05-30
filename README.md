@@ -78,11 +78,18 @@ This project comes with a pledge, providing transparency on supported and unsupp
 
 If you want to include AwsSignatureVersion4 in your project, you can [install it directly from NuGet](https://www.nuget.org/packages/AwsSignatureVersion4/).
 
-To install AwsSignatureVersion4, run the following command in the Package Manager Console:
+To install AwsSignatureVersion4, run the following command in the Package Manager Console.
 
 ```
 PM> Install-Package AwsSignatureVersion4
 ```
+
+You can also install AwsSignatureVersion4 using the `dotnet` command line interface.
+
+```bash
+dotnet add package AwsSignatureVersion4
+```
+
 
 ## Donations
 
