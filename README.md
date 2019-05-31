@@ -24,9 +24,9 @@ This project is unique for me. It's my first that isn't a labor of love.
 
 Having to sign requests in AWS I went through a series of emotions. My first was disappointment, directed at Amazon for not including a Signature Version 4 signer in their [AWS SDK for .NET](https://aws.amazon.com/sdk-for-net/). The functionality is listed on [Open Feature Requests for the AWS SDK for .NET](https://github.com/aws/aws-sdk-net/blob/master/FEATURE_REQUESTS.md) but I haven't seen any actions towards an implementation yet.
 
-My second emotion was resentment. Not towards Amazon but towards other developers proclaiming to have working implementations in their GitHub repositories, of which some had numerous stars and thousands of NuGet downloads. After analyzing their code and comparing it against the [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html), I found them all to be blatantly lacking.
+My second emotion was being overwhelmed. The signing algorithm involved [many more steps](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) than I'd thought be possible, and I knew I'd have to spend a lot of time getting conformable with the algorithm.
 
-So here we are, yet another attempt at implementing the Signature Version 4 algorithm in .NET. Lets try to make sure that this one has fewer surprises than the previous attempts...
+So here we are, my attempt at implementing the Signature Version 4 algorithm in .NET. Please lets hope that AWS SDK soon will release this functionality so we can deprecate this piece of code...
 
 ## Super simple to use
 
