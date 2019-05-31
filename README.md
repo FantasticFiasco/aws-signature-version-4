@@ -1,4 +1,4 @@
-# AwsSignatureVersion4 - The buttoned up and boring, but deeply analyzed, implementation of SigV4 in .NET.
+# AwsSignatureVersion4 - The buttoned up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/96upkt8x02mhqi5b/branch/master?svg=true)](https://ci.appveyor.com/project/FantasticFiasco/aws-signature-version-4)
 [![codecov](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg)](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4)

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>The serious Signature Version 4 implementation in .NET.</Description>
+    <Description>The buttoned up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Strong naming -->
