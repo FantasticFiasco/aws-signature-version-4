@@ -69,10 +69,12 @@ This project comes with a pledge, providing transparency on supported and unsupp
   - :x: `post-x-www-form-urlencoded` - The header `Content-Length` is specified in the canonical request file, but not in the authorization header file, nor the signed request file. AWS Technical Writers have been notified, and we are awaiting answer.
   - :x: `post-x-www-form-urlencoded-parameters` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, i.e. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
 - :x: Amazon S3 (Simple Storage Service) is currently not supported. Please give [issue #1](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1) a thumbs up if you wish it to be supported.
-- :heavy_check_mark: HTTP header authentication is supported
-- :x: Query string authentication is not supported
-- :heavy_check_mark: HTTP/1.1 is supported
-- :x: HTTP/2 is not supported, please create an issue if you wish it to be supported
+- Authentication method
+    - :heavy_check_mark: HTTP header authentication is supported
+    - :x: Query string authentication is not supported
+- HTTP version
+    - :heavy_check_mark: HTTP/1.1 is supported
+    - :x: HTTP/2 is not supported, please create an issue if you wish it to be supported
 
 ## Install via NuGet
 
