@@ -5,6 +5,7 @@
     ],
     "jsRules": {},
     "rules": {
+      "interface-name": [false],
       "no-console": [false],
       "no-unused-expression": false,
       "quotemark": [true, "single"]

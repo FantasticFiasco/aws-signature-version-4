@@ -1,29 +1,66 @@
-import { PolicyStatement, Role, User } from '@aws-cdk/aws-iam';
-import { Construct, Stack, StackProps } from '@aws-cdk/cdk';
+import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from '@aws-cdk/aws-iam';
+import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/cdk';
 
 export class UsersStack extends Stack {
+
+  public readonly trustedUser: IUser;
+  public readonly untrustedUser: IUser;
+  public readonly trustedRole: IRole;
+
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    // User with API Gateway permissions
-    const userWithApiGatewayPermissions = new User(this, 'UserWithApiGatewayPermissions', {
-      userName: 'user-with-api-gateway-permissions',
+    this.trustedUser = this.createTrustedUser();
+    this.untrustedUser = this.createUntrustedUser();
+    this.trustedRole = this.createTrustedRole();
+
+    const trustedUserAccessKey = new CfnAccessKey(this, 'trustedUserAccessKey', {
+      userName: this.trustedUser.userName,
+    });
+    const untrustedUserAccessKey = new CfnAccessKey(this, 'untrustedUserAccessKey', {
+      userName: this.untrustedUser.userName,
     });
 
-    userWithApiGatewayPermissions.attachManagedPolicy('arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess');
+    new CfnOutput(this, 'TrustedUserAccessKeyId', {
+      value: trustedUserAccessKey.accessKeyId,
+    });
+    new CfnOutput(this, 'TrustedUserSecretAccessKey', {
+      value: trustedUserAccessKey.accessKeySecretAccessKey,
+    });
+    new CfnOutput(this, 'UntrustedUserAccessKeyId', {
+      value: untrustedUserAccessKey.accessKeyId,
+    });
+    new CfnOutput(this, 'UntrustedUserSecretAccessKey', {
+      value: untrustedUserAccessKey.accessKeySecretAccessKey,
+    });
+  }
 
-    // User without API Gateway permissions, but with a role to assume them
-    const userWithoutApiGatewayPermissions = new User(this, 'UserWithoutApiGatewayPermissions', {
-      userName: 'user-without-api-gateway-permissions',
+  private createTrustedUser(): IUser {
+    const user = new User(this, 'TrustedUser', {
+      userName: 'trusted-user',
     });
 
-    const apiGatewayRole = new Role(this, 'ApiGatewayRole', {
-      assumedBy: userWithoutApiGatewayPermissions,
+    user.attachManagedPolicy('arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess');
+
+    return user;
+  }
+
+  private createUntrustedUser(): IUser {
+    return new User(this, 'UntrustedUser', {
+      userName: 'untrusted-user',
+    });
+  }
+
+  private createTrustedRole(): IRole {
+    const role = new Role(this, 'ApiGatewayRole', {
+      assumedBy: this.untrustedUser,
       roleName: 'ApiGatewayInvoke',
     });
 
-    apiGatewayRole.addToPolicy(new PolicyStatement()
+    role.addToPolicy(new PolicyStatement()
       .addActions('execute-api:Invoke', 'execute-api:ManageConnections')
       .addResource('arn:aws:execute-api:*:*:*'));
+
+    return role;
   }
 }
