@@ -15,7 +15,9 @@ new ApiGatewayStack(app, 'ApiGatewayStack', {
 });
 
 new S3Stack(app, 'S3Stack', {
-    roleWithReadAccess: usersStack.trustedRole,
+    readAccess: [
+        usersStack.trustedRole,
+        usersStack.trustedUser,
+    ],
     stackName: 'SigV4-S3',
-    userWithReadAccess: usersStack.trustedUser,
 });

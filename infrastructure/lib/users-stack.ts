@@ -13,42 +13,54 @@ export class UsersStack extends Stack {
     this.trustedUser = this.createTrustedUser();
     this.untrustedUser = this.createUntrustedUser();
     this.trustedRole = this.createTrustedRole();
-
-    const trustedUserAccessKey = new CfnAccessKey(this, 'trustedUserAccessKey', {
-      userName: this.trustedUser.userName,
-    });
-    const untrustedUserAccessKey = new CfnAccessKey(this, 'untrustedUserAccessKey', {
-      userName: this.untrustedUser.userName,
-    });
-
-    new CfnOutput(this, 'TrustedUserAccessKeyId', {
-      value: trustedUserAccessKey.accessKeyId,
-    });
-    new CfnOutput(this, 'TrustedUserSecretAccessKey', {
-      value: trustedUserAccessKey.accessKeySecretAccessKey,
-    });
-    new CfnOutput(this, 'UntrustedUserAccessKeyId', {
-      value: untrustedUserAccessKey.accessKeyId,
-    });
-    new CfnOutput(this, 'UntrustedUserSecretAccessKey', {
-      value: untrustedUserAccessKey.accessKeySecretAccessKey,
-    });
   }
 
   private createTrustedUser(): IUser {
+    // Create user
     const user = new User(this, 'TrustedUser', {
       userName: 'trusted-user',
     });
 
     user.attachManagedPolicy('arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess');
 
+    // Create access key
+    const accessKey = new CfnAccessKey(this, 'TrustedUserAccessKey', {
+      userName: user.userName,
+    });
+
+    // Create outputs
+    new CfnOutput(this, 'TrustedUserAccessKeyId', {
+      value: accessKey.accessKeyId,
+    });
+
+    new CfnOutput(this, 'TrustedUserSecretAccessKey', {
+      value: accessKey.accessKeySecretAccessKey,
+    });
+
     return user;
   }
 
   private createUntrustedUser(): IUser {
-    return new User(this, 'UntrustedUser', {
+    // Create user
+    const user = new User(this, 'UntrustedUser', {
       userName: 'untrusted-user',
     });
+
+    // Create access key
+    const accessKey = new CfnAccessKey(this, 'UntrustedUserAccessKey', {
+      userName: user.userName,
+    });
+
+    // Create outputs
+    new CfnOutput(this, 'UntrustedUserAccessKeyId', {
+      value: accessKey.accessKeyId,
+    });
+
+    new CfnOutput(this, 'UntrustedUserSecretAccessKey', {
+      value: accessKey.accessKeySecretAccessKey,
+    });
+
+    return user;
   }
 
   private createTrustedRole(): IRole {

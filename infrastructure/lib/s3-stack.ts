@@ -1,21 +1,20 @@
-import { IRole, IUser } from '@aws-cdk/aws-iam';
+import { IIdentity } from '@aws-cdk/aws-iam';
 import { Bucket } from '@aws-cdk/aws-s3';
 import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/cdk';
 
 export interface S3StackProps extends StackProps {
-    userWithReadAccess: IUser;
-    roleWithReadAccess: IRole;
+    readAccess: IIdentity[];
 }
 
 export class S3Stack extends Stack {
     constructor(scope: Construct, id: string, props: S3StackProps) {
         super(scope, id, props);
 
-        const bucket = new Bucket(this, 'Bucket', {
-        });
+        const bucket = new Bucket(this, 'Bucket');
 
-        bucket.grantRead(props.userWithReadAccess);
-        bucket.grantRead(props.roleWithReadAccess);
+        for (const identity of props.readAccess) {
+            bucket.grantRead(identity);
+        }
 
         new CfnOutput(this, 'BucketName', {
             value: bucket.bucketName,
