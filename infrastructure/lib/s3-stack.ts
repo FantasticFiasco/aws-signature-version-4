@@ -1,6 +1,7 @@
 import { IIdentity } from '@aws-cdk/aws-iam';
 import { Bucket } from '@aws-cdk/aws-s3';
-import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/cdk';
+import { CfnOutput, Construct, RemovalPolicy, Stack, StackProps } from '@aws-cdk/cdk';
+import { S3Item } from './s3-item';
 
 export interface S3StackProps extends StackProps {
     readAccess: IIdentity[];
@@ -10,11 +11,19 @@ export class S3Stack extends Stack {
     constructor(scope: Construct, id: string, props: S3StackProps) {
         super(scope, id, props);
 
-        const bucket = new Bucket(this, 'Bucket');
+        const bucket = new Bucket(this, 'Bucket', {
+            removalPolicy: RemovalPolicy.Destroy,
+        });
 
         for (const identity of props.readAccess) {
             bucket.grantRead(identity);
         }
+
+        new S3Item(this, 'S3ItemFoo', {
+            bucket,
+            key: 'foo',
+            value: 'This is foo',
+        });
 
         new CfnOutput(this, 'BucketName', {
             value: bucket.bucketName,
