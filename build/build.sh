@@ -37,22 +37,22 @@ echo "[test] test started"
 [ "${IS_PULL_REQUEST}" = true ] && TEST_FILTER="--filter Category!=Integration"
 echo "[test] test filter: ${TEST_FILTER}"
 
-dotnet tool install --global coverlet.console
-coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll \
-    --target "dotnet" \
-    --targetargs "test --configuration Release --no-build ${TEST_FILTER}" \
-    --exclude "[xunit.*]*" \
-    --format opencover
+# dotnet tool install --global coverlet.console
+# coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll \
+#     --target "dotnet" \
+#     --targetargs "test --configuration Release --no-build ${TEST_FILTER}" \
+#     --exclude "[xunit.*]*" \
+#     --format opencover
 
 # Codecov expects environment variables "CI" and "APPVEYOR" to be "True", while it on AppVeyor
 # Ubuntu images are specified as "true" (see https://www.appveyor.com/docs/environment-variables/
 # for reference). Lets remedy this by settig the environment variables ourself.
-if [ "${IS_PULL_REQUEST}" = false ]; then
-    echo "[test] upload coverage report"
-    export CI="True"
-    export APPVEYOR="True"
-    bash <(curl -s https://codecov.io/bash)
-fi
+# if [ "${IS_PULL_REQUEST}" = false ]; then
+#     echo "[test] upload coverage report"
+#     export CI="True"
+#     export APPVEYOR="True"
+#     bash <(curl -s https://codecov.io/bash)
+# fi
 
 # -------------------------------------------------------------------------------------------------
 # INFRASTRUCTURE
