@@ -39,7 +39,7 @@
     "@aws-cdk/aws-route53" "^0.33.0"
     "@aws-cdk/cdk" "^0.33.0"
 
-"@aws-cdk/aws-cloudformation@^0.33.0":
+"@aws-cdk/aws-cloudformation@0.33.0", "@aws-cdk/aws-cloudformation@^0.33.0":
   version "0.33.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cloudformation/-/aws-cloudformation-0.33.0.tgz#1d40a5dd6794c4fc64282fd8a96b26a61c977ef3"
   integrity sha512-x43Ynmz6s/7GnWpmdUZAsg0uK2bQVJxDezVeP6fTPmnXabC0ZB38/tiB7BCafOwRcKAZTeKVWQLX0+nEKmXaBw==
@@ -139,7 +139,7 @@
     "@aws-cdk/cdk" "^0.33.0"
     "@aws-cdk/cx-api" "^0.33.0"
 
-"@aws-cdk/aws-s3@^0.33.0":
+"@aws-cdk/aws-s3@0.33.0", "@aws-cdk/aws-s3@^0.33.0":
   version "0.33.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-s3/-/aws-s3-0.33.0.tgz#0d2a9d7de5269ebbd93e6518358363d4be5fdb72"
   integrity sha512-9HWVrlzup8o9GbpjPxX9YKtiRj034pVf+MteVWkiRccVy07BGL8i4d/dpCJDiNsOxaFH4qXCrgdbpUzq/tIcyw==
