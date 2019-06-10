@@ -19,10 +19,16 @@ export class S3Stack extends Stack {
             bucket.grantRead(identity);
         }
 
-        new S3Item(this, 'S3ItemFoo', {
+        new S3Item(this, 'FooItem', {
             bucket,
-            key: 'foo',
+            key: 'foo.txt',
             value: 'This is foo',
+        });
+
+        new S3Item(this, 'BarItem', {
+            bucket,
+            key: 'foo/bar.txt',
+            value: 'This is bar',
         });
 
         new CfnOutput(this, 'BucketName', {
