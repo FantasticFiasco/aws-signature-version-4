@@ -2,12 +2,12 @@
 import 'source-map-support/register';
 
 import { App } from '@aws-cdk/cdk';
-import { ApiGatewayStack, S3Stack, UsersStack } from '../lib';
+import { ApiGatewayStack, PrincipalsStack, S3Stack } from '../lib';
 
 const app = new App();
 
-const usersStack = new UsersStack(app, 'UsersStack', {
-    stackName: 'SigV4-Users',
+const usersStack = new PrincipalsStack(app, 'PrincipalsStack', {
+    stackName: 'SigV4-Principals',
 });
 
 new ApiGatewayStack(app, 'ApiGatewayStack', {

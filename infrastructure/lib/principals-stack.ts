@@ -1,7 +1,7 @@
 import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from '@aws-cdk/aws-iam';
 import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/cdk';
 
-export class UsersStack extends Stack {
+export class PrincipalsStack extends Stack {
 
   public readonly trustedUser: IUser;
   public readonly untrustedUser: IUser;
