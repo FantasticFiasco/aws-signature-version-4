@@ -23,7 +23,7 @@
     "@aws-cdk/aws-lambda" "^0.34.0"
     "@aws-cdk/cdk" "^0.34.0"
 
-"@aws-cdk/aws-certificatemanager@^0.34.0":
+"@aws-cdk/aws-certificatemanager@0.34.0", "@aws-cdk/aws-certificatemanager@^0.34.0":
   version "0.34.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-certificatemanager/-/aws-certificatemanager-0.34.0.tgz#0a7aa554726cd8c311d2c4f68588146605a60c54"
   integrity sha512-tp0w0ifzlUPkaAYR9dJJZ8iwxgqucrRHXK5HoG5PY8WcBH1xSAIm6MtfP5R7Dh9s5hUwg1hz8wygEerN90SrzA==
@@ -124,7 +124,7 @@
     "@aws-cdk/aws-iam" "^0.34.0"
     "@aws-cdk/cdk" "^0.34.0"
 
-"@aws-cdk/aws-route53@^0.34.0":
+"@aws-cdk/aws-route53@0.34.0", "@aws-cdk/aws-route53@^0.34.0":
   version "0.34.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-route53/-/aws-route53-0.34.0.tgz#114e1bdf804b9c6b2d822381aa98c8ee15c82db9"
   integrity sha512-jf8SF4wppJsRPCoVmvd6/votGxlbibDqlGP26IGLztIurAZ3ddxdXLHobDIaj1Y+/+8O6FnpFclmO2LNtGXL2g==
