@@ -73,6 +73,10 @@ export class PrincipalsStack extends Stack {
       .addActions('execute-api:Invoke', 'execute-api:ManageConnections')
       .addResource('arn:aws:execute-api:*:*:*'));
 
+    new CfnOutput(this, 'TrustedRoleArn', {
+      value: role.roleArn,
+    });
+
     return role;
   }
 }
