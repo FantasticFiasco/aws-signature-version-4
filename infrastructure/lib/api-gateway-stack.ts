@@ -33,20 +33,20 @@ export class ApiGatewayStack extends Stack {
             authorizationType: AuthorizationType.IAM,
         });
 
-        // Create Route53 records
+        // Get the existing hosted zone
         const hostedZone = new HostedZoneProvider(this, {
             domainName: 'fantasticfiasco.com',
         }).findAndImport(this, 'HostedZone');
 
-        // Create certificate
+       // Create certificate
         const certificate = new DnsValidatedCertificate(this, 'Certificate', {
-            domainName: 'sigv4.fantasticfiasco.com',
+            domainName: 'www.sigv4.fantasticfiasco.com',
             hostedZone,
         });
 
         // Create custom domain name
         new CfnDomainNameV2(this, 'ApiCustomDomainName', {
-            domainName: 'sigv4.fantasticfiasco.com',
+            domainName: 'www.sigv4.fantasticfiasco.com',
             domainNameConfigurations: [
                 {
                     certificateArn: certificate.certificateArn,
@@ -55,13 +55,17 @@ export class ApiGatewayStack extends Stack {
             ],
         });
 
-        // const target = AddressRecordTarget.fromAlias({});
-
-        // new ARecord(this, 'ARecord', {
-        //     recordName: 'sigv4.fantasticfiasco.com',
-        //     target: AddressRecordTarget.fromAlias(new Alias)
-        //     zone: hostedZone,
-        // });
-
+        // TODO: AWS CDK cannot create the ARecord pointing towards the custom domain name.
+        //       The following steps will have to be done manually.
+        //         1. Log into The AWS Console
+        //         2. Navigate to API Gateway and copy the Target Domain Name from the custom
+        //            domain name .
+        //         3. Navigate to Route 53 and create a new record set with the following arguments
+        //           - Name: www.sigv4.fantasticfiasco.com
+        //           - Type: A - IPv4 Address
+        //           - Alias: Yes
+        //           - Alias Target: <Target Domain Name>
+        //           - Routing policy: Simple
+        //           - Evaluate Target Health: No
     }
 }
