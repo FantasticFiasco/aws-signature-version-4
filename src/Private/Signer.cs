@@ -19,7 +19,7 @@ namespace AwsSignatureVersion4.Private
             if (httpClient == null) throw new ArgumentNullException(nameof(httpClient));
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (request.Headers.Contains(HeaderKeys.XAmzDateHeader)) throw new ArgumentException(ErrorMessages.XAmzDateHeaderExists, nameof(request));
-            if (request.Headers.Authorization != null)  throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
+            if (request.Headers.Authorization != null) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (request.Headers.Contains(HeaderKeys.AuthorizationHeader)) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (regionName == null) throw new ArgumentNullException(nameof(regionName));
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
@@ -58,6 +58,9 @@ namespace AwsSignatureVersion4.Private
 
             // Add the authorization header
             request.Headers.TryAddWithoutValidation(HeaderKeys.AuthorizationHeader, authorizationHeader);
+
+            // Remove the default headers again, they are inserted by httpClient itself
+            RemoveDefaultHeaders(httpClient, request);
 
             return new Result(canonicalRequest, stringToSign, authorizationHeader);
         }
@@ -103,6 +106,19 @@ namespace AwsSignatureVersion4.Private
                 if (!request.Headers.Contains(header.Key))
                 {
                     request.AddHeaders(header.Key, header.Value);
+                }
+            }
+        }
+
+        private static void RemoveDefaultHeaders(HttpClient httpClient, HttpRequestMessage request)
+        {
+            if (httpClient.DefaultRequestHeaders == null) return;
+
+            foreach (var header in httpClient.DefaultRequestHeaders)
+            {
+                if (request.Headers.Contains(header.Key))
+                {
+                    request.Headers.Remove(header.Key);
                 }
             }
         }
