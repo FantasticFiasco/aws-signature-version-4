@@ -44,7 +44,7 @@ export class ApiGatewayStack extends Stack {
             hostedZone,
         });
 
-        // TODO: The following steps are manual due do lacking support in the AWS SDK
+        // TODO: The following steps are manual due do lacking support in the AWS SDK.
         //
         // Create a custom domain name:
         //   1. Navigate to API Gateway in the console
@@ -67,7 +67,7 @@ export class ApiGatewayStack extends Stack {
         //     - Name: www.sigv4.fantasticfiasco.com
         //     - Type: A - IPv4 Address
         //     - Alias: Yes
-        //     - Alias Target: <Target Domain Name>
+        //     - Alias Target: <target domain name>
         //     - Routing policy: Simple
         //     - Evaluate Target Health: No
         //   3. Wait for about  60 seconds, it may take that long for the changes to be applied
