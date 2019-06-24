@@ -1,4 +1,4 @@
-import { AuthorizationType, CfnDomainNameV2, LambdaRestApi } from '@aws-cdk/aws-apigateway';
+import { AuthorizationType, LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { DnsValidatedCertificate } from '@aws-cdk/aws-certificatemanager';
 import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
 import { HostedZoneProvider } from '@aws-cdk/aws-route53';
@@ -39,33 +39,37 @@ export class ApiGatewayStack extends Stack {
         }).findAndImport(this, 'HostedZone');
 
        // Create certificate
-        const certificate = new DnsValidatedCertificate(this, 'Certificate', {
+        new DnsValidatedCertificate(this, 'Certificate', {
             domainName: 'www.sigv4.fantasticfiasco.com',
             hostedZone,
         });
 
-        // Create custom domain name
-        new CfnDomainNameV2(this, 'ApiCustomDomainName', {
-            domainName: 'www.sigv4.fantasticfiasco.com',
-            domainNameConfigurations: [
-                {
-                    certificateArn: certificate.certificateArn,
-                    endpointType: 'REGIONAL',
-                },
-            ],
-        });
-
-        // TODO: AWS CDK cannot create the ARecord pointing towards the custom domain name.
-        //       The following steps will have to be done manually.
-        //         1. Log into The AWS Console
-        //         2. Navigate to API Gateway and copy the Target Domain Name from the custom
-        //            domain name .
-        //         3. Navigate to Route 53 and create a new record set with the following arguments
-        //           - Name: www.sigv4.fantasticfiasco.com
-        //           - Type: A - IPv4 Address
-        //           - Alias: Yes
-        //           - Alias Target: <Target Domain Name>
-        //           - Routing policy: Simple
-        //           - Evaluate Target Health: No
+        // TODO: The following steps are manual due do lacking support in the AWS SDK
+        //
+        // Create a custom domain name:
+        //   1. Navigate to API Gateway in the console
+        //   2. Select 'Custom Domain Names'
+        //   3. Click 'Create Custom Domain Name'
+        //   4. Create custom domain name with the following arguments:
+        //     - HTTP or WebSocket protocol: HTTP
+        //     - Domain name: www.sigv4.fantasticfiasco.com
+        //     - Security policy: TLS 1.2
+        //     - Endpoint configuration: Regional
+        //     - ACM Certificate: <created certificate>
+        //   5. Add a base path mapping with the following arguments:
+        //     - Path: '/'
+        //     - Destination: <SignatureVersion4>
+        //     - Stage: <prod>
+        //
+        // Create DNS record
+        //   1. Log into The AWS Console
+        //   2. Navigate to Route 53 and create a new record set with the following arguments:
+        //     - Name: www.sigv4.fantasticfiasco.com
+        //     - Type: A - IPv4 Address
+        //     - Alias: Yes
+        //     - Alias Target: <Target Domain Name>
+        //     - Routing policy: Simple
+        //     - Evaluate Target Health: No
+        //   3. Wait for about  60 seconds, it may take that long for the changes to be applied
     }
 }
