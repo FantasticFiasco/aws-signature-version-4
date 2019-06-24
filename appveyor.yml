@@ -5,17 +5,17 @@ stack: node 10
 environment:
   AWS_REGION: eu-west-1
   AWS_USER_ACCESS_KEY_ID:
-    secure: pnm+FWaswoLIOt3ykO3A6FyvuSARzxrbsZDg+7itZaM=
+    secure: PQnvIUHDq17s3H7RsYa0pk0QOlTq+D9Zri1jW0PNvFY=
   AWS_USER_SECRET_ACCESS_KEY:
-    secure: x+Ajc49H+InLMCt5ISk5Qmx8aR6eSCplnQywpbph0gZweacIHYD40FrMNw6lx9IE
+    secure: 19+XZSLTI5PdtGtVzo6bvSdgESvW8cb02iWTaAKjDmuOFQHiRxsVK15VZeU7nTdD
   AWS_ROLE_ACCESS_KEY_ID:
-    secure: K/5vD3fMzsV+X3kDlKnbk9fRkKCyM/WgUoNIPep3xYQ=
+    secure: G1CuP/fmqxkIACbLc9UlQk/xTnn0hkT2D1h745wm71w=
   AWS_ROLE_SECRET_ACCESS_KEY:
-    secure: csP2gYTF0PwaCxRIF3ICdxz/S/fJnfZL3uBpnzKfPochjIujbr03285G5812AadQ
+    secure: qUY0UIc8LSrxKZc7GFpH5TWvi5u3qRdj03J+eLgqXwBv1LfUQJSwpfdiZ7f5lJz3
   AWS_ROLE_ARN:
     secure: CVjaIRrwBKMLa+ZIqgA4E4oiK9sUOGZncU78nup5xam1Lrl0RQgOTiEqTlfonNKP
   AWS_API_GATEWAY_URL:
-    secure: hTaLsR3b2rnQzLUxQU+8Nm90jTkMohPqlXWHhgvhAeuVASndHiZ55FVW0nQBcjz6gc+CrLIyCM4wf3JdUl6SIA==
+    secure: bwh7XZg8Kv/Q1eQ/KrXij51CvsKnzrplc/miKaBscohWX0WMuRNRLv+dfIp7N1fa/DkALSRZv/3GmS/XgK+qQw==
   CODECOV_TOKEN:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
 
