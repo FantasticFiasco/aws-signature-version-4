@@ -15,7 +15,7 @@ environment:
   AWS_ROLE_ARN:
     secure: CVjaIRrwBKMLa+ZIqgA4E4oiK9sUOGZncU78nup5xam1Lrl0RQgOTiEqTlfonNKP
   AWS_API_GATEWAY_URL:
-    secure: hTaLsR3b2rnQzLUxQU+8Nm90jTkMohPqlXWHhgvhAeuVASndHiZ55FVW0nQBcjz6gc+CrLIyCM4wf3JdUl6SIA==
+    secure: ukX4J8lpha/AR7ParjXb7X4Qusxx2oCiIGCvsh45VGhg8vzrMBp+0FZi7l1b/Crm
   CODECOV_TOKEN:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
 
