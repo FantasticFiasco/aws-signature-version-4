@@ -1,6 +1,6 @@
 import { IIdentity } from '@aws-cdk/aws-iam';
 import { Bucket } from '@aws-cdk/aws-s3';
-import { CfnOutput, Construct, RemovalPolicy, Stack, StackProps } from '@aws-cdk/cdk';
+import { CfnOutput, Construct, RemovalPolicy, Stack, StackProps } from '@aws-cdk/core';
 import { S3Item } from './s3-item';
 
 export interface S3StackProps extends StackProps {
@@ -12,7 +12,7 @@ export class S3Stack extends Stack {
         super(scope, id, props);
 
         const bucket = new Bucket(this, 'Bucket', {
-            removalPolicy: RemovalPolicy.Destroy,
+            removalPolicy: RemovalPolicy.DESTROY,
         });
 
         for (const identity of props.readAccess) {

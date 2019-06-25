@@ -1,6 +1,6 @@
 import { AwsCustomResource } from '@aws-cdk/aws-cloudformation';
 import { IBucket } from '@aws-cdk/aws-s3';
-import { Construct } from '@aws-cdk/cdk';
+import { Construct } from '@aws-cdk/core';
 
 export interface S3ItemProps {
     bucket: IBucket;
