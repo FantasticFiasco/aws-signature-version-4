@@ -112,7 +112,7 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Fact]
-        public async Task RespectDefaultRequestHeaders()
+        public async Task RespectDefaultRequestHeader()
         {
             // Arrange
             httpClient.DefaultRequestHeaders.Add(HeaderName, ExpectedHeaderValue);
