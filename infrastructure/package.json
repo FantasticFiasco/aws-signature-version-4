@@ -18,17 +18,17 @@
     "lint": "tslint ./**/*.ts --exclude ./**/*.d.ts"
   },
   "dependencies": {
-    "@aws-cdk/aws-apigateway": "0.35.0",
-    "@aws-cdk/aws-cloudformation": "0.35.0",
-    "@aws-cdk/aws-iam": "0.35.0",
-    "@aws-cdk/aws-lambda": "0.35.0",
-    "@aws-cdk/aws-s3": "0.35.0",
+    "@aws-cdk/aws-apigateway": "0.36.0",
+    "@aws-cdk/aws-cloudformation": "0.36.0",
+    "@aws-cdk/aws-iam": "0.36.0",
+    "@aws-cdk/aws-lambda": "0.36.0",
+    "@aws-cdk/aws-s3": "0.36.0",
     "@aws-cdk/cdk": "0.35.0",
     "source-map-support": "0.5.12"
   },
   "devDependencies": {
     "@types/node": "8.10.49",
-    "aws-cdk": "0.35.0",
+    "aws-cdk": "0.36.0",
     "rimraf": "2.6.3",
     "tslint": "5.18.0",
     "typescript": "3.5.2"
