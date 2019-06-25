@@ -21,7 +21,9 @@ export class UsersStack extends Stack {
       userName: 'trusted-user',
     });
 
-    user.attachManagedPolicy('arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess');
+    user.addManagedPolicy({
+      managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess',
+    });
 
     // Create access key
     const accessKey = new CfnAccessKey(this, 'TrustedUserAccessKey', {
@@ -30,11 +32,11 @@ export class UsersStack extends Stack {
 
     // Create outputs
     new CfnOutput(this, 'TrustedUserAccessKeyId', {
-      value: accessKey.accessKeyId,
+      value: accessKey.userName,
     });
 
     new CfnOutput(this, 'TrustedUserSecretAccessKey', {
-      value: accessKey.accessKeySecretAccessKey,
+      value: accessKey.attrSecretAccessKey,
     });
 
     return user;
@@ -53,11 +55,11 @@ export class UsersStack extends Stack {
 
     // Create outputs
     new CfnOutput(this, 'UntrustedUserAccessKeyId', {
-      value: accessKey.accessKeyId,
+      value: accessKey.userName,
     });
 
     new CfnOutput(this, 'UntrustedUserSecretAccessKey', {
-      value: accessKey.accessKeySecretAccessKey,
+      value: accessKey.attrSecretAccessKey,
     });
 
     return user;
@@ -66,12 +68,15 @@ export class UsersStack extends Stack {
   private createTrustedRole(): IRole {
     const role = new Role(this, 'ApiGatewayRole', {
       assumedBy: this.untrustedUser,
-      roleName: 'ApiGatewayInvoke',
+      roleName: {
+        value: 'ApiGatewayInvoke',
+      },
     });
 
-    role.addToPolicy(new PolicyStatement()
-      .addActions('execute-api:Invoke', 'execute-api:ManageConnections')
-      .addResource('arn:aws:execute-api:*:*:*'));
+    role.addToPolicy(new PolicyStatement({
+      actions: [ 'execute-api:Invoke', 'execute-api:ManageConnections' ],
+      resources: [ 'arn:aws:execute-api:*:*:*' ],
+    }));
 
     return role;
   }
