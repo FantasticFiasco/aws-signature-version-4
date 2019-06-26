@@ -19,7 +19,7 @@ namespace AwsSignatureVersion4.Private
     public static class CanonicalRequest
     {
         /// <summary>
-        /// Gets or sets instance capable of probing the environment.
+        /// Gets or sets an instance capable of probing the environment.
         /// </summary>
         public static EnvironmentProbe EnvironmentProbe { get; set; } = new EnvironmentProbe();
 
