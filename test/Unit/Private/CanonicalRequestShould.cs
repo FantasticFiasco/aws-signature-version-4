@@ -152,39 +152,6 @@ namespace AwsSignatureVersion4.Unit.Private
             actual["some-header-name"].ShouldBe(new[] { expected });
         }
 
-        [Fact]
-        public void RespectDefaultHeader()
-        {
-            // Arrange
-            var headers = new HttpRequestMessage().Headers;
-
-            var defaultHeaders = new HttpRequestMessage().Headers;
-            defaultHeaders.Add("some-header-name", "some-header-value");
-
-            // Act
-            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
-
-            // Assert
-            actual["some-header-name"].ShouldBe(new[] { "some-header-value" });
-        }
-
-        [Fact]
-        public void IgnoreDuplicateDefaultHeader()
-        {
-            // Arrange
-            var headers = new HttpRequestMessage().Headers;
-            headers.Add("some-header-name", "some-header-value");
-
-            var defaultHeaders = new HttpRequestMessage().Headers;
-            defaultHeaders.Add("some-header-name", "some-ignored-header-value");
-
-            // Act
-            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
-
-            // Assert
-            actual["some-header-name"].ShouldBe(new[] { "some-header-value" });
-        }
-
         [Theory]
         [InlineData("?a=1&b=2&c=3", new[] { "a", "b", "c" })]
         [InlineData("?a=1&c=3&b=2", new[] { "a", "b", "c" })]
