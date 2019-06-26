@@ -13,10 +13,6 @@ namespace AwsSignatureVersion4.Unit.Private
 {
     public class SignatureVersion4Should : IClassFixture<TestSuiteContext>, IDisposable
     {
-        private const string HeaderName = "Some-Header";
-        private const string IgnoredHeaderValue = "Should be ignored";
-        private const string ExpectedHeaderValue = "Should be expected";
-
         private readonly TestSuiteContext context;
         private readonly HttpClient httpClient;
 
@@ -109,49 +105,6 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Assert
             request.RequestUri.ShouldBe(new Uri(expectedRequestUri));
-        }
-
-        [Fact]
-        public async Task RespectDefaultRequestHeader()
-        {
-            // Arrange
-            httpClient.DefaultRequestHeaders.Add(HeaderName, ExpectedHeaderValue);
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
-
-            // Act
-            await Signer.SignAsync(
-                httpClient,
-                request,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
-
-            // Assert
-            request.Headers.GetValues(HeaderName).Single().ShouldBe(ExpectedHeaderValue);
-        }
-
-        [Fact]
-        public async Task IgnoreDuplicateDefaultRequestHeader()
-        {
-            // Arrange
-            httpClient.DefaultRequestHeaders.Add(HeaderName, IgnoredHeaderValue);
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
-            request.Headers.Add(HeaderName, ExpectedHeaderValue);
-
-            // Act
-            await Signer.SignAsync(
-                httpClient,
-                request,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
-
-            // Assert
-            request.Headers.GetValues(HeaderName).Single().ShouldBe(ExpectedHeaderValue);
         }
 
         [Fact]

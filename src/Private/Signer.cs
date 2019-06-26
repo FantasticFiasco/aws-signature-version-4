@@ -27,7 +27,6 @@ namespace AwsSignatureVersion4.Private
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             UpdateRequestUri(httpClient, request);
-            AddDefaultHeaders(httpClient, request);
 
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());
@@ -37,7 +36,7 @@ namespace AwsSignatureVersion4.Private
             request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri.Host);
 
             // Build the canonical request
-            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(request);
+            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(request, httpClient.DefaultRequestHeaders);
 
             // Build the string to sign
             var (stringToSign, credentialScope) = StringToSign.Build(
@@ -58,9 +57,6 @@ namespace AwsSignatureVersion4.Private
 
             // Add the authorization header
             request.Headers.TryAddWithoutValidation(HeaderKeys.AuthorizationHeader, authorizationHeader);
-
-            // Remove the default headers again, they are inserted by httpClient itself
-            RemoveDefaultHeaders(httpClient, request);
 
             return new Result(canonicalRequest, stringToSign, authorizationHeader);
         }
@@ -91,35 +87,6 @@ namespace AwsSignatureVersion4.Private
             if (requestUri != null)
             {
                 request.RequestUri = requestUri;
-            }
-        }
-
-        private static void AddDefaultHeaders(HttpClient httpClient, HttpRequestMessage request)
-        {
-            if (httpClient.DefaultRequestHeaders == null) return;
-
-            foreach (var header in httpClient.DefaultRequestHeaders)
-            {
-                // Only add header values if they're not already set on the message. Note that
-                // we don't merge collections: If both the default headers and the message have
-                // set some values for a certain header, then we don't try to merge the values.
-                if (!request.Headers.Contains(header.Key))
-                {
-                    request.AddHeaders(header.Key, header.Value);
-                }
-            }
-        }
-
-        private static void RemoveDefaultHeaders(HttpClient httpClient, HttpRequestMessage request)
-        {
-            if (httpClient.DefaultRequestHeaders == null) return;
-
-            foreach (var header in httpClient.DefaultRequestHeaders)
-            {
-                if (request.Headers.Contains(header.Key))
-                {
-                    request.Headers.Remove(header.Key);
-                }
             }
         }
     }

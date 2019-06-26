@@ -30,7 +30,9 @@ namespace AwsSignatureVersion4.Private
         /// <returns>
         /// The first value is the canonical request, the second value is the signed headers.
         /// </returns>
-        public static async Task<(string, string)> BuildAsync(HttpRequestMessage request)
+        public static async Task<(string, string)> BuildAsync(
+            HttpRequestMessage request,
+            HttpRequestHeaders defaultHeaders)
         {
             var builder = new StringBuilder();
 
@@ -102,7 +104,7 @@ namespace AwsSignatureVersion4.Private
             //   PLEASE NOTE: Microsoft has chosen to separate the header values with ", ", not ","
             //   as defined by the Canonical Request algorithm.
             // - Append a new line ('\n').
-            var sortedHeaders = SortHeaders(request.Headers);
+            var sortedHeaders = SortHeaders(request.Headers, defaultHeaders);
 
             foreach (var header in sortedHeaders)
             {
@@ -167,15 +169,22 @@ namespace AwsSignatureVersion4.Private
 
             return sortedQueryParameters;
         }
-        
-        public static SortedDictionary<string, List<string>> SortHeaders(HttpRequestHeaders headers)
+
+        public static SortedDictionary<string, List<string>> SortHeaders(
+            HttpRequestHeaders headers,
+            HttpRequestHeaders defaultHeaders)
         {
             var sortedHeaders = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
 
-            foreach (var header in headers)
+            string FormatHeaderName(string headerName)
+            {
+                return headerName.ToLowerInvariant();
+            }
+
+            void AddSortedHeader(KeyValuePair<string, IEnumerable<string>> header)
             {
                 // Convert header name to lowercase
-                var headerName = header.Key.ToLowerInvariant();
+                var headerName = FormatHeaderName(header.Key);
 
                 // Create header if it doesn't already exist
                 if (!sortedHeaders.TryGetValue(headerName, out var headerValues))
@@ -187,6 +196,27 @@ namespace AwsSignatureVersion4.Private
                 // Remove leading and trailing header value spaces, and convert sequential spaces
                 // into a single space
                 headerValues.AddRange(header.Value.Select(headerValue => headerValue.Trim().NormalizeWhiteSpace()));
+            }
+
+            // Add headers
+            foreach (var header in headers)
+            {
+                AddSortedHeader(header);
+            }
+
+            // Add default headers
+            if (defaultHeaders != null)
+            {
+                foreach (var defaultHeader in defaultHeaders)
+                {
+                    // Only add header values if they're not already set on the message. Note that
+                    // we don't merge collections: If both the default headers and the message have
+                    // set some values for a certain header, then we don't try to merge the values.
+                    if (!sortedHeaders.ContainsKey(FormatHeaderName(defaultHeader.Key)))
+                    {
+                        AddSortedHeader(defaultHeader);
+                    }
+                }
             }
 
             return sortedHeaders;

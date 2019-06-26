@@ -61,7 +61,7 @@ namespace AwsSignatureVersion4.Unit.Private
             scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, context.UtcNow.ToIso8601BasicDateTime());
 
             // Act
-            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(scenario.Request);
+            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(scenario.Request, null);
 
             // Assert
             canonicalRequest.ShouldBe(scenario.ExpectedCanonicalRequest);
@@ -79,7 +79,7 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add(headerName, "some header value");
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers);
+            var actual = CanonicalRequest.SortHeaders(headers, null);
 
             // Assert
             actual.Keys.ShouldBe(new[] { expected });
@@ -103,7 +103,7 @@ namespace AwsSignatureVersion4.Unit.Private
             }
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers);
+            var actual = CanonicalRequest.SortHeaders(headers, null);
 
             // Assert
             actual.Keys.ShouldBe(expected);
@@ -126,7 +126,7 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers);
+            var actual = CanonicalRequest.SortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
@@ -146,10 +146,43 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers);
+            var actual = CanonicalRequest.SortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
+        }
+
+        [Fact]
+        public void RespectDefaultHeader()
+        {
+            // Arrange
+            var headers = new HttpRequestMessage().Headers;
+
+            var defaultHeaders = new HttpRequestMessage().Headers;
+            defaultHeaders.Add("some-header-name", "some-header-value");
+
+            // Act
+            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
+
+            // Assert
+            actual["some-header-name"].ShouldBe(new[] { "some-header-value" });
+        }
+
+        [Fact]
+        public void IgnoreDuplicateDefaultHeader()
+        {
+            // Arrange
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add("some-header-name", "some-header-value");
+
+            var defaultHeaders = new HttpRequestMessage().Headers;
+            defaultHeaders.Add("some-header-name", "some-ignored-header-value");
+
+            // Act
+            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
+
+            // Assert
+            actual["some-header-name"].ShouldBe(new[] { "some-header-value" });
         }
 
         [Theory]
