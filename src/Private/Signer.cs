@@ -19,7 +19,7 @@ namespace AwsSignatureVersion4.Private
             if (httpClient == null) throw new ArgumentNullException(nameof(httpClient));
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (request.Headers.Contains(HeaderKeys.XAmzDateHeader)) throw new ArgumentException(ErrorMessages.XAmzDateHeaderExists, nameof(request));
-            if (request.Headers.Authorization != null)  throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
+            if (request.Headers.Authorization != null) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (request.Headers.Contains(HeaderKeys.AuthorizationHeader)) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (regionName == null) throw new ArgumentNullException(nameof(regionName));
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
@@ -27,7 +27,6 @@ namespace AwsSignatureVersion4.Private
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             UpdateRequestUri(httpClient, request);
-            AddDefaultHeaders(httpClient, request);
 
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());
@@ -37,7 +36,7 @@ namespace AwsSignatureVersion4.Private
             request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri.Host);
 
             // Build the canonical request
-            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(request);
+            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(request, httpClient.DefaultRequestHeaders);
 
             // Build the string to sign
             var (stringToSign, credentialScope) = StringToSign.Build(
@@ -88,22 +87,6 @@ namespace AwsSignatureVersion4.Private
             if (requestUri != null)
             {
                 request.RequestUri = requestUri;
-            }
-        }
-
-        private static void AddDefaultHeaders(HttpClient httpClient, HttpRequestMessage request)
-        {
-            if (httpClient.DefaultRequestHeaders == null) return;
-
-            foreach (var header in httpClient.DefaultRequestHeaders)
-            {
-                // Only add header values if they're not already set on the message. Note that
-                // we don't merge collections: If both the default headers and the message have
-                // set some values for a certain header, then we don't try to merge the values.
-                if (!request.Headers.Contains(header.Key))
-                {
-                    request.AddHeaders(header.Key, header.Value);
-                }
             }
         }
     }

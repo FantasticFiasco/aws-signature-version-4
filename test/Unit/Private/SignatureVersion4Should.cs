@@ -108,29 +108,6 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Fact]
-        public async Task RespectDefaultRequestHeaders()
-        {
-            // Arrange
-            httpClient.DefaultRequestHeaders.Add("Some-Header-1", "Some value 1");
-            httpClient.DefaultRequestHeaders.Add("Some-Header-2", "Some value 2");
-
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
-
-            // Act
-            await Signer.SignAsync(
-                httpClient,
-                request,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
-
-            // Assert
-            request.Headers.GetValues("Some-Header-1").Single().ShouldBe("Some value 1");
-            request.Headers.GetValues("Some-Header-2").Single().ShouldBe("Some value 2");
-        }
-
-        [Fact]
         public async Task ThrowArgumentExceptionGivenXAmzDateHeader()
         {
             // Arrange

@@ -19,6 +19,11 @@ namespace AwsSignatureVersion4.Private
     public static class CanonicalRequest
     {
         /// <summary>
+        /// Gets or sets an instance capable of probing the environment.
+        /// </summary>
+        public static EnvironmentProbe EnvironmentProbe { get; set; } = new EnvironmentProbe();
+
+        /// <summary>
         /// Gets or sets the header value separator. The default value is ", " and it is defined in
         /// <see href="https://github.com/dotnet/corefx/blob/master/src/System.Net.Http/src/System/Net/Http/Headers/HttpHeaderParser.cs">
         /// HttpHeaderParser</see> in the .NET source code. It is used when serializing a header
@@ -30,7 +35,9 @@ namespace AwsSignatureVersion4.Private
         /// <returns>
         /// The first value is the canonical request, the second value is the signed headers.
         /// </returns>
-        public static async Task<(string, string)> BuildAsync(HttpRequestMessage request)
+        public static async Task<(string, string)> BuildAsync(
+            HttpRequestMessage request,
+            HttpRequestHeaders defaultHeaders)
         {
             var builder = new StringBuilder();
 
@@ -102,7 +109,7 @@ namespace AwsSignatureVersion4.Private
             //   PLEASE NOTE: Microsoft has chosen to separate the header values with ", ", not ","
             //   as defined by the Canonical Request algorithm.
             // - Append a new line ('\n').
-            var sortedHeaders = SortHeaders(request.Headers);
+            var sortedHeaders = SortHeaders(request.Headers, defaultHeaders);
 
             foreach (var header in sortedHeaders)
             {
@@ -167,15 +174,21 @@ namespace AwsSignatureVersion4.Private
 
             return sortedQueryParameters;
         }
-        
-        public static SortedDictionary<string, List<string>> SortHeaders(HttpRequestHeaders headers)
+
+        public static SortedDictionary<string, List<string>> SortHeaders(
+            HttpRequestHeaders headers,
+            HttpRequestHeaders defaultHeaders)
         {
             var sortedHeaders = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
 
-            foreach (var header in headers)
+            string FormatHeaderName(string headerName)
             {
-                // Convert header name to lowercase
-                var headerName = header.Key.ToLowerInvariant();
+                return headerName.ToLowerInvariant();
+            }
+
+            void AddHeader(KeyValuePair<string, IEnumerable<string>> header)
+            {
+                var headerName = FormatHeaderName(header.Key);
 
                 // Create header if it doesn't already exist
                 if (!sortedHeaders.TryGetValue(headerName, out var headerValues))
@@ -187,6 +200,49 @@ namespace AwsSignatureVersion4.Private
                 // Remove leading and trailing header value spaces, and convert sequential spaces
                 // into a single space
                 headerValues.AddRange(header.Value.Select(headerValue => headerValue.Trim().NormalizeWhiteSpace()));
+            }
+
+            void AddDefaultDotnetHeaders()
+            {
+                foreach (var defaultHeader in defaultHeaders)
+                {
+                    // On .NET Framework or .NET Core we only add header values if they're not
+                    // already added on the message. Note that we don't merge collections: If both
+                    // the default headers and the message have set some values for a certain
+                    // header, then we don't try to merge the values.
+                    if (!sortedHeaders.ContainsKey(FormatHeaderName(defaultHeader.Key)))
+                    {
+                        AddHeader(defaultHeader);
+                    }
+                }
+            }
+
+            void AddDefaultMonoHeaders()
+            {
+                foreach (var defaultHeader in defaultHeaders)
+                {
+                    // On Mono we add header values indifferent of whether the header already exists
+                    AddHeader(defaultHeader);
+                }
+            }
+
+            // Add headers
+            foreach (var header in headers)
+            {
+                AddHeader(header);
+            }
+
+            // Add default headers
+            if (defaultHeaders != null)
+            {
+                if (EnvironmentProbe.IsMono)
+                {
+                    AddDefaultMonoHeaders();
+                }
+                else
+                {
+                    AddDefaultDotnetHeaders();
+                }
             }
 
             return sortedHeaders;
