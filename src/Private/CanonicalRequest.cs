@@ -186,9 +186,8 @@ namespace AwsSignatureVersion4.Private
                 return headerName.ToLowerInvariant();
             }
 
-            void AddSortedHeader(KeyValuePair<string, IEnumerable<string>> header)
+            void AddHeader(KeyValuePair<string, IEnumerable<string>> header)
             {
-                // Convert header name to lowercase
                 var headerName = FormatHeaderName(header.Key);
 
                 // Create header if it doesn't already exist
@@ -207,13 +206,13 @@ namespace AwsSignatureVersion4.Private
             {
                 foreach (var defaultHeader in defaultHeaders)
                 {
-                    // In .NET Framework and .NET Core we only add header values if they're not
-                    // already set on the message. Note that we don't merge collections: If both
+                    // On .NET Framework or .NET Core we only add header values if they're not
+                    // already added on the message. Note that we don't merge collections: If both
                     // the default headers and the message have set some values for a certain
                     // header, then we don't try to merge the values.
                     if (!sortedHeaders.ContainsKey(FormatHeaderName(defaultHeader.Key)))
                     {
-                        AddSortedHeader(defaultHeader);
+                        AddHeader(defaultHeader);
                     }
                 }
             }
@@ -222,15 +221,15 @@ namespace AwsSignatureVersion4.Private
             {
                 foreach (var defaultHeader in defaultHeaders)
                 {
-                    // In Mono we add header values indifferent of whether the header already exists
-                    AddSortedHeader(defaultHeader);
+                    // On Mono we add header values indifferent of whether the header already exists
+                    AddHeader(defaultHeader);
                 }
             }
 
             // Add headers
             foreach (var header in headers)
             {
-                AddSortedHeader(header);
+                AddHeader(header);
             }
 
             // Add default headers
