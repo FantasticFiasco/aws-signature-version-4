@@ -1,6 +1,6 @@
 import { AuthorizationType, LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
-import { Construct, Stack, StackProps } from '@aws-cdk/cdk';
+import { Construct, Stack, StackProps } from '@aws-cdk/core';
 
 export class ApiGatewayStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -10,7 +10,7 @@ export class ApiGatewayStack extends Stack {
         const requestHandler = new Function(this, 'ApiRequestHandler', {
             code: Code.asset('resources'),
             handler: 'request.handler',
-            runtime: Runtime.Nodejs10x,
+            runtime: Runtime.NODEJS_10_X,
         });
 
         // Create API Gateway
