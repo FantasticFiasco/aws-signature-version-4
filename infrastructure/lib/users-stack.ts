@@ -1,5 +1,5 @@
 import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from '@aws-cdk/aws-iam';
-import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/cdk';
+import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/core';
 
 export class UsersStack extends Stack {
 
@@ -68,9 +68,7 @@ export class UsersStack extends Stack {
   private createTrustedRole(): IRole {
     const role = new Role(this, 'ApiGatewayRole', {
       assumedBy: this.untrustedUser,
-      roleName: {
-        value: 'ApiGatewayInvoke',
-      },
+      roleName: 'ApiGatewayInvoke',
     });
 
     role.addToPolicy(new PolicyStatement({
