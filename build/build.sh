@@ -28,6 +28,7 @@ echo "[build] dotnet cli v`dotnet --version`"
 # xbuild AwsSignatureVersion4.sln
 
 echo "msbuild cli"
+nuget /h
 msbuild /help
 msbuild ./src/AwsSignatureVersion4.csproj
 
