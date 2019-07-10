@@ -34,7 +34,7 @@ echo "msbuild /help"
 msbuild /help
 
 echo "msbuild ./src/AwsSignatureVersion4.csproj"
-msbuild ./src/AwsSignatureVersion4.csproj
+msbuild /property:TargetFramework=net45 /property:Configuration=Release ./src/AwsSignatureVersion4.csproj
 
 echo "dotnet cli"
 [ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
