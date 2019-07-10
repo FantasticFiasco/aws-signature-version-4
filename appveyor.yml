@@ -3,8 +3,11 @@ image: ubuntu
 stack: node 10
 
 install:
-  - sudo apt-get update
-  - sudo apt-get install -y nuget mono-devel mono-xbuild
+  # The following apt-get packages are already installed:
+  # - nuget
+  # - mono-devel
+  # - mono-xbuild
+  - nuget update -self
 
 environment:
   AWS_REGION: eu-west-1
