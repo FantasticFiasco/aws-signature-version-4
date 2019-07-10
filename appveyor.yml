@@ -3,11 +3,9 @@ image: ubuntu
 stack: node 10
 
 install:
-  # The following apt-get packages are already installed:
-  # - nuget
-  # - mono-devel
-  # - mono-xbuild
-  - nuget update -self
+  # The steps required to build .NET Framework on Linux are here:
+  # https://medium.com/@hudsonmendes/build-net-4-5-on-linux-in-5-minutes-and-see-what-it-is-like-848ea45fc667
+  # - nuget update -self
 
 environment:
   AWS_REGION: eu-west-1
