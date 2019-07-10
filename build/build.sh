@@ -29,6 +29,7 @@ echo "[build] dotnet cli v`dotnet --version`"
 
 echo "msbuild cli"
 msbuild /help
+msbuild ./src/AwsSignatureVersion4.csproj
 
 echo "dotnet cli"
 [ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
