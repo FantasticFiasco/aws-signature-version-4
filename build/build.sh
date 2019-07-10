@@ -24,8 +24,8 @@ echo "[info] is pull request: ${IS_PULL_REQUEST}"
 echo "[build] build started"
 echo "[build] dotnet cli v`dotnet --version`"
 
-echo "xbuild cli"
-xbuild AwsSignatureVersion4.sln
+# echo "xbuild cli"
+# xbuild AwsSignatureVersion4.sln
 
 echo "msbuild cli"
 msbuild --version
