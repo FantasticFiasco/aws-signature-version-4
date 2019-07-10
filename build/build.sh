@@ -27,9 +27,13 @@ echo "[build] dotnet cli v`dotnet --version`"
 # echo "xbuild cli"
 # xbuild AwsSignatureVersion4.sln
 
-echo "msbuild cli"
-nuget /h
+echo "nuget restore"
+nuget restore
+
+echo "msbuild /help"
 msbuild /help
+
+echo "msbuild ./src/AwsSignatureVersion4.csproj"
 msbuild ./src/AwsSignatureVersion4.csproj
 
 echo "dotnet cli"
