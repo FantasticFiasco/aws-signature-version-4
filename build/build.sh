@@ -37,9 +37,9 @@ msbuild /property:TargetFramework=net461 /property:Configuration=Release ./src/A
 echo "[build] build test"
 dotnet build -c Release ./test/AwsSignatureVersion4.Test.csproj
 
-echo "nuget restore"
-nuget restore
-echo "after nuget restore"
+#echo "nuget restore"
+#nuget restore
+#echo "after nuget restore"
 #echo "msbuild /help"
 #msbuild /help
 
