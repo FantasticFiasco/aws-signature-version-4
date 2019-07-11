@@ -39,7 +39,7 @@ dotnet build -c Release ./test/AwsSignatureVersion4.Test.csproj
 
 echo "nuget restore"
 nuget restore
-echo "after nuget restore"
+
 #echo "msbuild /help"
 #msbuild /help
 
@@ -47,9 +47,12 @@ echo "after nuget restore"
 
 
 #echo "dotnet cli"
-#[ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
+# [ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
+[ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="/property:PackageVersionSuffix=sha-${GIT_SHA}"
 #dotnet build -c Release "${VERSION_SUFFIX_ARG}"
-dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "${VERSION_SUFFIX_ARG}"
+#dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "${VERSION_SUFFIX_ARG}"
+echo "[build] create NuGet package"
+msbuild -t:pack "${VERSION_SUFFIX_ARG}"
 
 # -------------------------------------------------------------------------------------------------
 # TEST
