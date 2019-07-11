@@ -24,6 +24,7 @@ echo "[info] is pull request: ${IS_PULL_REQUEST}"
 echo "[build] build started"
 echo "[build] dotnet cli v`dotnet --version`"
 
+nuget restore
 msbuild /property:Configuration=Release
 
 #echo "[build] build src for .NET Standard 2.0"
