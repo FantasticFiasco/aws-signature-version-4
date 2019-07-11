@@ -32,5 +32,8 @@
     "rimraf": "2.6.3",
     "tslint": "5.18.0",
     "typescript": "3.5.3"
+  },
+  "resolutions": {
+    "lodash": ">=4.17.13"
   }
 }
