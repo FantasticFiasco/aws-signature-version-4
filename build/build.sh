@@ -24,8 +24,12 @@ echo "[info] is pull request: ${IS_PULL_REQUEST}"
 echo "[build] build started"
 echo "[build] dotnet cli v`dotnet --version`"
 
-# echo "xbuild cli"
-# xbuild AwsSignatureVersion4.sln
+echo "[build] build src for .NET Standard 2.0"
+[ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
+dotnet build -c Release "${VERSION_SUFFIX_ARG}" --framework netstandard2.0 ./src/AwsSignatureVersion4.csproj
+
+echo "[build] build test"
+dotnet build -c Release ./test/AwsSignatureVersion4.Test.csproj
 
 echo "nuget restore"
 nuget restore

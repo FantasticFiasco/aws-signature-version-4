@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>The buttoned up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.</Description>
-    <TargetFrameworks>net45;net461:netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;net461;netstandard2.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Strong naming -->
     <SignAssembly>true</SignAssembly>
