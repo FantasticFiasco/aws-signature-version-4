@@ -46,3 +46,9 @@ If ($IS_PULL_REQUEST -eq $false)
     &choco install codecov
     &codecov -f ./coverage.opencover.xml
 }
+
+# -------------------------------------------------------------------------------------------------
+# INFRASTRUCTURE
+# -------------------------------------------------------------------------------------------------
+&yarn --cwd ./infrastructure
+&yarn --cwd ./infrastructure build
