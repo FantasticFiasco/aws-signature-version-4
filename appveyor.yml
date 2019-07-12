@@ -1,11 +1,6 @@
-image: ubuntu
+image: Visual Studio 2017
 
 stack: node 10
-
-install:
-  # The steps required to build .NET Framework on Linux are here:
-  # https://medium.com/@hudsonmendes/build-net-4-5-on-linux-in-5-minutes-and-see-what-it-is-like-848ea45fc667
-  # - nuget update -self
 
 environment:
   AWS_REGION: eu-west-1
@@ -25,7 +20,7 @@ environment:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
 
 build_script:
-  - ./build/build.sh
+  - sh: ./build/build.sh
 
 test: off
 
