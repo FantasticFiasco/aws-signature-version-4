@@ -50,7 +50,7 @@ If ($IS_PULL_REQUEST -eq $false)
     Get-ChildItem -Path ./
 
 
-    &bash "./codecov -f ./coverage.opencover.xml"
+    &bash ./codecov
 }
 
 # -------------------------------------------------------------------------------------------------
