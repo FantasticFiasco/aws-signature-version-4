@@ -45,7 +45,7 @@ If ($IS_PULL_REQUEST -eq $false)
     Write-Host "[test] upload coverage report"
     #&choco install codecov
     #&codecov -f ./coverage.opencover.xml
-    Invoke-WebRequest -Uri https://codecov.io/bash -MaximumRetryCount 12 -RetryIntervalSec 5 | Out-File -FilePath ./codecov
+    Invoke-WebRequest -Uri https://codecov.io/bash -OutFile ./codecov
     Write-Host "ls"
     Get-ChildItem -Path ./
 
