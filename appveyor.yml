@@ -20,7 +20,7 @@ environment:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
 
 build_script:
-  - sh: ./build/build.sh
+  - ps: ./build/build.ps1
 
 test: off
 
