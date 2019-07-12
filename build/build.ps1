@@ -20,8 +20,8 @@ Write-Host "[info] is pull request: $IS_PULL_REQUEST"
 Write-Host "[build] build started"
 Write-Host "[build] dotnet cli v$(dotnet --version)"
 $VERSION_SUFFIX_ARG = If ($IS_TAGGED_BUILD -eq $true) { "" } Else { "--version-suffix=sha-$GIT_SHA" }
-&dotnet build -c Release $VERSION_SUFFIX_ARG
-&dotnet pack -c Release --include-symbols -o ./../artifacts --no-build $VERSION_SUFFIX_ARG
+dotnet build -c Release $VERSION_SUFFIX_ARG
+dotnet pack -c Release --include-symbols -o ./../artifacts --no-build $VERSION_SUFFIX_ARG
 
 # -------------------------------------------------------------------------------------------------
 # TEST
@@ -33,8 +33,8 @@ Write-Host "[test] test started"
 $TEST_FILTER = If ($IS_PULL_REQUEST -eq $true) { "--filter Category!=Integration" } Else { "" }
 Write-Host "[test] test filter: $TEST_FILTER"
 
-&dotnet tool install --global coverlet.console
-&coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll `
+dotnet tool install --global coverlet.console
+coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll `
     --target "dotnet" `
     --targetargs "test --configuration Release --no-build ${TEST_FILTER}" `
     --exclude "[xunit.*]*" `
@@ -43,8 +43,6 @@ Write-Host "[test] test filter: $TEST_FILTER"
 If ($IS_PULL_REQUEST -eq $false)
 {
     Write-Host "[test] upload coverage report"
-    #&choco install codecov
-    #&codecov -f ./coverage.opencover.xml
     Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
     bash codecov.sh -f "coverage.opencover.xml"
 }
@@ -53,5 +51,5 @@ If ($IS_PULL_REQUEST -eq $false)
 # INFRASTRUCTURE
 # -------------------------------------------------------------------------------------------------
 Write-Host "[infrastructure] build started"
-&yarn --cwd ./infrastructure
-&yarn --cwd ./infrastructure build
+yarn --cwd ./infrastructure
+yarn --cwd ./infrastructure build
