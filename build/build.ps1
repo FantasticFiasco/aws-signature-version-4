@@ -8,7 +8,7 @@ Write-Host "$LOGO" -ForegroundColor Green
 # VARIABLES
 # -------------------------------------------------------------------------------------------------
 $GIT_SHA = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
-$IS_TAGGED_BUILD = If ("${APPVEYOR_REPO_TAG}" -eq "true") { $true } Else { $false }
+$IS_TAGGED_BUILD = If ("$env:APPVEYOR_REPO_TAG" -eq "true") { $true } Else { $false }
 Write-Host "before"
 Write-Host "$IS_TAGGED_BUILD"
 Write-Host "after"
