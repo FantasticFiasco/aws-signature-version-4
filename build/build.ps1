@@ -32,3 +32,10 @@ Write-Host "[test] test started"
 # secrets, which are omitted by AppVeyor on pull requests.
 $TEST_FILTER = If ($IS_PULL_REQUEST -eq $true) { "--filter Category!=Integration" } Else { "" }
 Write-Host "[test] test filter: $TEST_FILTER"
+
+&dotnet tool install --global coverlet.console
+# &coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll \
+#     --target "dotnet" \
+#     --targetargs "test --configuration Release --no-build ${TEST_FILTER}" \
+#     --exclude "[xunit.*]*" \
+#     --format opencover
