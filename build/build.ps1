@@ -46,6 +46,10 @@ If ($IS_PULL_REQUEST -eq $false)
     #&choco install codecov
     #&codecov -f ./coverage.opencover.xml
     Invoke-WebRequest -Uri https://codecov.io/bash | Out-File -FilePath ./codecov
+    Write-Host "ls"
+    Get-ChildItem -Path ./
+
+
     &bash "./codecov -f ./coverage.opencover.xml"
 }
 
