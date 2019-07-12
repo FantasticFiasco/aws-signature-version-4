@@ -50,5 +50,6 @@ If ($IS_PULL_REQUEST -eq $false)
 # -------------------------------------------------------------------------------------------------
 # INFRASTRUCTURE
 # -------------------------------------------------------------------------------------------------
+Write-Host "[infrastructure] build started"
 &yarn --cwd ./infrastructure
 &yarn --cwd ./infrastructure build
