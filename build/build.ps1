@@ -10,9 +10,6 @@ Write-Host "$LOGO" -ForegroundColor Green
 $GIT_SHA = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
 $IS_TAGGED_BUILD = If ("$env:APPVEYOR_REPO_TAG" -eq "true") { $true } Else { $false }
 $IS_PULL_REQUEST = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } Else { $true }
-Write-Host "$IS_PULL_REQUEST"
-
-# [ ! -z "${APPVEYOR_PULL_REQUEST_NUMBER}" ] && IS_PULL_REQUEST=true || IS_PULL_REQUEST=false
-# echo "[info] git sha: ${GIT_SHA}"
-# echo "[info] is git tag: ${IS_TAGGED_BUILD}"
-# echo "[info] is pull request: ${IS_PULL_REQUEST}"
+Write-Host "[info] git sha: $GIT_SHA"
+Write-Host "[info] is git tag: $IS_TAGGED_BUILD"
+Write-Host "[info] is pull request: $IS_PULL_REQUEST"
