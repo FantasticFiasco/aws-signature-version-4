@@ -45,8 +45,8 @@ If ($IS_PULL_REQUEST -eq $false)
     Write-Host "[test] upload coverage report"
     #&choco install codecov
     #&codecov -f ./coverage.opencover.xml
-    curl -s https://codecov.io/bash > codecov
-    bash "./codecov -f ./coverage.opencover.xml"
+    Invoke-WebRequest -Uri https://codecov.io/bash | Out-File -FilePath ./codecov
+    &bash "./codecov -f ./coverage.opencover.xml"
 }
 
 # -------------------------------------------------------------------------------------------------
