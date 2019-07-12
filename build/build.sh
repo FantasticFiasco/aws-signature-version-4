@@ -23,36 +23,9 @@ echo "[info] is pull request: ${IS_PULL_REQUEST}"
 # -------------------------------------------------------------------------------------------------
 echo "[build] build started"
 echo "[build] dotnet cli v`dotnet --version`"
-
-echo "[build] build src for .NET Standard 2.0"
 [ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
-dotnet build -c Release "${VERSION_SUFFIX_ARG}" --framework netstandard2.0 ./src/AwsSignatureVersion4.csproj
-
-echo "[build] build src for .NET Framework 4.5"
-msbuild /property:TargetFramework=net45 /property:Configuration=Release ./src/AwsSignatureVersion4.csproj
-
-echo "[build] build src for .NET Framework 4.6.1"
-msbuild /property:TargetFramework=net461 /property:Configuration=Release ./src/AwsSignatureVersion4.csproj
-
-echo "[build] build test"
-dotnet build -c Release ./test/AwsSignatureVersion4.Test.csproj
-
-echo "nuget restore"
-nuget restore
-
-#echo "msbuild /help"
-#msbuild /help
-
-#echo "msbuild ./src/AwsSignatureVersion4.csproj"
-
-
-#echo "dotnet cli"
-# [ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
-[ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="/property:PackageVersionSuffix=sha-${GIT_SHA}"
-#dotnet build -c Release "${VERSION_SUFFIX_ARG}"
-#dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "${VERSION_SUFFIX_ARG}"
-echo "[build] create NuGet package"
-msbuild -t:pack "${VERSION_SUFFIX_ARG}"
+dotnet build -c Release "${VERSION_SUFFIX_ARG}"
+dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "${VERSION_SUFFIX_ARG}"
 
 # -------------------------------------------------------------------------------------------------
 # TEST

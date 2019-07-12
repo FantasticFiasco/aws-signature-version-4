@@ -13,3 +13,15 @@ $IS_PULL_REQUEST = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } El
 Write-Host "[info] git sha: $GIT_SHA"
 Write-Host "[info] is git tag: $IS_TAGGED_BUILD"
 Write-Host "[info] is pull request: $IS_PULL_REQUEST"
+
+# -------------------------------------------------------------------------------------------------
+# BUILD
+# -------------------------------------------------------------------------------------------------
+Write-Host "[build] build started"
+Write-Host "[build] dotnet cli v${dotnet --version}"
+
+# [ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
+# dotnet build -c Release "${VERSION_SUFFIX_ARG}"
+# dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "${VERSION_SUFFIX_ARG}"
+
+
