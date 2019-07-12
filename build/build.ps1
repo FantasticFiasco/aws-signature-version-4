@@ -19,9 +19,6 @@ Write-Host "[info] is pull request: $IS_PULL_REQUEST"
 # -------------------------------------------------------------------------------------------------
 Write-Host "[build] build started"
 Write-Host "[build] dotnet cli v$(dotnet --version)"
-
-# [ "${IS_TAGGED_BUILD}" = false ] && VERSION_SUFFIX_ARG="--version-suffix=sha-${GIT_SHA}"
-# dotnet build -c Release "${VERSION_SUFFIX_ARG}"
-# dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "${VERSION_SUFFIX_ARG}"
-
-
+$VERSION_SUFFIX_ARG = If ($IS_TAGGED_BUILD -eq $true) { "" } Else { "--version-suffix=sha-$GIT_SHA" }
+&dotnet build -c Release "$VERSION_SUFFIX_ARG"
+&dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "$VERSION_SUFFIX_ARG"
