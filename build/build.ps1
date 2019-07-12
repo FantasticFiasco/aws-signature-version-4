@@ -20,8 +20,8 @@ Write-Host "[info] is pull request: $IS_PULL_REQUEST"
 Write-Host "[build] build started"
 Write-Host "[build] dotnet cli v$(dotnet --version)"
 $VERSION_SUFFIX_ARG = If ($IS_TAGGED_BUILD -eq $true) { "" } Else { "--version-suffix=sha-$GIT_SHA" }
-&dotnet build -c Release "$VERSION_SUFFIX_ARG"
-&dotnet pack -c Release --include-symbols -o ./../artifacts --no-build "$VERSION_SUFFIX_ARG"
+&dotnet build -c Release $VERSION_SUFFIX_ARG
+&dotnet pack -c Release --include-symbols -o ./../artifacts --no-build $VERSION_SUFFIX_ARG
 
 # -------------------------------------------------------------------------------------------------
 # TEST
@@ -39,3 +39,10 @@ Write-Host "[test] test filter: $TEST_FILTER"
     --targetargs "test --configuration Release --no-build ${TEST_FILTER}" `
     --exclude "[xunit.*]*" `
     --format opencover
+
+If ($IS_PULL_REQUEST -eq $false)
+{
+    Write-Host "[test] upload coverage report"
+    &choco install codecov
+    &codecov -f ./coverage.opencover.xml
+}
