@@ -44,5 +44,6 @@ If ($IS_PULL_REQUEST -eq $false)
 {
     Write-Host "[test] upload coverage report"
     &choco install codecov
-    &codecov -f ./coverage.opencover.xml
+    # &codecov -f ./coverage.opencover.xml
+    &codecov
 }
