@@ -50,6 +50,7 @@ coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll `
 If ($IS_PULL_REQUEST -eq $false)
 {
     Write-Host "[test] upload coverage report"
+    python -m pip install --upgrade pip
     pip install codecov
     codecov
     # Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
