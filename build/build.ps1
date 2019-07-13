@@ -52,7 +52,7 @@ If ($IS_PULL_REQUEST -eq $false)
     Write-Host "[test] upload coverage report"
     Get-ChildItem C:\Python37
 
-    # python -m pip install --upgrade pip
+    C:\Python37\python.exe -m pip install --upgrade pip
     # pip install codecov
     # codecov
     # Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
