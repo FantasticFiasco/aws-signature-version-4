@@ -51,14 +51,14 @@ If ($IS_PULL_REQUEST -eq $false)
 {
     # Uploading the code coverage will print to stderr, but seems to work anyway. Because of this,
     # we have to change the default error handling to continue on error.
-    $ErrorActionPreference = "Continue";
+    #$ErrorActionPreference = "Continue";
 
     Write-Host "[test] upload coverage report"
     Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
     bash codecov.sh -f "coverage.opencover.xml"
 
     # Reset error handling
-    $ErrorActionPreference = "Stop";
+    #$ErrorActionPreference = "Stop";
 }
 
 # -------------------------------------------------------------------------------------------------
