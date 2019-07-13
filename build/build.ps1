@@ -17,7 +17,7 @@ Write-Host "[info] is pull request: $IS_PULL_REQUEST"
 # -------------------------------------------------------------------------------------------------
 # DEFAULT ERROR HANDLING
 # -------------------------------------------------------------------------------------------------
-#$ErrorActionPreference = "Stop";
+$ErrorActionPreference = "Stop";
 
 # -------------------------------------------------------------------------------------------------
 # BUILD
@@ -50,13 +50,14 @@ coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll `
 If ($IS_PULL_REQUEST -eq $false)
 {
     Write-Host "[test] upload coverage report"
-    C:\Python37\python.exe -m pip install --upgrade pip
-    pip3 --version
+    #C:\Python37\python.exe -m pip install --upgrade pip
+    #pip3 --version
 
     # pip install codecov
     # codecov
-    # Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
-    # bash codecov.sh -f "coverage.opencover.xml"
+    $ErrorActionPreference = "Continue";
+    Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
+    bash codecov.sh -f "coverage.opencover.xml"
 }
 
 # -------------------------------------------------------------------------------------------------
