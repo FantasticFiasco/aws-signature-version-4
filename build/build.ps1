@@ -49,23 +49,16 @@ coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll `
 
 If ($IS_PULL_REQUEST -eq $false)
 {
-    # Uploading the code coverage will print to stderr, but seems to work anyway. Because of this,
-    # we have to change the default error handling to continue on error.
-    #$ErrorActionPreference = "Continue";
-
     Write-Host "[test] upload coverage report"
     Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
     bash codecov.sh -f "coverage.opencover.xml"
-
-    # Reset error handling
-    #$ErrorActionPreference = "Stop";
 }
 
 # -------------------------------------------------------------------------------------------------
 # INFRASTRUCTURE
 # -------------------------------------------------------------------------------------------------
 # Installing the AWS CDK packages will print warning messages about missing peer dependencies to
-# stderr. Let's ignore these warnings and continue executing scripts.
+# stderr. Let's ignore these warnings and continue installing the packages.
 $ErrorActionPreference = "Continue";
 
 Write-Host "[infrastructure] build started"
