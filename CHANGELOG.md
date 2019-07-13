@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [1.1.0] - 2019-07-13
+
 ### :zap: Added
 
 - [#36](https://github.com/FantasticFiasco/aws-signature-version-4/issues/36) Support for .NET Framework 4.5
