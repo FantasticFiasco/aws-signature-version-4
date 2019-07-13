@@ -50,9 +50,10 @@ coverlet ./test/bin/Release/netcoreapp2.1/AwsSignatureVersion4.Test.dll `
 If ($IS_PULL_REQUEST -eq $false)
 {
     Write-Host "[test] upload coverage report"
-    # pip install --user codecov && codecov -t <the-repository-upload-token>
-    Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
-    bash codecov.sh -f "coverage.opencover.xml"
+    pip install --user codecov
+    codecov
+    # Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
+    # bash codecov.sh -f "coverage.opencover.xml"
 }
 
 # -------------------------------------------------------------------------------------------------
