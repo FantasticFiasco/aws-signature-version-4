@@ -5,6 +5,11 @@ $LOGO = (Invoke-WebRequest "https://raw.githubusercontent.com/FantasticFiasco/lo
 Write-Host "$LOGO" -ForegroundColor Green
 
 # -------------------------------------------------------------------------------------------------
+# DEFAULT ERROR HANDLING
+# -------------------------------------------------------------------------------------------------
+$ErrorActionPreference = "Stop";
+
+# -------------------------------------------------------------------------------------------------
 # VARIABLES
 # -------------------------------------------------------------------------------------------------
 $GIT_SHA = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
@@ -13,11 +18,6 @@ $IS_PULL_REQUEST = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } El
 Write-Host "[info] git sha: $GIT_SHA"
 Write-Host "[info] is git tag: $IS_TAGGED_BUILD"
 Write-Host "[info] is pull request: $IS_PULL_REQUEST"
-
-# -------------------------------------------------------------------------------------------------
-# DEFAULT ERROR HANDLING
-# -------------------------------------------------------------------------------------------------
-$ErrorActionPreference = "Stop";
 
 # -------------------------------------------------------------------------------------------------
 # BUILD
