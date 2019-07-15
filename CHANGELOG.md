@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- Improve searchability by adding NuGet tags `aws`, `sign`, `http` and `request`
+
 ## [1.1.0] - 2019-07-13
 
 ### :zap: Added
