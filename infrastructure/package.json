@@ -24,7 +24,7 @@
     "@aws-cdk/aws-lambda": "1.2.0",
     "@aws-cdk/aws-s3": "1.2.0",
     "@aws-cdk/core": "1.2.0",
-    "source-map-support": "0.5.12"
+    "source-map-support": "0.5.13"
   },
   "devDependencies": {
     "@types/node": "8.10.51",
