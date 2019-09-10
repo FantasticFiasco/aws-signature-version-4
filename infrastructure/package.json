@@ -30,7 +30,7 @@
     "@types/node": "8.10.53",
     "aws-cdk": "1.7.0",
     "rimraf": "3.0.0",
-    "tslint": "5.19.0",
+    "tslint": "5.20.0",
     "typescript": "3.6.3"
   },
   "resolutions": {
