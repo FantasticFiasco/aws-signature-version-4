@@ -1,8 +1,7 @@
 image: Visual Studio 2017
 
-stack: node 10
-
 environment:
+  NODEJS_VERSION: "10"
   AWS_REGION: eu-west-1
   AWS_USER_ACCESS_KEY_ID:
     secure: PQnvIUHDq17s3H7RsYa0pk0QOlTq+D9Zri1jW0PNvFY=
@@ -18,6 +17,9 @@ environment:
     secure: bwh7XZg8Kv/Q1eQ/KrXij51CvsKnzrplc/miKaBscohWX0WMuRNRLv+dfIp7N1fa/DkALSRZv/3GmS/XgK+qQw==
   CODECOV_TOKEN:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
+
+install:
+  - ps: Install-Product node $env:NODEJS_VERSION
 
 build_script:
   - ps: ./build/build.ps1

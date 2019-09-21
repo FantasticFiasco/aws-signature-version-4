@@ -62,6 +62,7 @@ If ($IS_PULL_REQUEST -eq $false)
 $ErrorActionPreference = "Continue";
 
 Write-Host "[infrastructure] build started"
+Write-Host "[infrastructure] node $(node --version)"
 yarn --cwd ./infrastructure
 yarn --cwd ./infrastructure build
 
