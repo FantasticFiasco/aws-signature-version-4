@@ -31,7 +31,7 @@
     "aws-cdk": "1.15.0",
     "rimraf": "3.0.0",
     "tslint": "5.20.0",
-    "typescript": "3.6.4"
+    "typescript": "3.7.2"
   },
   "resolutions": {
     "lodash": ">=4.17.13"
