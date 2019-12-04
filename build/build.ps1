@@ -5,12 +5,6 @@ $LOGO = (Invoke-WebRequest "https://raw.githubusercontent.com/FantasticFiasco/lo
 Write-Host "$LOGO" -ForegroundColor Green
 
 # -------------------------------------------------------------------------------------------------
-# DEFAULT ERROR HANDLING
-# -------------------------------------------------------------------------------------------------
-
-$ErrorActionPreference = "Stop";
-
-# -------------------------------------------------------------------------------------------------
 # VARIABLES
 # -------------------------------------------------------------------------------------------------
 $GIT_SHA = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
@@ -42,17 +36,12 @@ $TEST_FILTER = If ($IS_PULL_REQUEST -eq $true) { "--filter Category!=Integration
 Write-Host "[test] test filter: $TEST_FILTER"
 
 dotnet tool install --global coverlet.console
-Write-Host "xxx $ErrorActionPreference"
 coverlet ./test/bin/Release/netcoreapp2.2/AwsSignatureVersion4.Test.dll `
     --target "dotnet" `
     --targetargs "test --configuration Release --no-build ${TEST_FILTER}" `
     --exclude "[xunit.*]*" `
     --format opencover
-If ($?) {
-    Write-Host "xxx last operation suceeded"
-} Else {
-    Write-Host "xxx last operation failed"
-}
+if ($LASTEXITCODE -ne 0) { exit 1 }
 
 
 If ($IS_PULL_REQUEST -eq $false)
@@ -65,14 +54,7 @@ If ($IS_PULL_REQUEST -eq $false)
 # -------------------------------------------------------------------------------------------------
 # INFRASTRUCTURE
 # -------------------------------------------------------------------------------------------------
-# Installing the AWS CDK packages will print warning messages about missing peer dependencies to
-# stderr. Let's ignore these warnings and continue installing the packages.
-$ErrorActionPreference = "Continue";
-
 Write-Host "[infrastructure] build started"
 Write-Host "[infrastructure] node $(node --version)"
 yarn --cwd ./infrastructure
 yarn --cwd ./infrastructure build
-
-# Reset error handling
-$ErrorActionPreference = "Stop";
