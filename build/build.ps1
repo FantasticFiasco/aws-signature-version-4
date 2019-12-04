@@ -8,7 +8,6 @@ Write-Host "$LOGO" -ForegroundColor Green
 # DEFAULT ERROR HANDLING
 # -------------------------------------------------------------------------------------------------
 
-Write-Host "Error action: $ErrorActionPreference"
 $ErrorActionPreference = "Stop";
 
 # -------------------------------------------------------------------------------------------------
@@ -43,7 +42,7 @@ $TEST_FILTER = If ($IS_PULL_REQUEST -eq $true) { "--filter Category!=Integration
 Write-Host "[test] test filter: $TEST_FILTER"
 
 dotnet tool install --global coverlet.console
-coverlet ./test/bin/Release/netcoreapp2.2/AwsSignatureVersion4.Test.dll `
+& coverlet ./test/bin/Release/netcoreapp2.2/AwsSignatureVersion4.Test.dll `
     --target "dotnet" `
     --targetargs "test --configuration Release --no-build ${TEST_FILTER}" `
     --exclude "[xunit.*]*" `
