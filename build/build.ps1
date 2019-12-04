@@ -43,7 +43,6 @@ coverlet ./test/bin/Release/netcoreapp2.2/AwsSignatureVersion4.Test.dll `
     --format opencover
 if ($LASTEXITCODE -ne 0) { exit 1 }
 
-
 If ($IS_PULL_REQUEST -eq $false)
 {
     Write-Host "[test] upload coverage report"
