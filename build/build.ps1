@@ -48,6 +48,12 @@ coverlet ./test/bin/Release/netcoreapp2.2/AwsSignatureVersion4.Test.dll `
     --targetargs "test --configuration Release --no-build ${TEST_FILTER}" `
     --exclude "[xunit.*]*" `
     --format opencover
+If ($?) {
+    Write-Host "xxx last operation suceeded"
+} Else {
+    Write-Host "xxx last operation failed"
+}
+
 
 If ($IS_PULL_REQUEST -eq $false)
 {
