@@ -27,7 +27,7 @@
     "source-map-support": "0.5.16"
   },
   "devDependencies": {
-    "@types/node": "13.1.8",
+    "@types/node": "13.5.0",
     "aws-cdk": "1.21.1",
     "rimraf": "3.0.0",
     "tslint": "5.20.1",
