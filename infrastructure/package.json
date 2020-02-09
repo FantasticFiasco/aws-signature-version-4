@@ -29,7 +29,7 @@
   "devDependencies": {
     "@types/node": "13.7.0",
     "aws-cdk": "1.23.0",
-    "rimraf": "3.0.1",
+    "rimraf": "3.0.2",
     "tslint": "5.20.1",
     "typescript": "3.7.5"
   },
