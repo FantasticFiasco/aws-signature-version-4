@@ -27,7 +27,7 @@ namespace AwsSignatureVersion4.TestSuite
         /// released by AWS. If not, we have to download the latest version and make sure the tests
         /// still pass.
         /// </summary>
-        [Fact(Skip = "Test suite has been updated, see https://github.com/FantasticFiasco/aws-signature-version-4/issues/96")]
+        [Fact]
         public async Task BeUpToDate()
         {
             // Arrange
