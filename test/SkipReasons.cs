@@ -14,7 +14,7 @@
 
         public const string RedundantContentTypeCharset =
             "This scenario is based on the fact that we need to specify the charset in the " +
-            "'Content-Type' header, i.e. 'Content-Type:application/x-www-form-urlencoded; " +
+            "'Content-Type' header, e.g. 'Content-Type:application/x-www-form-urlencoded; " +
             "charset=utf-8'. This is not necessary because .NET will add this encoding if " +
             "omitted by us. We can safely skip this test and rely on integration tests " +
             "where actual content is sent to an AWS API Gateway.";
