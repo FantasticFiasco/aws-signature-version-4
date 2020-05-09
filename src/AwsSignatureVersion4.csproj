@@ -10,7 +10,7 @@
     <!-- NuGet package -->
     <PackageId>AwsSignatureVersion4</PackageId>
     <PackageTags>aws;sign;http;request;sigv4;aws-sigv4;aws-signature-v4;aws-signature;aws-signer;aws;amazon-web-services</PackageTags>
-    <PackageIconUrl>http://media.amazonwebservices.com/aws_singlebox_01.png</PackageIconUrl>
+    <PackageIcon>aws-signature-version-4.png</PackageIcon>
     <PackageProjectUrl>https://github.com/FantasticFiasco/aws-signature-version-4</PackageProjectUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReleaseNotes>For release notes, please see the change log on GitHub.</PackageReleaseNotes>
@@ -34,6 +34,10 @@
     <Reference Include="Microsoft.CSharp" />
 
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="assets\aws-signature-version-4.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>
