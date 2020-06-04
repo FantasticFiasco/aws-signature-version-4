@@ -1,7 +1,7 @@
 image: Visual Studio 2017
 
 environment:
-  NODEJS_VERSION: "10"
+  NODEJS_VERSION: "12"
   AWS_REGION: eu-west-1
   AWS_USER_ACCESS_KEY_ID:
     secure: PQnvIUHDq17s3H7RsYa0pk0QOlTq+D9Zri1jW0PNvFY=
