@@ -1,14 +1,14 @@
+using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
-using AwsSignatureVersion4;
 using AwsSignatureVersion4.Private;
-using AwsSignatureVersion4.Integration;
 using AwsSignatureVersion4.Integration.Authentication;
 using AwsSignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 
-// ReSharper disable once CheckNamespace
-namespace System.Net.Http
+namespace AwsSignatureVersion4.Integration
 {
     public class SendAsyncShould : IntegrationBase, IClassFixture<TestSuiteContext>
     {

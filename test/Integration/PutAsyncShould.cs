@@ -1,13 +1,14 @@
-﻿using System.Threading;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration;
 using AwsSignatureVersion4.Integration.Authentication;
 using AwsSignatureVersion4.Integration.Contents;
 using Shouldly;
 using Xunit;
 
-// ReSharper disable once CheckNamespace
-namespace System.Net.Http
+namespace AwsSignatureVersion4.Integration
 {
     public class PutAsyncShould : IntegrationBase
     {
