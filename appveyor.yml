@@ -4,13 +4,13 @@ environment:
   NODEJS_VERSION: "12"
   AWS_REGION: eu-west-1
   AWS_USER_ACCESS_KEY_ID:
-    secure: PQnvIUHDq17s3H7RsYa0pk0QOlTq+D9Zri1jW0PNvFY=
+    secure: 1KlzKnv8s7AYHur0ChvyffOqhiMJw8TEZPRZLFdj5G0=
   AWS_USER_SECRET_ACCESS_KEY:
-    secure: 19+XZSLTI5PdtGtVzo6bvSdgESvW8cb02iWTaAKjDmuOFQHiRxsVK15VZeU7nTdD
+    secure: nuGsgyWKz7qWDAzuOwlyYrasb+C8b6dE7LGPGrl5TGa7ZblhgSYZVhLbuW5kPxwz
   AWS_ROLE_ACCESS_KEY_ID:
-    secure: G1CuP/fmqxkIACbLc9UlQk/xTnn0hkT2D1h745wm71w=
+    secure: jLdRp0Quemmo2psEeItdHYSfHIeqXlw+0HE80SyUhTs=
   AWS_ROLE_SECRET_ACCESS_KEY:
-    secure: qUY0UIc8LSrxKZc7GFpH5TWvi5u3qRdj03J+eLgqXwBv1LfUQJSwpfdiZ7f5lJz3
+    secure: QzEfvFFWtaeLirFnHHiGaKjDPWeBfZIqQVxJhIQ0zrVJ7vfaYsmwPHm9QZVS5e1l
   AWS_ROLE_ARN:
     secure: CVjaIRrwBKMLa+ZIqgA4E4oiK9sUOGZncU78nup5xam1Lrl0RQgOTiEqTlfonNKP
   AWS_API_GATEWAY_URL:
