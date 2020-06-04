@@ -5,7 +5,7 @@ using System.IO;
 namespace AwsSignatureVersion4.Integration
 {
     /// <summary>
-    /// The integration test values are not static but is retrieved from either environment or from
+    /// The integration test values are not static but are retrieved from either environment or from
     /// a local file called "local-integration-test-variables.txt" in the output directory.
     /// <para/>
     /// A variable in the file should have the following format:
