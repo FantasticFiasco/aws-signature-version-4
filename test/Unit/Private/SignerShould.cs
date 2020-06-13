@@ -11,12 +11,12 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Unit.Private
 {
-    public class SignatureVersion4Should : IClassFixture<TestSuiteContext>, IDisposable
+    public class SignerShould : IClassFixture<TestSuiteContext>, IDisposable
     {
         private readonly TestSuiteContext context;
         private readonly HttpClient httpClient;
 
-        public SignatureVersion4Should(TestSuiteContext context)
+        public SignerShould(TestSuiteContext context)
         {
             this.context = context;
 
