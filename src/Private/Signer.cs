@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Runtime;
+using Amazon.Runtime.Internal.Auth;
 using Amazon.Util;
 
 namespace AwsSignatureVersion4.Private
@@ -23,10 +24,11 @@ namespace AwsSignatureVersion4.Private
             if (request.Headers.Contains(HeaderKeys.AuthorizationHeader)) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (regionName == null) throw new ArgumentNullException(nameof(regionName));
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
-            if (serviceName == "s3") throw new NotSupportedException(ErrorMessages.S3NotSupported);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             UpdateRequestUri(httpClient, request);
+
+            var contentHash = await CreateContentHashAsync(request.Content);
 
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());
@@ -34,9 +36,10 @@ namespace AwsSignatureVersion4.Private
             // Add conditional headers
             request.AddHeaderIf(credentials.UseToken, HeaderKeys.XAmzSecurityTokenHeader, credentials.Token);
             request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri.Host);
+            request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
 
             // Build the canonical request
-            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(request, httpClient.DefaultRequestHeaders);
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(request, httpClient.DefaultRequestHeaders, contentHash);
 
             // Build the string to sign
             var (stringToSign, credentialScope) = StringToSign.Build(
@@ -88,6 +91,20 @@ namespace AwsSignatureVersion4.Private
             {
                 request.RequestUri = requestUri;
             }
+        }
+
+        private static async Task<string> CreateContentHashAsync(HttpContent requestContent)
+        {
+            // Use a hash (digest) function like SHA256 to create a hashed value from the payload
+            // in the body of the HTTP or HTTPS request.
+            //
+            // If the payload is empty, use an empty string as the input to the hash function.
+            var requestPayload = requestContent != null
+                ? await requestContent.ReadAsByteArrayAsync()
+                : new byte[0];
+
+            var hash = AWS4Signer.ComputeHash(requestPayload);
+            return AWSSDKUtils.ToHex(hash, true);
         }
     }
 }

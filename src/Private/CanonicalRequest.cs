@@ -4,9 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
-using Amazon.Runtime.Internal.Auth;
 using Amazon.Util;
 
 namespace AwsSignatureVersion4.Private
@@ -35,9 +33,10 @@ namespace AwsSignatureVersion4.Private
         /// <returns>
         /// The first value is the canonical request, the second value is the signed headers.
         /// </returns>
-        public static async Task<(string, string)> BuildAsync(
+        public static (string, string) Build(
             HttpRequestMessage request,
-            HttpRequestHeaders defaultHeaders)
+            HttpRequestHeaders defaultHeaders,
+            string contentHash)
         {
             var builder = new StringBuilder();
 
@@ -137,14 +136,7 @@ namespace AwsSignatureVersion4.Private
             // in the body of the HTTP or HTTPS request.
             //
             // If the payload is empty, use an empty string as the input to the hash function.
-            var requestPayload = request.Content != null
-                ? await request.Content.ReadAsByteArrayAsync()
-                : new byte[0];
-
-            var hash = AWS4Signer.ComputeHash(requestPayload);
-            var hex = AWSSDKUtils.ToHex(hash, true);
-
-            builder.Append(hex);
+            builder.Append(contentHash);
 
             return (builder.ToString(), signedHeaders);
         }

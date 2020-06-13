@@ -107,6 +107,28 @@ namespace AwsSignatureVersion4.Unit.Private
             request.RequestUri.ShouldBe(new Uri(expectedRequestUri));
         }
 
+        /// <summary>
+        /// Only requests to S3 should add the "X-Amz-Content-SHA256" header.
+        /// </summary>
+        [Fact]
+        public async Task NotAddXAmzContentHeader()
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
+
+            // Act
+            await Signer.SignAsync(
+                httpClient,
+                request,
+                context.UtcNow,
+                context.RegionName,
+                context.ServiceName,
+                context.Credentials);
+
+            // Assert
+            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeFalse();
+        }
+
         [Fact]
         public async Task ThrowArgumentExceptionGivenXAmzDateHeader()
         {
