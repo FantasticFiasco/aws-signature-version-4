@@ -2,7 +2,6 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Runtime;
-using Amazon.Runtime.Internal.Auth;
 using Amazon.Util;
 
 namespace AwsSignatureVersion4.Private
@@ -28,7 +27,7 @@ namespace AwsSignatureVersion4.Private
 
             UpdateRequestUri(httpClient, request);
 
-            var contentHash = await CreateContentHashAsync(request.Content);
+            var contentHash = await ContentHash.BuildAsync(request.Content);
 
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());
@@ -91,20 +90,6 @@ namespace AwsSignatureVersion4.Private
             {
                 request.RequestUri = requestUri;
             }
-        }
-
-        private static async Task<string> CreateContentHashAsync(HttpContent requestContent)
-        {
-            // Use a hash (digest) function like SHA256 to create a hashed value from the payload
-            // in the body of the HTTP or HTTPS request.
-            //
-            // If the payload is empty, use an empty string as the input to the hash function.
-            var requestPayload = requestContent != null
-                ? await requestContent.ReadAsByteArrayAsync()
-                : new byte[0];
-
-            var hash = AWS4Signer.ComputeHash(requestPayload);
-            return AWSSDKUtils.ToHex(hash, true);
         }
     }
 }
