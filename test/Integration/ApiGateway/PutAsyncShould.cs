@@ -10,7 +10,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class PutAsyncShould : IntegrationBase
+    public class PutAsyncShould : ApiGatewayIntegrationBase
     {
         public PutAsyncShould(IntegrationTestContext context)
             : base(context)

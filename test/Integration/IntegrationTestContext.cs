@@ -20,23 +20,25 @@ namespace AwsSignatureVersion4.Integration
             variables = new IntegrationTestVariables();
 
             RegionName = variables.GetValue("AWS_REGION");
-            ServiceName = "execute-api";
             UserCredentials = new ImmutableCredentials(
                 variables.GetValue("AWS_USER_ACCESS_KEY_ID"),
                 variables.GetValue("AWS_USER_SECRET_ACCESS_KEY"),
                 null);
             ApiGatewayUrl = variables.GetValue("AWS_API_GATEWAY_URL");
+            S3Url = variables.GetValue("AWS_S3_URL");
         }
 
         public string RegionName { get; }
 
-        public string ServiceName { get; }
+        public string ServiceName { get; set; }
 
         public ImmutableCredentials UserCredentials { get; }
 
         public ImmutableCredentials RoleCredentials { get; private set; }
 
         public string ApiGatewayUrl { get; }
+
+        public string S3Url { get; }
 
         public async Task InitializeAsync() => RoleCredentials = await CreateRoleCredentials();
 

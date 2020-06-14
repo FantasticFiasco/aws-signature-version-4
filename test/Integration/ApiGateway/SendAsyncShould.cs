@@ -10,7 +10,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class SendAsyncShould : IntegrationBase, IClassFixture<TestSuiteContext>
+    public class SendAsyncShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
     {
         private readonly TestSuiteContext testSuiteContext;
 

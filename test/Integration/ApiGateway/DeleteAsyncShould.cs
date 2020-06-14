@@ -9,7 +9,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class DeleteAsyncShould : IntegrationBase
+    public class DeleteAsyncShould : ApiGatewayIntegrationBase
     {
         public DeleteAsyncShould(IntegrationTestContext context)
             : base(context)
