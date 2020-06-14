@@ -189,26 +189,6 @@ namespace AwsSignatureVersion4.Unit.Private
             await actual.ShouldThrowAsync<ArgumentException>();
         }
 
-        [Fact]
-        public async Task ThrowNotSupportedExceptionGivenS3ServiceName()
-        {
-            // Arrange
-            var serviceName = "s3";
-            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
-
-            // Act
-            var actual = Signer.SignAsync(
-                httpClient,
-                request,
-                context.UtcNow,
-                context.RegionName,
-                serviceName,
-                context.Credentials);
-
-            // Assert
-            await actual.ShouldThrowAsync<NotSupportedException>();
-        }
-
         public void Dispose()
         {
             httpClient?.Dispose();
