@@ -4,7 +4,7 @@ using Amazon.Runtime;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Xunit;
 
-namespace AwsSignatureVersion4.Integration.ApiGateway
+namespace AwsSignatureVersion4.Integration
 {
     [Trait("Category", "Integration")]
     public abstract class IntegrationBase : IClassFixture<IntegrationTestContext>, IDisposable

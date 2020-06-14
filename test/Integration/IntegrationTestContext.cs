@@ -5,7 +5,7 @@ using Amazon.SecurityToken.Model;
 using AwsSignatureVersion4.TestSuite;
 using Xunit;
 
-namespace AwsSignatureVersion4.Integration.ApiGateway
+namespace AwsSignatureVersion4.Integration
 {
     /// <summary>
     /// Class setting up a context that is valid when we run integration tests towards a real AWS

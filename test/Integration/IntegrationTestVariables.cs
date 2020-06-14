@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace AwsSignatureVersion4.Integration.ApiGateway
+namespace AwsSignatureVersion4.Integration
 {
     /// <summary>
     /// The integration test values are not static but are retrieved from either environment or from
