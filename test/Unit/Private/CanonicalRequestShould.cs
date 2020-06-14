@@ -60,8 +60,11 @@ namespace AwsSignatureVersion4.Unit.Private
             // Add header 'X-Amz-Date' since the algorithm at this point expects it on the request
             scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, context.UtcNow.ToIso8601BasicDateTime());
 
+            // Calculate the content hash, since it's one of the parameters to the canonical request
+            var contentHash = await ContentHash.CalculateAsync(scenario.Request.Content);
+
             // Act
-            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(scenario.Request, null);
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(scenario.Request, null, contentHash);
 
             // Assert
             canonicalRequest.ShouldBe(scenario.ExpectedCanonicalRequest);

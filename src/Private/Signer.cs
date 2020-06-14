@@ -27,7 +27,7 @@ namespace AwsSignatureVersion4.Private
 
             UpdateRequestUri(httpClient, request);
 
-            var contentHash = await ContentHash.BuildAsync(request.Content);
+            var contentHash = await ContentHash.CalculateAsync(request.Content);
 
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());

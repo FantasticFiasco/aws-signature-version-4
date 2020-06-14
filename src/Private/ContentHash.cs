@@ -6,12 +6,12 @@ using Amazon.Util;
 namespace AwsSignatureVersion4.Private
 {
     /// <summary>
-    /// Building the content hash is not in itself one of the steps in the Signature Version 4
+    /// Calculating the content hash is not in itself one of the steps in the Signature Version 4
     /// process, but it one of the tasks in the step to build the canonical request.
     /// </summary>
     public static class ContentHash
     {
-        public static async Task<string> BuildAsync(HttpContent content)
+        public static async Task<string> CalculateAsync(HttpContent content)
         {
             // Use a hash (digest) function like SHA256 to create a hashed value from the payload
             // in the body of the HTTP or HTTPS request.

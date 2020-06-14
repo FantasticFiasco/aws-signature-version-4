@@ -14,7 +14,7 @@ namespace AwsSignatureVersion4.Unit.Private
         public async Task SupportNullContent()
         {
             // Act
-            var actual = await ContentHash.BuildAsync(null);
+            var actual = await ContentHash.CalculateAsync(null);
 
             // Assert
             actual.ShouldBe(EmptyContentHash);
@@ -27,20 +27,20 @@ namespace AwsSignatureVersion4.Unit.Private
             HttpContent content = new  StringContent(string.Empty);
 
             // Act
-            var actual = await ContentHash.BuildAsync(content);
+            var actual = await ContentHash.CalculateAsync(content);
 
             // Assert
             actual.ShouldBe(EmptyContentHash);
         }
 
         [Fact]
-        public async Task BuildValidHash()
+        public async Task CalculateValidHash()
         {
             // Arrange
             HttpContent content = new StringContent("foo");
 
             // Act
-            var actual = await ContentHash.BuildAsync(content);
+            var actual = await ContentHash.CalculateAsync(content);
 
             // Assert
             actual.Length.ShouldBe(64);
