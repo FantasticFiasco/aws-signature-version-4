@@ -20,7 +20,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task Succeed(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var url = $"{Context.S3Url}/foo.txt";
+            var url = $"{Context.S3Url}/{Bucket.Foo.Key}";
 
             // Act
             var response = await HttpClient.GetAsync(
