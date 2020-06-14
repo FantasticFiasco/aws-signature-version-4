@@ -3,11 +3,11 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Shouldly;
 using Xunit;
 
-namespace AwsSignatureVersion4.Integration
+namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     public class DeleteAsyncShould : IntegrationBase
     {
