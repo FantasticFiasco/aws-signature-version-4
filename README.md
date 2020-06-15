@@ -27,7 +27,7 @@ Having to sign requests in AWS I went through a series of emotions. My first was
 
 My second emotion was being overwhelmed. The signing algorithm involved [many more steps](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) than I'd thought be possible, and I knew I'd have to spend a lot of time getting conformable with the algorithm.
 
-So here we are, my attempt at implementing the Signature Version 4 algorithm in .NET. Please lets hope that AWS SDK soon will release this functionality so we can deprecate this piece of code...
+So here we are, my attempt at implementing the Signature Version 4 algorithm in .NET. Please lets hope that AWS SDK soon releases this functionality so we can deprecate this piece of code...
 
 ## Super simple to use
 
