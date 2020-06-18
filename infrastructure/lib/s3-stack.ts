@@ -1,42 +1,35 @@
-// import { IIdentity } from '@aws-cdk/aws-iam';
-// import { Bucket } from '@aws-cdk/aws-s3';
-// import { CfnOutput, Construct, RemovalPolicy, Stack, StackProps } from '@aws-cdk/core';
-// import { S3Item } from './s3-item';
+import { IIdentity } from '@aws-cdk/aws-iam';
+import { Bucket } from '@aws-cdk/aws-s3';
+import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
+import { CfnOutput, Construct, RemovalPolicy, Stack, StackProps } from '@aws-cdk/core';
 
-// export interface S3StackProps extends StackProps {
-//     readAccess: IIdentity[];
-// }
+export interface S3StackProps extends StackProps {
+    readWriteAccess: IIdentity[];
+}
 
-// export class S3Stack extends Stack {
-//     constructor(scope: Construct, id: string, props: S3StackProps) {
-//         super(scope, id, props);
+export class S3Stack extends Stack {
+    constructor(scope: Construct, id: string, props: S3StackProps) {
+        super(scope, id, props);
 
-//         const bucket = new Bucket(this, 'Bucket', {
-//             removalPolicy: RemovalPolicy.Destroy,
-//         });
+        const bucket = new Bucket(this, 'Bucket', {
+            removalPolicy: RemovalPolicy.DESTROY,
+        });
 
-//         for (const identity of props.readAccess) {
-//             bucket.grantRead(identity);
-//         }
+        for (const identity of props.readWriteAccess) {
+            bucket.grantReadWrite(identity);
+        }
 
-//         new S3Item(this, 'FooItem', {
-//             bucket,
-//             key: 'foo.txt',
-//             value: 'This is foo',
-//         });
+        new BucketDeployment(this, 'BucketItems', {
+            sources: [Source.asset('./s3')],
+            destinationBucket: bucket,
+        });
 
-//         new S3Item(this, 'BarItem', {
-//             bucket,
-//             key: 'foo/bar.txt',
-//             value: 'This is bar',
-//         });
+        new CfnOutput(this, 'BucketName', {
+            value: bucket.bucketName,
+        });
 
-//         new CfnOutput(this, 'BucketName', {
-//             value: bucket.bucketName,
-//         });
-
-//         new CfnOutput(this, 'BucketArn', {
-//             value: bucket.bucketArn,
-//         });
-//     }
-// }
+        new CfnOutput(this, 'BucketArn', {
+            value: bucket.bucketArn,
+        });
+    }
+}

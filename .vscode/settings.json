@@ -1,4 +1,7 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
   "files.exclude": {
     "**/.git": true,
     "**/*.js": {
@@ -8,13 +11,10 @@
       "when": "$(basename).ts"
     }
   },
-  "spellright.language": [
-    "English (American)"
-  ],
-  "spellright.documentTypes": [
-    "markdown",
-    "latex",
-    "plaintext"
-  ],
-  "tslint.autoFixOnSave": true
+  "spellright.language": ["English (American)"],
+  "spellright.documentTypes": ["markdown", "latex", "plaintext"],
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
 }
