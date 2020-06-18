@@ -17,7 +17,7 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task Succeed(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenNoPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var url = $"{Context.S3Url}/{Bucket.Foo.Key}";
@@ -31,6 +31,47 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            (await response.Content.ReadAsStringAsync()).ShouldBe(Bucket.Foo.Content);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenPrefix(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var url = $"{Context.S3Url}/{Bucket.Foo.Bar.Key}";
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                url,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            (await response.Content.ReadAsStringAsync()).ShouldBe(Bucket.Foo.Bar.Content);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenDeepPrefix(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var url = $"{Context.S3Url}/{Bucket.Foo.Bar.Baz.Key}";
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                url,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            (await response.Content.ReadAsStringAsync()).ShouldBe(Bucket.Foo.Bar.Baz.Content);
         }
     }
 }
