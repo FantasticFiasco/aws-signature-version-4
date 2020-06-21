@@ -20,7 +20,7 @@ export class S3Stack extends Stack {
         }
 
         new BucketDeployment(this, 'BucketItems', {
-            sources: [Source.asset('./s3')],
+            sources: [Source.asset('./lib/s3/items')],
             destinationBucket: bucket,
         });
 
