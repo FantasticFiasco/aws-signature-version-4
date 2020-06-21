@@ -20,16 +20,12 @@ export class S3Stack extends Stack {
         }
 
         new BucketDeployment(this, 'BucketItems', {
-            sources: [Source.asset('./lib/s3/items')],
+            sources: [Source.asset('./lib/s3/items/')],
             destinationBucket: bucket,
         });
 
         new CfnOutput(this, 'BucketName', {
-            value: bucket.bucketName,
-        });
-
-        new CfnOutput(this, 'BucketArn', {
-            value: bucket.bucketArn,
+            value: `https://${bucket.bucketRegionalDomainName}`,
         });
     }
 }
