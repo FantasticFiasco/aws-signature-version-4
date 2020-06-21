@@ -31,7 +31,7 @@ export class UsersStack extends Stack {
 
         // Create outputs
         new CfnOutput(this, 'UserWithPermissionsAccessKeyId', {
-            value: accessKey.userName,
+            value: accessKey.ref,
         });
 
         new CfnOutput(this, 'UserWithPermissionsSecretAccessKey', {
@@ -54,7 +54,7 @@ export class UsersStack extends Stack {
 
         // Create outputs
         new CfnOutput(this, 'UserWithoutPermissionsAccessKeyId', {
-            value: accessKey.userName,
+            value: accessKey.ref,
         });
 
         new CfnOutput(this, 'UserWithoutPermissionsSecretAccessKey', {
@@ -76,6 +76,11 @@ export class UsersStack extends Stack {
                 resources: ['arn:aws:execute-api:*:*:*'],
             })
         );
+
+        // Create outputs
+        new CfnOutput(this, 'ApiGatewayRoleArn', {
+            value: role.roleArn,
+        });
 
         return role;
     }
