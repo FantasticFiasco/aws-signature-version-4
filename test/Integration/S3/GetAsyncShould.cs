@@ -20,7 +20,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenNoPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var url = $"{Context.S3Url}/{Bucket.Foo.Key}";
+            var url = $"{Context.S3Url}{Bucket.Foo.Key}";
 
             // Act
             var response = await HttpClient.GetAsync(
@@ -40,7 +40,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var url = $"{Context.S3Url}/{Bucket.Foo.Bar.Key}";
+            var url = $"{Context.S3Url}{Bucket.Foo.Bar.Key}";
 
             // Act
             var response = await HttpClient.GetAsync(
@@ -60,7 +60,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenDeepPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var url = $"{Context.S3Url}/{Bucket.Foo.Bar.Baz.Key}";
+            var url = $"{Context.S3Url}{Bucket.Foo.Bar.Baz.Key}";
 
             // Act
             var response = await HttpClient.GetAsync(

@@ -21,8 +21,8 @@ namespace AwsSignatureVersion4.Integration
 
             RegionName = variables.GetValue("AWS_REGION");
             UserCredentials = new ImmutableCredentials(
-                variables.GetValue("AWS_USER_ACCESS_KEY_ID"),
-                variables.GetValue("AWS_USER_SECRET_ACCESS_KEY"),
+                variables.GetValue("AWS_USER_WITH_PERMISSIONS_ACCESS_KEY_ID"),
+                variables.GetValue("AWS_USER_WITH_PERMISSIONS_SECRET_ACCESS_KEY"),
                 null);
             ApiGatewayUrl = variables.GetValue("AWS_API_GATEWAY_URL");
             S3Url = variables.GetValue("AWS_S3_URL");
@@ -47,8 +47,8 @@ namespace AwsSignatureVersion4.Integration
         private async Task<ImmutableCredentials> CreateRoleCredentials()
         {
             var stsClient = new AmazonSecurityTokenServiceClient(
-                variables.GetValue("AWS_ROLE_ACCESS_KEY_ID"),
-                variables.GetValue("AWS_ROLE_SECRET_ACCESS_KEY"));
+                variables.GetValue("AWS_USER_WITHOUT_PERMISSIONS_ACCESS_KEY_ID"),
+                variables.GetValue("AWS_USER_WITHOUT_PERMISSIONS_SECRET_ACCESS_KEY"));
 
             using (stsClient)
             {
