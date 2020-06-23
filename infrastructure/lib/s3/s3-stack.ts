@@ -24,8 +24,8 @@ export class S3Stack extends Stack {
             destinationBucket: bucket,
         });
 
-        new CfnOutput(this, 'BucketName', {
-            value: `https://${bucket.bucketRegionalDomainName}/`,
+        new CfnOutput(this, 'BucketUrl', {
+            value: `https://${bucket.bucketName}.s3-${this.region}.amazonaws.com/`,
         });
     }
 }
