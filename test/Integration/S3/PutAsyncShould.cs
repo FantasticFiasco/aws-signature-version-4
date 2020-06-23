@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Amazon.Util;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Shouldly;
 using Xunit;
@@ -44,7 +43,7 @@ namespace AwsSignatureVersion4.Integration.S3
             var now = DateTime.Now.ToString("yyyyMMdd HHmmss");
             var id = Guid.NewGuid().ToString();
 
-            return AWSSDKUtils.UrlEncode($"{now} {id}.txt", false);
+            return $"{now} {id}.txt";
         }
     }
 }
