@@ -27,29 +27,29 @@
         {
             public static class Lowercase
             {
-                public const string Name = "abcdefghijklmnopqrstuvwxyz.txt";
-                public const string Key = "safe-characters/lowercase/" + Name;
+                public const string NameWithoutExtension = "abcdefghijklmnopqrstuvwxyz";
+                public const string Key = "safe-characters/lowercase/" + NameWithoutExtension + ".txt";
                 public const string Content = "This file name consists of lowercase characters\n";
             }
 
             public static class Numbers
             {
-                public const string Name = "0123456789.txt";
-                public const string Key = "safe-characters/numbers/" + Name;
+                public const string NameWithoutExtension = "0123456789";
+                public const string Key = "safe-characters/numbers/" + NameWithoutExtension + ".txt";
                 public const string Content = "This file name consists of numbers\n";
             }
 
             public static class SpecialCharacters
             {
-                public const string Name = "!-_.'().txt";
-                public const string Key = "safe-characters/special-characters/" + Name;
+                public const string NameWithoutExtension = "!-_.'()";
+                public const string Key = "safe-characters/special-characters/" + NameWithoutExtension + ".txt";
                 public const string Content = "This file name consists of special characters\n";
             }
 
             public static class Uppercase
             {
-                public const string Name = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.txt";
-                public const string Key = "safe-characters/uppercase/" + Name;
+                public const string NameWithoutExtension = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                public const string Key = "safe-characters/uppercase/" + NameWithoutExtension + ".txt";
                 public const string Content = "This file name consists of uppercase characters\n";
             }
         }

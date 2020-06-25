@@ -11,13 +11,11 @@ namespace AwsSignatureVersion4.Integration.S3
 {
     public class PutAsyncShould : S3IntegrationBase
     {
-        private readonly HttpContent content;
         private readonly string now;
 
         public PutAsyncShould(IntegrationTestContext context)
             : base(context)
         {
-            content = new StringContent("This is some content...");
             now = DateTime.Now.ToString("yyyyMMdd-HHmmss");
         }
 
@@ -27,12 +25,12 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenNoPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = GenerateRandomKey();
+            var key = Bucket.Foo.Key;
 
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3Url}{key}",
-                content,
+                new StringContent(Bucket.Foo.Content),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -47,12 +45,12 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = GenerateRandomKey("put/");
+            var key = Bucket.Foo.Bar.Key;
 
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3Url}{key}",
-                content,
+                new StringContent(Bucket.Foo.Bar.Content),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -67,12 +65,12 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenDeepPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = GenerateRandomKey("put/deep/");
+            var key = Bucket.Foo.Bar.Baz.Key;
 
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3Url}{key}",
-                content,
+                new StringContent(Bucket.Foo.Bar.Baz.Content),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -82,23 +80,23 @@ namespace AwsSignatureVersion4.Integration.S3
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Lowercase.Name)]
-        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Lowercase.Name)]
-        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Numbers.Name)]
-        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Numbers.Name)]
-        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.SpecialCharacters.Name)]
-        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.SpecialCharacters.Name)]
-        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Uppercase.Name)]
-        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Uppercase.Name)]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Lowercase.NameWithoutExtension)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Lowercase.NameWithoutExtension)]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Numbers.NameWithoutExtension)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Numbers.NameWithoutExtension)]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.SpecialCharacters.NameWithoutExtension)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.SpecialCharacters.NameWithoutExtension)]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Uppercase.NameWithoutExtension)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Uppercase.NameWithoutExtension)]
         public async Task SucceedGivenSafeCharacters(IamAuthenticationType iamAuthenticationType, string characters)
         {
             // Arrange
-            var key = GenerateRandomKey($"put/{characters}-");
+            var key = GenerateRandomTempKey($"{characters}-");
 
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3Url}{key}",
-                content,
+                new StringContent("This is some content..."),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -113,13 +111,13 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = GenerateRandomKey();
+            var key = GenerateRandomTempKey();
             var ct = new CancellationToken();
 
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3Url}{key}",
-                content,
+                new StringContent("This is some content..."),
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
@@ -135,13 +133,13 @@ namespace AwsSignatureVersion4.Integration.S3
         public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = GenerateRandomKey();
+            var key = GenerateRandomTempKey();
             var ct = new CancellationToken(true);
 
             // Act
             var task = HttpClient.PutAsync(
                 $"{Context.S3Url}{key}",
-                content,
+                new StringContent("This is some content..."),
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
@@ -151,11 +149,11 @@ namespace AwsSignatureVersion4.Integration.S3
             task.Status.ShouldBe(TaskStatus.Canceled);
         }
 
-        private string GenerateRandomKey(string prefix = null)
+        private string GenerateRandomTempKey(string namePrefix = null)
         {
             var id = Guid.NewGuid().ToString();
 
-            return $"{prefix}{now}-{id}.txt";
+            return $"temp/{namePrefix}{now}-{id}.txt";
         }
     }
 }
