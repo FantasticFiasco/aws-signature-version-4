@@ -27,25 +27,29 @@
         {
             public static class Lowercase
             {
-                public const string Key = "safe-characters/lowercase/abcdefghijklmnopqrstuvwxyz.txt";
+                public const string Name = "abcdefghijklmnopqrstuvwxyz.txt";
+                public const string Key = "safe-characters/lowercase/" + Name;
                 public const string Content = "This file name consists of lowercase characters\n";
             }
 
             public static class Numbers
             {
-                public const string Key = "safe-characters/numbers/0123456789.txt";
+                public const string Name = "0123456789.txt";
+                public const string Key = "safe-characters/numbers/" + Name;
                 public const string Content = "This file name consists of numbers\n";
             }
 
             public static class SpecialCharacters
             {
-                public const string Key = "safe-characters/special-characters/!-_.'().txt";
+                public const string Name = "!-_.'().txt";
+                public const string Key = "safe-characters/special-characters/" + Name;
                 public const string Content = "This file name consists of special characters\n";
             }
 
             public static class Uppercase
             {
-                public const string Key = "safe-characters/uppercase/ABCDEFGHIJKLMNOPQRSTUVWXYZ.txt";
+                public const string Name = "ABCDEFGHIJKLMNOPQRSTUVWXYZ.txt";
+                public const string Key = "safe-characters/uppercase/" + Name;
                 public const string Content = "This file name consists of uppercase characters\n";
             }
         }
