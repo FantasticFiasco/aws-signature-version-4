@@ -67,6 +67,29 @@ namespace AwsSignatureVersion4.Integration.S3
         }
 
         [Theory]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Lowercase.Key, Bucket.SafeCharacters.Lowercase.Content)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Lowercase.Key, Bucket.SafeCharacters.Lowercase.Content)]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Numbers.Key, Bucket.SafeCharacters.Numbers.Content)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Numbers.Key, Bucket.SafeCharacters.Numbers.Content)]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.SpecialCharacters.Key, Bucket.SafeCharacters.SpecialCharacters.Content)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.SpecialCharacters.Key, Bucket.SafeCharacters.SpecialCharacters.Content)]
+        [InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Uppercase.Key, Bucket.SafeCharacters.Uppercase.Content)]
+        [InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Uppercase.Key, Bucket.SafeCharacters.Uppercase.Content)]
+        public async Task SucceedGivenSafeCharacters(IamAuthenticationType iamAuthenticationType, string key, string expectedContent)
+        {
+            // Act
+            var response = await HttpClient.GetAsync(
+                $"{Context.S3Url}{key}",
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            (await response.Content.ReadAsStringAsync()).ShouldBe(expectedContent);
+        }
+
+        [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
         public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)

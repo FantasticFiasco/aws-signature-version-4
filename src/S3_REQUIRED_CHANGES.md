@@ -7,3 +7,36 @@
     - 
 - Step 4 - Add signature
   - You can make requests and pass all request values in the query string, including signing information. This is sometimes referred to as a presigned URL, because it produces a single URL with everything required in order to make a successful call to AWS. It's commonly used in Amazon S3.
+
+
+
+# Limitations
+
+Object keys with special characters are not supported, they are the following:
+
+- Ampersand ("&")
+- Dollar ("$")
+- ASCII character ranges 00–1F hex (0–31 decimal) and 7F (127 decimal)
+- 'At' symbol ("@")
+- Equals ("=")
+- Semicolon (";")
+- Colon (":")
+- Plus ("+")
+- Space – Significant sequences of spaces might be lost in some uses (especially multiple spaces)
+- Comma (",")
+- Question mark ("?")
+- Backslash ("\")
+- Left curly brace ("{")
+- Non-printable ASCII characters (128–255 decimal characters)
+- Caret ("^")
+- Right curly brace ("}")
+- Percent character ("%")
+- Grave accent / back tick ("`")
+- Right square bracket ("]")
+- Quotation marks
+- 'Greater Than' symbol (">")
+- Left square bracket ("[")
+- Tilde ("~")
+- 'Less Than' symbol ("<")
+- 'Pound' character ("#")
+- Vertical bar / pipe ("|")
