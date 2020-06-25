@@ -8,9 +8,9 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.S3
 {
-    public class PutAsyncShould : S3IntegrationBase
+    public class DeleteAsyncShould : S3IntegrationBase
     {
-        public PutAsyncShould(IntegrationTestContext context)
+        public DeleteAsyncShould(IntegrationTestContext context)
             : base(context)
         {
         }
@@ -21,18 +21,17 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenNoPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = Bucket.Foo.Key;
+            var requestUri = await CreateObject(iamAuthenticationType, "delete.txt");
 
             // Act
-            var response = await HttpClient.PutAsync(
-                $"{Context.S3Url}{key}",
-                new StringContent(Bucket.Foo.Content),
+            var response = await HttpClient.DeleteAsync(
+                requestUri,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
 
             // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         }
 
         [Theory]
@@ -41,18 +40,17 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = Bucket.Foo.Bar.Key;
+            var requestUri = await CreateObject(iamAuthenticationType, "temp/delete.txt");
 
             // Act
-            var response = await HttpClient.PutAsync(
-                $"{Context.S3Url}{key}",
-                new StringContent(Bucket.Foo.Bar.Content),
+            var response = await HttpClient.DeleteAsync(
+                requestUri,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
 
             // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         }
 
         [Theory]
@@ -61,18 +59,17 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenDeepPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = Bucket.Foo.Bar.Baz.Key;
+            var requestUri = await CreateObject(iamAuthenticationType, "temp/deep/delete.txt");
 
             // Act
-            var response = await HttpClient.PutAsync(
-                $"{Context.S3Url}{key}",
-                new StringContent(Bucket.Foo.Bar.Baz.Content),
+            var response = await HttpClient.DeleteAsync(
+                requestUri,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
 
             // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         }
 
         [Theory]
@@ -87,18 +84,17 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenSafeCharacters(IamAuthenticationType iamAuthenticationType, string characters)
         {
             // Arrange
-            var key = GenerateRandomTempKey($"{characters}-");
+            var requestUri = await CreateObject(iamAuthenticationType, $"temp/delete-{characters}.txt");
 
             // Act
-            var response = await HttpClient.PutAsync(
-                $"{Context.S3Url}{key}",
-                new StringContent("This is some content..."),
+            var response = await HttpClient.DeleteAsync(
+                requestUri,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
 
             // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         }
 
         [Theory]
@@ -107,20 +103,19 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = GenerateRandomTempKey();
+            var requestUri = await CreateObject(iamAuthenticationType, "temp/delete.txt");
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.PutAsync(
-                $"{Context.S3Url}{key}",
-                new StringContent("This is some content..."),
+            var response = await HttpClient.DeleteAsync(
+                requestUri,
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
 
             // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         }
 
         [Theory]
@@ -129,13 +124,12 @@ namespace AwsSignatureVersion4.Integration.S3
         public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var key = GenerateRandomTempKey();
+            var key = "temp/delete.txt";
             var ct = new CancellationToken(true);
 
             // Act
-            var task = HttpClient.PutAsync(
+            var task = HttpClient.DeleteAsync(
                 $"{Context.S3Url}{key}",
-                new StringContent("This is some content..."),
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
@@ -143,6 +137,22 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
+        }
+
+        private async Task<string> CreateObject(IamAuthenticationType iamAuthenticationType, string key)
+        {
+            var requestUri = $"{Context.S3Url}{key}";
+
+            var response = await HttpClient.PutAsync(
+                requestUri,
+                new StringContent("This is some content..."),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            response.StatusCode.ShouldBe(HttpStatusCode.OK, "Arranging test by creating S3 object failed");
+
+            return requestUri;
         }
     }
 }

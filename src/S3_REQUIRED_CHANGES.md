@@ -40,3 +40,8 @@ Object keys with special characters are not supported, they are the following:
 - 'Less Than' symbol ("<")
 - 'Pound' character ("#")
 - Vertical bar / pipe ("|")
+
+Implementation uses single chunk signature calculation, which is more taxing to the memory than multiple chunks signature calculation. For more information read https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-auth-using-authorization-header.html
+
+Supports GET, PUT and DELETE
+Does not support Browser-Based Uploads Using POST. For more information read https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-UsingHTTPPOST.html
