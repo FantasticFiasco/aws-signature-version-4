@@ -18,7 +18,7 @@ export class S3Stack extends Stack {
         bucket.addLifecycleRule({
             id: 'Delete temp',
             prefix: 'temp/',
-            expiration: Duration.days(7),
+            expiration: Duration.days(31),
         });
 
         for (const identity of props.readWriteAccess) {
