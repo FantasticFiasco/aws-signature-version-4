@@ -141,26 +141,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var ct = new CancellationToken(true);
-
-            // Act
-            var task = HttpClient.GetAsync(
-                Context.ApiGatewayUrl,
-                ct,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
-
-            // Assert
-            task.Status.ShouldBe(TaskStatus.Canceled);
-        }
-
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
         public async Task SucceedGivenHttpCompletionOptionAndCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -178,6 +158,26 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken(true);
+
+            // Act
+            var task = HttpClient.GetAsync(
+                Context.ApiGatewayUrl,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            task.Status.ShouldBe(TaskStatus.Canceled);
         }
     }
 }

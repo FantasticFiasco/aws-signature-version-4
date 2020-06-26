@@ -134,26 +134,6 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var ct = new CancellationToken(true);
-
-            // Act
-            var task = HttpClient.GetAsync(
-                $"{Context.S3Url}{Bucket.Foo.Key}",
-                ct,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
-
-            // Assert
-            task.Status.ShouldBe(TaskStatus.Canceled);
-        }
-
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
         public async Task SucceedGivenHttpCompletionOptionAndCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -172,6 +152,45 @@ namespace AwsSignatureVersion4.Integration.S3
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
             (await response.Content.ReadAsStringAsync()).ShouldBe(Bucket.Foo.Content);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task ReturnNotFoundGivenUnknownKey(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var key = "unknown.txt";
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                $"{Context.S3Url}{key}",
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken(true);
+
+            // Act
+            var task = HttpClient.GetAsync(
+                $"{Context.S3Url}{Bucket.Foo.Key}",
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            task.Status.ShouldBe(TaskStatus.Canceled);
         }
     }
 }

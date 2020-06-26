@@ -118,6 +118,29 @@ namespace AwsSignatureVersion4.Integration.S3
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
         }
 
+        /// <summary>
+        /// Deleting an object that doesn't exist returns NoContent instead of NotFound, probably
+        /// because the intent has been fulfilled.
+        /// </summary>
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenUnknownKey(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var key = "unknown.txt";
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                $"{Context.S3Url}{key}",
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        }
+
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
