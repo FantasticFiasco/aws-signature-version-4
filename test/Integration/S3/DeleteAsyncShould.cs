@@ -100,6 +100,25 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenCharactersThatRequireSpecialHandling(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var requestUri = await CreateObject(iamAuthenticationType, $"temp/delete-{Bucket.CharactersThatRequireSpecialHandling.NameWithoutExtension}.txt");
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                requestUri,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
         public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange

@@ -104,6 +104,26 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenCharactersThatRequireSpecialHandling(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var key = GenerateRandomTempKey($"{Bucket.CharactersThatRequireSpecialHandling.NameWithoutExtension}-");
+
+            // Act
+            var response = await HttpClient.PutAsync(
+                $"{Context.S3Url}{key}",
+                new StringContent("This is some content..."),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
         public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange

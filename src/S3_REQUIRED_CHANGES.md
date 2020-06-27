@@ -12,19 +12,22 @@
 
 # Limitations
 
-Object keys with special characters are not supported, they are the following:
+Object keys with the following special characters are not tested, and might not work as expected:
 
-- Ampersand ("&")
-- Dollar ("$")
-- ASCII character ranges 00–1F hex (0–31 decimal) and 7F (127 decimal)
-- 'At' symbol ("@")
-- Equals ("=")
-- Semicolon (";")
+// - Ampersand ("&")
+// - Dollar ("$")
+// - ASCII character ranges 00–1F hex (0–31 decimal) and 7F (127 decimal)
+// - 'At' symbol ("@")
+// - Equals ("=")
+// - Semicolon (";")
 - Colon (":")
-- Plus ("+")
-- Space – Significant sequences of spaces might be lost in some uses (especially multiple spaces)
-- Comma (",")
-- Question mark ("?")
+// - Plus ("+")
+// - Space – Significant sequences of spaces might be lost in some uses (especially multiple spaces)
+// - Comma (",")
+// - Question mark ("?")
+
+Object keys with the following special characters are not supported:
+
 - Backslash ("\")
 - Left curly brace ("{")
 - Non-printable ASCII characters (128–255 decimal characters)
