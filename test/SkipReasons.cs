@@ -2,11 +2,6 @@
 {
     public static class SkipReasons
     {
-        public const string PlausibleSignedHeadersTestSuiteError =
-            "The header 'Content-Length' is specified in the canonical request file, but not in " +
-            "the authorization header file, nor the signed request file. AWS Technical Writers " +
-            "have been notified, and we are awaiting answer.";
-
         public const string PlausibleCanonicalUriTestSuiteError =
             "The signing algorithm states the following: 'Each path segment must be URI-encoded " +
             "twice except for Amazon S3 which only gets URI-encoded once.'. This scenario does " +
