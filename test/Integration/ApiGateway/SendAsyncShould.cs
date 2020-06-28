@@ -299,14 +299,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        public async Task SucceedGivenHttpCompletionOption(
-            IamAuthenticationType iamAuthenticationType,
-            string method)
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
