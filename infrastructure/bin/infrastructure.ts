@@ -14,6 +14,6 @@ new ApiGatewayStack(app, 'ApiGatewayStack', {
 });
 
 new S3Stack(app, 'S3Stack', {
-    readWriteAccess: [usersStack.userWithPermissions, usersStack.roleWithPermissions],
     stackName: 'SigV4-S3',
+    readWriteAccess: [usersStack.userWithPermissions, usersStack.roleWithPermissions],
 });
