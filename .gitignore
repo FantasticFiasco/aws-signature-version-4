@@ -6,7 +6,6 @@
 *.user
 *.userosscache
 *.sln.docstates
-launchSettings.json
 
 # Build results
 src/[Bb]in/
