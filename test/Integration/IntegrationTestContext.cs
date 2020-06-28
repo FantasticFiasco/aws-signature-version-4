@@ -24,7 +24,7 @@ namespace AwsSignatureVersion4.Integration
             Secrets.AwsRoleArn,
             "signature-version-4-integration-tests");
 
-        public string ApiGatewayUrl { get; } = Secrets.AwsApiGatewayUrl.TrimEnd('/');
+        public string ApiGatewayUrl { get; } = Secrets.AwsApiGatewayUrl;
 
         public string S3BucketName { get; } = Secrets.AwsS3BucketName;
 

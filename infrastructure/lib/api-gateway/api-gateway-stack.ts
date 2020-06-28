@@ -1,6 +1,6 @@
 import { AuthorizationType, LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
-import { Construct, Stack, StackProps } from '@aws-cdk/core';
+import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/core';
 
 export class ApiGatewayStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
@@ -29,6 +29,10 @@ export class ApiGatewayStack extends Stack {
 
         api.root.addResource('{proxy+}').addMethod('ANY', undefined, {
             authorizationType: AuthorizationType.IAM,
+        });
+
+        new CfnOutput(this, 'ApiGatewayUrl', {
+            value: api.url.slice(0, -1), // Remove the trailing slash
         });
     }
 }

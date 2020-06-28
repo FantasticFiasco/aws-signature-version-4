@@ -25,7 +25,7 @@ namespace AwsSignatureVersion4.Integration.S3
             
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -44,7 +44,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -63,7 +63,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -88,7 +88,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -107,7 +107,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -126,7 +126,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -146,7 +146,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
@@ -170,7 +170,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{key}",
+                $"{Context.S3BucketUrl}/{key}",
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -190,7 +190,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var task = HttpClient.DeleteAsync(
-                $"{Context.S3BucketUrl}{key}",
+                $"{Context.S3BucketUrl}/{key}",
                 ct,
                 Context.RegionName,
                 Context.ServiceName,

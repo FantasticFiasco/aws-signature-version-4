@@ -20,6 +20,9 @@
             "integration tests and can because of this safely be ignored.";
 
         public const string NotSupportedByApiGateway =
-            "This scenario defines a request URI that isn't supported by AWS API Gateway.";
+            "This scenario defines a request that isn't supported by AWS API Gateway.";
+
+        public const string NotSupportedByS3 =
+            "This scenario defines a request that isn't supported by AWS S3.";
     }
 }

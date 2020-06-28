@@ -25,7 +25,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
@@ -45,7 +45,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
@@ -65,7 +65,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
@@ -91,7 +91,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
@@ -111,7 +111,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
@@ -131,7 +131,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
@@ -152,7 +152,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Act
             var response = await HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 ct,
                 Context.RegionName,
@@ -174,7 +174,7 @@ namespace AwsSignatureVersion4.Integration.S3
             
             // Act
             var task = HttpClient.PutAsync(
-                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
                 ct,
                 Context.RegionName,
