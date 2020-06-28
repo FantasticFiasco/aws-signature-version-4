@@ -7,11 +7,14 @@ namespace AwsSignatureVersion4.Integration.S3
         public BucketObject(string key, string content = "This is some content")
         {
             Key = key;
-            Content = new StringContent(content);
+            Content = content;
+            StringContent = new StringContent(content);
         }
 
         public string Key { get; }
 
-        public StringContent Content { get; }
+        public string Content { get; }
+
+        public StringContent StringContent { get; }
     }
 }

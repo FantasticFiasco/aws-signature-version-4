@@ -26,7 +26,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                bucketObject.Content,
+                bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -46,7 +46,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                bucketObject.Content,
+                bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -66,7 +66,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                bucketObject.Content,
+                bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -92,7 +92,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                bucketObject.Content,
+                bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -112,7 +112,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                bucketObject.Content,
+                bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -133,7 +133,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                bucketObject.Content,
+                bucketObject.StringContent,
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
@@ -155,7 +155,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Act
             var task = HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                bucketObject.Content,
+                bucketObject.StringContent,
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
