@@ -37,7 +37,7 @@
 ////        [Theory]
 ////        [InlineData(IamAuthenticationType.User)]
 ////        [InlineData(IamAuthenticationType.Role)]
-////        public async Task SucceedGivenPrefix(IamAuthenticationType iamAuthenticationType)
+////        public async Task SucceedGivenSingleLevelPrefix(IamAuthenticationType iamAuthenticationType)
 ////        {
 ////            // Arrange
 ////            var requestUri = await CreateObject(iamAuthenticationType, "temp/delete.txt");
@@ -56,7 +56,7 @@
 ////        [Theory]
 ////        [InlineData(IamAuthenticationType.User)]
 ////        [InlineData(IamAuthenticationType.Role)]
-////        public async Task SucceedGivenDeepPrefix(IamAuthenticationType iamAuthenticationType)
+////        public async Task SucceedGivenMultiLevelPrefix(IamAuthenticationType iamAuthenticationType)
 ////        {
 ////            // Arrange
 ////            var requestUri = await CreateObject(iamAuthenticationType, "temp/deep/delete.txt");

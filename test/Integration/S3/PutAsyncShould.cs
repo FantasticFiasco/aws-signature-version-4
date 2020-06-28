@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Shouldly;
@@ -20,12 +21,12 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenNoPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync("foo.txt");
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
 
             // Act
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}{bucketObject.Key}",
-                new StringContent(bucketObject.Content),
+                bucketObject.Content,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -34,134 +35,134 @@ namespace AwsSignatureVersion4.Integration.S3
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public async Task SucceedGivenPrefix(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // Arrange
-        //    var key = Bucket.Foo.Bar.Key;
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenSingleLevelPrefix(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithSingleLevelPrefix);
 
-        //    // Act
-        //    var response = await HttpClient.PutAsync(
-        //        $"{Context.S3BucketUrl}{key}",
-        //        new StringContent(Bucket.Foo.Bar.Content),
-        //        Context.RegionName,
-        //        Context.ServiceName,
-        //        ResolveCredentials(iamAuthenticationType));
+            // Act
+            var response = await HttpClient.PutAsync(
+                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                bucketObject.Content,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
 
-        //    // Assert
-        //    response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        //}
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public async Task SucceedGivenDeepPrefix(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // Arrange
-        //    var key = Bucket.Foo.Bar.Baz.Key;
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenMultiLevelPrefix(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithMultiLevelPrefix);
 
-        //    // Act
-        //    var response = await HttpClient.PutAsync(
-        //        $"{Context.S3BucketUrl}{key}",
-        //        new StringContent(Bucket.Foo.Bar.Baz.Content),
-        //        Context.RegionName,
-        //        Context.ServiceName,
-        //        ResolveCredentials(iamAuthenticationType));
+            // Act
+            var response = await HttpClient.PutAsync(
+                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                bucketObject.Content,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
 
-        //    // Assert
-        //    response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        //}
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Lowercase.NameWithoutExtension)]
-        //[InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Lowercase.NameWithoutExtension)]
-        //[InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Numbers.NameWithoutExtension)]
-        //[InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Numbers.NameWithoutExtension)]
-        //[InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.SpecialCharacters.NameWithoutExtension)]
-        //[InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.SpecialCharacters.NameWithoutExtension)]
-        //[InlineData(IamAuthenticationType.User, Bucket.SafeCharacters.Uppercase.NameWithoutExtension)]
-        //[InlineData(IamAuthenticationType.Role, Bucket.SafeCharacters.Uppercase.NameWithoutExtension)]
-        //public async Task SucceedGivenSafeCharacters(IamAuthenticationType iamAuthenticationType, string characters)
-        //{
-        //    // Arrange
-        //    var key = GenerateRandomTempKey($"{characters}-");
+        [Theory]
+        [InlineData(IamAuthenticationType.User, BucketObjectKey.WithLowercaseSafeCharacters)]
+        [InlineData(IamAuthenticationType.Role, BucketObjectKey.WithLowercaseSafeCharacters)]
+        [InlineData(IamAuthenticationType.User, BucketObjectKey.WithNumberSafeCharacters)]
+        [InlineData(IamAuthenticationType.Role, BucketObjectKey.WithNumberSafeCharacters)]
+        [InlineData(IamAuthenticationType.User, BucketObjectKey.WithSpecialSafeCharacters)]
+        [InlineData(IamAuthenticationType.Role, BucketObjectKey.WithSpecialSafeCharacters)]
+        [InlineData(IamAuthenticationType.User, BucketObjectKey.WithUppercaseSafeCharacters)]
+        [InlineData(IamAuthenticationType.Role, BucketObjectKey.WithUppercaseSafeCharacters)]
+        public async Task SucceedGivenSafeCharacters(IamAuthenticationType iamAuthenticationType, string key)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(key);
 
-        //    // Act
-        //    var response = await HttpClient.PutAsync(
-        //        $"{Context.S3BucketUrl}{key}",
-        //        new StringContent("This is some content..."),
-        //        Context.RegionName,
-        //        Context.ServiceName,
-        //        ResolveCredentials(iamAuthenticationType));
+            // Act
+            var response = await HttpClient.PutAsync(
+                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                bucketObject.Content,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
 
-        //    // Assert
-        //    response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        //}
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public async Task SucceedGivenCharactersThatRequireSpecialHandling(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // Arrange
-        //    var key = GenerateRandomTempKey($"{Bucket.CharactersThatRequireSpecialHandling.NameWithoutExtension}-");
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenCharactersThatRequireSpecialHandling(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithCharactersThatRequireSpecialHandling);
 
-        //    // Act
-        //    var response = await HttpClient.PutAsync(
-        //        $"{Context.S3BucketUrl}{key}",
-        //        new StringContent("This is some content..."),
-        //        Context.RegionName,
-        //        Context.ServiceName,
-        //        ResolveCredentials(iamAuthenticationType));
+            // Act
+            var response = await HttpClient.PutAsync(
+                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                bucketObject.Content,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
 
-        //    // Assert
-        //    response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        //}
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // Arrange
-        //    var key = GenerateRandomTempKey();
-        //    var ct = new CancellationToken();
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var ct = new CancellationToken();
 
-        //    // Act
-        //    var response = await HttpClient.PutAsync(
-        //        $"{Context.S3BucketUrl}{key}",
-        //        new StringContent("This is some content..."),
-        //        ct,
-        //        Context.RegionName,
-        //        Context.ServiceName,
-        //        ResolveCredentials(iamAuthenticationType));
+            // Act
+            var response = await HttpClient.PutAsync(
+                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                bucketObject.Content,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
 
-        //    // Assert
-        //    response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        //}
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // Arrange
-        //    var key = GenerateRandomTempKey();
-        //    var ct = new CancellationToken(true);
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var ct = new CancellationToken(true);
+            
+            // Act
+            var task = HttpClient.PutAsync(
+                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                bucketObject.Content,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
 
-        //    // Act
-        //    var task = HttpClient.PutAsync(
-        //        $"{Context.S3BucketUrl}{key}",
-        //        new StringContent("This is some content..."),
-        //        ct,
-        //        Context.RegionName,
-        //        Context.ServiceName,
-        //        ResolveCredentials(iamAuthenticationType));
-
-        //    // Assert
-        //    task.Status.ShouldBe(TaskStatus.Canceled);
-        //}
+            // Assert
+            task.Status.ShouldBe(TaskStatus.Canceled);
+        }
     }
 }

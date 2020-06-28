@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http;
+using System.Threading.Tasks;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
@@ -23,12 +24,12 @@ namespace AwsSignatureVersion4.Integration.S3
             {
                 BucketName = name,
                 Key = key,
-                ContentBody = content,
+                ContentBody = content
             };
 
             await client.PutObjectAsync(request);
 
-            return new BucketObject(key, content);
+            return new BucketObject(key, new StringContent(content));
         }
     }
 }

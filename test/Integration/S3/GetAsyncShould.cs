@@ -35,7 +35,7 @@
 ////        [Theory]
 ////        [InlineData(IamAuthenticationType.User)]
 ////        [InlineData(IamAuthenticationType.Role)]
-////        public async Task SucceedGivenPrefix(IamAuthenticationType iamAuthenticationType)
+////        public async Task SucceedGivenSingleLevelPrefix(IamAuthenticationType iamAuthenticationType)
 ////        {
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
@@ -52,7 +52,7 @@
 ////        [Theory]
 ////        [InlineData(IamAuthenticationType.User)]
 ////        [InlineData(IamAuthenticationType.Role)]
-////        public async Task SucceedGivenDeepPrefix(IamAuthenticationType iamAuthenticationType)
+////        public async Task SucceedGivenMultiLevelPrefix(IamAuthenticationType iamAuthenticationType)
 ////        {
 ////            // Act
 ////            var response = await HttpClient.GetAsync(

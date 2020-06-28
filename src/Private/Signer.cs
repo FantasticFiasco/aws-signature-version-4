@@ -23,6 +23,7 @@ namespace AwsSignatureVersion4.Private
             if (request.Headers.Contains(HeaderKeys.AuthorizationHeader)) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (regionName == null) throw new ArgumentNullException(nameof(regionName));
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
+            if (serviceName == "s3" && request.Method == HttpMethod.Post) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPost);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             UpdateRequestUri(httpClient, request);
