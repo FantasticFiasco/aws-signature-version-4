@@ -20,7 +20,8 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var requestUri = $"{Context.S3BucketUrl}{BucketObjectKey.WithoutPrefix}";
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var requestUri = $"{Context.S3BucketUrl}{bucketObject.Key}";
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
