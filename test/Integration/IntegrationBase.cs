@@ -26,8 +26,8 @@ namespace AwsSignatureVersion4.Integration
         {
             switch (iamAuthenticationType)
             {
-                case IamAuthenticationType.User: return Context.UserCredentials;
-                case IamAuthenticationType.Role: return Context.RoleCredentials;
+                case IamAuthenticationType.User: return Context.UserCredentials.GetCredentials();
+                case IamAuthenticationType.Role: return Context.RoleCredentials.GetCredentials();
                 default: throw new NotImplementedException($"The authentication type {iamAuthenticationType} is not implemented");
             }
         }
