@@ -20,7 +20,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task ThrowNotSupportedException(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
 
             // Act
             var actual = HttpClient.PostAsync(

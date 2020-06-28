@@ -29,7 +29,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             await client.PutObjectAsync(request);
 
-            return new BucketObject(key, new StringContent(content));
+            return new BucketObject(key, content);
         }
     }
 }

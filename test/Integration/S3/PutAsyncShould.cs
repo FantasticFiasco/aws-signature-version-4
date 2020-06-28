@@ -21,7 +21,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenNoPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
 
             // Act
             var response = await HttpClient.PutAsync(
@@ -41,7 +41,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenSingleLevelPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithSingleLevelPrefix);
+            var bucketObject = new BucketObject(BucketObjectKey.WithSingleLevelPrefix);
 
             // Act
             var response = await HttpClient.PutAsync(
@@ -61,7 +61,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenMultiLevelPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithMultiLevelPrefix);
+            var bucketObject = new BucketObject(BucketObjectKey.WithMultiLevelPrefix);
 
             // Act
             var response = await HttpClient.PutAsync(
@@ -87,7 +87,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenSafeCharacters(IamAuthenticationType iamAuthenticationType, string key)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(key);
+            var bucketObject = new BucketObject(key);
 
             // Act
             var response = await HttpClient.PutAsync(
@@ -107,7 +107,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenCharactersThatRequireSpecialHandling(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithCharactersThatRequireSpecialHandling);
+            var bucketObject = new BucketObject(BucketObjectKey.WithCharactersThatRequireSpecialHandling);
 
             // Act
             var response = await HttpClient.PutAsync(
@@ -127,7 +127,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
             var ct = new CancellationToken();
 
             // Act
@@ -146,10 +146,10 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
             var ct = new CancellationToken(true);
             
             // Act
