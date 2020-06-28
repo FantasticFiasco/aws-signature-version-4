@@ -10,5 +10,6 @@
         public const string WithNumberSafeCharacters = "0123456789.txt";
         public const string WithSpecialSafeCharacters = "!-_.*'().txt";
         public const string WithCharactersThatRequireSpecialHandling = "&$@=; ,.txt";
+        public const string WithUnnormalizedDelimiters = "unnormalized//delimiter.txt";
     }
 }

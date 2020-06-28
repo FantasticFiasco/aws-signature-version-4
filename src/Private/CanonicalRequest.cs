@@ -56,10 +56,9 @@ namespace AwsSignatureVersion4.Private
             // except for Amazon S3 which only gets URI-encoded once</see>).
             var path = S3Uri.IsS3Uri(request.RequestUri)
                 ? request.RequestUri.LocalPath
-                : request.RequestUri.AbsolutePath;
+                : request.RequestUri.AbsolutePath.Replace("//", "/");
 
             var pathSegments = path
-                .Replace("//", "/")
                 .Split('/')
                 .Select(pathSegment => AWSSDKUtils.UrlEncode(pathSegment, false));
 

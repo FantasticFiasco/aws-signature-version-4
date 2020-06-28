@@ -119,6 +119,25 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenUnnormalizedDelimiters(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithUnnormalizedDelimiters);
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                $"{Context.S3BucketUrl}{bucketObject.Key}",
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
         public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
