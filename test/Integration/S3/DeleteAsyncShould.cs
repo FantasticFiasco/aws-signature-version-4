@@ -151,7 +151,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.DeleteAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                Context.RegionName,
 ////                Context.ServiceName,
 ////                await ResolveCredentials(iamAuthenticationType));
@@ -171,7 +171,7 @@
 
 ////            // Act
 ////            var task = HttpClient.DeleteAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                ct,
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -183,7 +183,7 @@
 
 ////        private async Task<string> CreateObject(IamAuthenticationType iamAuthenticationType, string key)
 ////        {
-////            var requestUri = $"{Context.S3Url}{key}";
+////            var requestUri = $"{Context.S3BucketUrl}{key}";
 
 ////            var response = await HttpClient.PutAsync(
 ////                requestUri,

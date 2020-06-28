@@ -1,1 +1,0 @@
-This file name consists of special characters that require special handling

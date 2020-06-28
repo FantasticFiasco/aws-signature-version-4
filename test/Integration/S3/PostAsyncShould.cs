@@ -25,7 +25,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.PutAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                new StringContent(Bucket.Foo.Content),
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -45,7 +45,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.PutAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                new StringContent(Bucket.Foo.Bar.Content),
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -65,7 +65,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.PutAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                new StringContent(Bucket.Foo.Bar.Baz.Content),
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -91,7 +91,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.PutAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                new StringContent("This is some content..."),
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -111,7 +111,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.PutAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                new StringContent("This is some content..."),
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -132,7 +132,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.PutAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                new StringContent("This is some content..."),
 ////                ct,
 ////                Context.RegionName,
@@ -154,7 +154,7 @@
 
 ////            // Act
 ////            var task = HttpClient.PutAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                new StringContent("This is some content..."),
 ////                ct,
 ////                Context.RegionName,

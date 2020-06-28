@@ -22,7 +22,7 @@
 ////            string method)
 ////        {
 ////            // Arrange
-////            var requestUri = $"{Context.S3Url}{Bucket.Foo.Key}";
+////            var requestUri = $"{Context.S3BucketUrl}{Bucket.Foo.Key}";
 ////            var request = new HttpRequestMessage(new HttpMethod(method), requestUri);
 ////            var completionOption = HttpCompletionOption.ResponseContentRead;
 

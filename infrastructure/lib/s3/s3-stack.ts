@@ -1,6 +1,5 @@
 import { IIdentity } from '@aws-cdk/aws-iam';
 import { Bucket } from '@aws-cdk/aws-s3';
-import { BucketDeployment, Source } from '@aws-cdk/aws-s3-deployment';
 import { CfnOutput, Construct, Duration, RemovalPolicy, Stack, StackProps } from '@aws-cdk/core';
 
 export interface S3StackProps extends StackProps {
@@ -25,9 +24,8 @@ export class S3Stack extends Stack {
             bucket.grantReadWrite(identity);
         }
 
-        new BucketDeployment(this, 'BucketItems', {
-            sources: [Source.asset('./lib/s3/items/')],
-            destinationBucket: bucket,
+        new CfnOutput(this, 'BucketName', {
+            value: bucket.bucketName,
         });
 
         new CfnOutput(this, 'BucketUrl', {

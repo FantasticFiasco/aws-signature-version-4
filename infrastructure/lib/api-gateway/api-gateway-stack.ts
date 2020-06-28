@@ -8,7 +8,7 @@ export class ApiGatewayStack extends Stack {
 
         // Create Lambda
         const requestHandler = new Function(this, 'ApiRequestHandler', {
-            code: Code.asset('./lib/api-gateway/handlers'),
+            code: Code.asset(`${__dirname}/handlers`),
             handler: 'request.handler',
             runtime: Runtime.NODEJS_10_X,
         });

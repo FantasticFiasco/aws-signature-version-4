@@ -4,7 +4,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 
-namespace AwsSignatureVersion4.Integration.S3.Helpers
+namespace AwsSignatureVersion4.Integration.S3
 {
     public class Bucket
     {
@@ -17,7 +17,7 @@ namespace AwsSignatureVersion4.Integration.S3.Helpers
             client = new AmazonS3Client(credentials, region);
         }
 
-        public async Task PutObjectAsync(string key, string content)
+        public async Task<BucketObject> PutObjectAsync(string key, string content = "This is some content")
         {
             var request = new PutObjectRequest
             {
@@ -27,6 +27,8 @@ namespace AwsSignatureVersion4.Integration.S3.Helpers
             };
 
             await client.PutObjectAsync(request);
+
+            return new BucketObject(key, content);
         }
     }
 }

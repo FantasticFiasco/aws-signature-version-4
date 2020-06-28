@@ -22,7 +22,7 @@
 ////        {
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.Foo.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.Foo.Key}",
 ////                Context.RegionName,
 ////                Context.ServiceName,
 ////                ResolveCredentials(iamAuthenticationType));
@@ -39,7 +39,7 @@
 ////        {
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.Foo.Bar.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.Foo.Bar.Key}",
 ////                Context.RegionName,
 ////                Context.ServiceName,
 ////                ResolveCredentials(iamAuthenticationType));
@@ -56,7 +56,7 @@
 ////        {
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.Foo.Bar.Baz.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.Foo.Bar.Baz.Key}",
 ////                Context.RegionName,
 ////                Context.ServiceName,
 ////                ResolveCredentials(iamAuthenticationType));
@@ -79,7 +79,7 @@
 ////        {
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                Context.RegionName,
 ////                Context.ServiceName,
 ////                ResolveCredentials(iamAuthenticationType));
@@ -96,7 +96,7 @@
 ////        {
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.CharactersThatRequireSpecialHandling.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.CharactersThatRequireSpecialHandling.Key}",
 ////                Context.RegionName,
 ////                Context.ServiceName,
 ////                ResolveCredentials(iamAuthenticationType));
@@ -116,7 +116,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.Foo.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.Foo.Key}",
 ////                completionOption,
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -137,7 +137,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.Foo.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.Foo.Key}",
 ////                ct,
 ////                Context.RegionName,
 ////                Context.ServiceName,
@@ -159,7 +159,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.Foo.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.Foo.Key}",
 ////                completionOption,
 ////                ct,
 ////                Context.RegionName,
@@ -181,7 +181,7 @@
 
 ////            // Act
 ////            var response = await HttpClient.GetAsync(
-////                $"{Context.S3Url}{key}",
+////                $"{Context.S3BucketUrl}{key}",
 ////                Context.RegionName,
 ////                Context.ServiceName,
 ////                ResolveCredentials(iamAuthenticationType));
@@ -200,7 +200,7 @@
 
 ////            // Act
 ////            var task = HttpClient.GetAsync(
-////                $"{Context.S3Url}{Bucket.Foo.Key}",
+////                $"{Context.S3BucketUrl}{Bucket.Foo.Key}",
 ////                ct,
 ////                Context.RegionName,
 ////                Context.ServiceName,

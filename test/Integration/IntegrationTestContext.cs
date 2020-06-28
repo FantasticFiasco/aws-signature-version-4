@@ -26,6 +26,8 @@ namespace AwsSignatureVersion4.Integration
 
         public string ApiGatewayUrl { get; } = Secrets.AwsApiGatewayUrl;
 
-        public string S3Url { get; } = Secrets.AwsS3Url;
+        public string S3BucketName { get; } = Secrets.AwsS3BucketName;
+
+        public string S3BucketUrl { get; } = Secrets.AwsS3BucketUrl;
     }
 }
