@@ -21,7 +21,7 @@ Object keys with the following special characters are not tested, and might not 
 // - Equals ("=")
 // - Semicolon (";")
 - Colon (":")
-// - Plus ("+")
+ - Plus ("+")
 // - Space – Significant sequences of spaces might be lost in some uses (especially multiple spaces)
 // - Comma (",")
 // - Question mark ("?")
@@ -48,3 +48,6 @@ Implementation uses single chunk signature calculation, which is more taxing to 
 
 Supports GET, PUT and DELETE
 Does not support Browser-Based Uploads Using POST. For more information read https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-UsingHTTPPOST.html
+
+Lägg in test för:
+In exception to this, you do not normalize URI paths for requests to Amazon S3. For example, if you have a bucket with an object named my-object//example//photo.user, use that path. Normalizing the path to my-object/example/photo.user will cause the request to fail. For more information, see Task 1: Create a Canonical Request in the Amazon Simple Storage Service API Reference.

@@ -31,7 +31,7 @@ export class S3Stack extends Stack {
         });
 
         new CfnOutput(this, 'BucketUrl', {
-            value: `https://${bucket.bucketName}.s3-${this.region}.amazonaws.com/`,
+            value: `https://${bucket.bucketName}.s3.${this.region}.amazonaws.com/`,
         });
     }
 }

@@ -56,7 +56,7 @@
 
         public static class CharactersThatRequireSpecialHandling
         {
-            public const string NameWithoutExtension = "&$@=;+ ,";
+            public const string NameWithoutExtension = "&$@=; ,";
             public const string Key = "characters-that-require-special-handling/" + NameWithoutExtension + ".txt";
             public const string Content = "This file name consists of special characters that require special handling\n";
         }

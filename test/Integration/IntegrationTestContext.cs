@@ -13,26 +13,22 @@ namespace AwsSignatureVersion4.Integration
     /// </summary>
     public class IntegrationTestContext : Context, IAsyncLifetime
     {
-        private readonly IntegrationTestVariables variables;
-
         public IntegrationTestContext()
         {
-            variables = new IntegrationTestVariables();
-
-            RegionName = variables.GetValue("AWS_REGION");
+            RegionName = Secrets.AwsRegion;
             UserCredentials = new ImmutableCredentials(
-                variables.GetValue("AWS_USER_WITH_PERMISSIONS_ACCESS_KEY_ID"),
-                variables.GetValue("AWS_USER_WITH_PERMISSIONS_SECRET_ACCESS_KEY"),
+                Secrets.AwsUserWithPermissionsAccessKeyId,
+                Secrets.AwsUserWithPermissionsSecretAccessKey,
                 null);
-            ApiGatewayUrl = variables.GetValue("AWS_API_GATEWAY_URL");
-            S3Url = variables.GetValue("AWS_S3_URL");
+            ApiGatewayUrl = Secrets.AwsApiGatewayUrl;
+            S3Url = Secrets.AwsS3Url;
         }
 
         public string RegionName { get; }
 
         public string ServiceName { get; set; }
 
-        public ImmutableCredentials UserCredentials { get; }
+        public ImmutableCredentials UserCredentials { get; } 
 
         public ImmutableCredentials RoleCredentials { get; private set; }
 
@@ -40,21 +36,21 @@ namespace AwsSignatureVersion4.Integration
 
         public string S3Url { get; }
 
-        public async Task InitializeAsync() => RoleCredentials = await CreateRoleCredentials();
+        public async Task InitializeAsync() => RoleCredentials = await CreateRoleCredentialsAsync();
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        private async Task<ImmutableCredentials> CreateRoleCredentials()
+        private static async Task<ImmutableCredentials> CreateRoleCredentialsAsync()
         {
             var stsClient = new AmazonSecurityTokenServiceClient(
-                variables.GetValue("AWS_USER_WITHOUT_PERMISSIONS_ACCESS_KEY_ID"),
-                variables.GetValue("AWS_USER_WITHOUT_PERMISSIONS_SECRET_ACCESS_KEY"));
+                Secrets.AwsUserWithoutPermissionsAccessKeyId,
+                Secrets.AwsUserWithoutPermissionsSecretAccessKey);
 
             using (stsClient)
             {
                 var request = new AssumeRoleRequest
                 {
-                    RoleArn = variables.GetValue("AWS_ROLE_ARN"),
+                    RoleArn = Secrets.AwsRoleArn,
                     RoleSessionName = "signature-version-4-integration-tests"
                 };
 
