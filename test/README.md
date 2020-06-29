@@ -12,4 +12,4 @@ The [AWS Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-
 
 ## Unit tests
 
-Unit tests can be found in the `Unit` directory. These tests does not require any prerequisite and is included by the ReSharper test runner.
+Unit tests can be found in the `Unit` directory. These tests does not require any prerequisite and are included by the ReSharper test runner.
