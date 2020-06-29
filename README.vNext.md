@@ -124,13 +124,6 @@ You can also install AwsSignatureVersion4 using the `dotnet` command line interf
 dotnet add package AwsSignatureVersion4
 ```
 
-
-## Donations
-
-If this project has helped you to stay productive and save money, you can buy me a cup of coffee :)
-
-[![PayPal Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/FantasticFiasco)
-
 ## Credit
 
 Thank you [JetBrains](https://www.jetbrains.com/) for your important initiative to support the open source community with free licenses to your products.
