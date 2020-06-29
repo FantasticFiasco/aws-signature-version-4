@@ -46,10 +46,10 @@ var client = new HttpClient();
 var credentials = new ImmutableCredentials("<access key id>", "<secret access key>", null);
 
 var response = await client.GetAsync(
-    "https://www.acme.com/resources",
-    regionName: "us-west-1",
-    serviceName: "execute-api",
-    credentials: credentials);
+  "https://www.acme.com/resources",
+  regionName: "us-west-1",
+  serviceName: "execute-api",
+  credentials: credentials);
 ```
 
 Please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test) directory for other examples.
@@ -60,22 +60,53 @@ This project comes with a pledge, providing transparency on supported and unsupp
 
 - :heavy_check_mark: Over 170 unit tests are passing before a release
 - :heavy_check_mark: Over 180 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
+- :heavy_check_mark: Over 110 integration tests targeting an IAM authenticated AWS S3 bucket are passing before a release
 - :heavy_check_mark: No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
 - :heavy_check_mark: [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/) is reused as much as possible, thus the dependency
 - :heavy_check_mark: [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios are passing, with the following exceptions:
-  - :x: `get-vanilla-query-unreserved` - This scenario defines a request URI that isn't supported by AWS API Gateway
-  - :x: `get-utf8` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
-  - :x: `normalize-path/get-space` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
-  - :x: `post-sts-token/post-sts-header-before` - This scenario is based on the fact that the signing algorithm should support STS tokens, e.g. by assuming a role. This scenario is already covered by numerous other integration tests and can because of this safely be ignored.
-  - :x: `post-x-www-form-urlencoded` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, e.g. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
-  - :x: `post-x-www-form-urlencoded-parameters` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, e.g. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
-- :x: Amazon S3 (Simple Storage Service) is currently not supported. Please give [issue #1](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1) a thumbs up if you wish it to be supported.
+  - General
+    - :x: `get-utf8` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
+    - :x: `normalize-path/get-space` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
+    - :x: `post-x-www-form-urlencoded` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, e.g. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
+    - :x: `post-x-www-form-urlencoded-parameters` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, e.g. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
+  - API Gateway
+    - :x: `get-vanilla-query-unreserved` - This scenario defines a request that isn't supported by AWS API Gateway
+    - :x: `post-sts-token/post-sts-header-before` - This scenario is based on the fact that the signing algorithm should support STS tokens, e.g. by assuming a role. This scenario is already covered by numerous other integration tests and can because of this safely be ignored.
+  - S3
+    - :x: `normalize-path/get-slash-pointless-dot` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-header-key-case` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-header-key-sort` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-header-value-case` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-sts-token/post-sts-header-after` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-sts-token/post-sts-header-before` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-vanilla` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-vanilla-empty-query-value` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-vanilla-query` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-x-www-form-urlencoded` - This scenario defines a request that isn't supported by AWS S3.
+    - :x: `post-x-www-form-urlencoded-parameters` - This scenario defines a request that isn't supported by AWS S3.
+- :heavy_check_mark: All characters are supported in S3 object keys with the following exceptions:
+  - Plus (`+`)
+  - Backslash (`\`)
+  - Left curly brace (`{`)
+  - Right curly brace (`}`)
+  - Left square bracket (`[`)
+  - Right square bracket (`]`)
+  - 'Less Than' symbol (`<`)
+  - 'Greater Than' symbol (`>`)
+  - Grave accent / back tick (`` ` ``)
+  - 'Pound' character (`#`)
+  - Caret (`^`)
+  - Percent character (`%`)
+  - Tilde (`~`)
+  - Vertical bar / pipe (`|`)
+  - Non-printable ASCII characters (128–255 decimal characters)
+  - Quotation marks
 - Authentication method
-    - :heavy_check_mark: HTTP header authentication is supported
-    - :x: Query string authentication is not supported
+  - :heavy_check_mark: HTTP header authentication is supported
+  - :x: Query string authentication is not supported
 - HTTP version
-    - :heavy_check_mark: HTTP/1.1 is supported
-    - :x: HTTP/2 is not supported, please create an issue if you wish it to be supported
+  - :heavy_check_mark: HTTP/1.1 is supported
+  - :x: HTTP/2 is not supported, please create an issue if you wish it to be supported
 
 ## Install via NuGet
 
@@ -92,13 +123,6 @@ You can also install AwsSignatureVersion4 using the `dotnet` command line interf
 ```bash
 dotnet add package AwsSignatureVersion4
 ```
-
-
-## Donations
-
-If this project has helped you to stay productive and save money, you can buy me a cup of coffee :)
-
-[![PayPal Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/FantasticFiasco)
 
 ## Credit
 

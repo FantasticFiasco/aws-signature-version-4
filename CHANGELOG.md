@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [1.3.0] - 2020-06-29
+
 ### :zap: Added
 
 - [#1](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1) Support for S3 (Simple Storage Service)
