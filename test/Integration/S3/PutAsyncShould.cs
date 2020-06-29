@@ -127,7 +127,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenUnnormalizedDelimiters(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = new BucketObject(BucketObjectKey.WithUnnormalizedDelimiters);
+            var bucketObject = new BucketObject(BucketObjectKey.WithUnnormalizedDelimiter);
 
             // Act
             var response = await HttpClient.PutAsync(
