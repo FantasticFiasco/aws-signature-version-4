@@ -34,7 +34,7 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 context.UtcNow,
                 context.RegionName,
-                ServiceName.S3,
+                "s3",
                 context.Credentials);
 
             // Assert

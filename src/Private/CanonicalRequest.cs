@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web;
-using Amazon.Runtime.Internal.Util;
 using Amazon.Util;
 
 namespace AwsSignatureVersion4.Private
@@ -35,6 +34,7 @@ namespace AwsSignatureVersion4.Private
         /// The first value is the canonical request, the second value is the signed headers.
         /// </returns>
         public static (string, string) Build(
+            string serviceName,
             HttpRequestMessage request,
             HttpRequestHeaders defaultHeaders,
             string contentHash)
@@ -54,15 +54,9 @@ namespace AwsSignatureVersion4.Private
             // URI-encoded twice (
             // <see href="https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html">
             // except for Amazon S3 which only gets URI-encoded once</see>).
-            var path = S3Uri.IsS3Uri(request.RequestUri)
-                ? request.RequestUri.LocalPath
-                : request.RequestUri.AbsolutePath.Replace("//", "/");
+            var canonicalResourcePath = GetCanonicalResourcePath(serviceName, request.RequestUri);
 
-            var pathSegments = path
-                .Split('/')
-                .Select(pathSegment => AWSSDKUtils.UrlEncode(pathSegment, false));
-
-            builder.Append($"{string.Join("/", pathSegments)}\n");
+            builder.Append($"{canonicalResourcePath}\n");
 
             // Add the canonical query string, followed by a newline character. If the request does
             // not include a query string, use an empty string (essentially, a blank line).
@@ -143,6 +137,19 @@ namespace AwsSignatureVersion4.Private
             builder.Append(contentHash);
 
             return (builder.ToString(), signedHeaders);
+        }
+
+        public static string GetCanonicalResourcePath(string serviceName, Uri requestUri)
+        {
+            var path = serviceName == ServiceName.S3
+                ? requestUri.LocalPath
+                : requestUri.AbsolutePath.Replace("//", "/");
+
+            var pathSegments = path
+                .Split('/')
+                .Select(pathSegment => AWSSDKUtils.UrlEncode(pathSegment, false));
+
+            return string.Join("/", pathSegments);
         }
 
         public static SortedList<string, List<string>> SortQueryParameters(string query)

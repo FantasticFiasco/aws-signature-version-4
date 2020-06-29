@@ -1,7 +1,7 @@
 ﻿namespace AwsSignatureVersion4.Private
 {
-    public static class ServiceName
+    internal static class ServiceName
     {
-        public const string S3 = "s3";
+        internal const string S3 = "s3";
     }
 }

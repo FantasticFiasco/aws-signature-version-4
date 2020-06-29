@@ -39,7 +39,7 @@ namespace AwsSignatureVersion4.Private
             request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
 
             // Build the canonical request
-            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(request, httpClient.DefaultRequestHeaders, contentHash);
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(serviceName, request, httpClient.DefaultRequestHeaders, contentHash);
 
             // Build the string to sign
             var (stringToSign, credentialScope) = StringToSign.Build(

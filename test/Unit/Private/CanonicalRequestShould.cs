@@ -64,18 +64,44 @@ namespace AwsSignatureVersion4.Unit.Private
             var contentHash = await ContentHash.CalculateAsync(scenario.Request.Content);
 
             // Act
-            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(scenario.Request, null, contentHash);
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build("execute-api", scenario.Request, null, contentHash);
 
             // Assert
             canonicalRequest.ShouldBe(scenario.ExpectedCanonicalRequest);
             signedHeaders.ShouldBe(scenario.ExpectedSignedHeaders);
         }
 
+        [Fact]
+        public void NormalizeNonS3RequestUri()
+        {
+            // Arrange
+            var requestUri = new Uri("https://example.amazonaws.com/resource//path");
+
+            // Act
+            var actual = CanonicalRequest.GetCanonicalResourcePath("execute-api", requestUri);
+
+            // Assert
+            actual.ShouldBe("/resource/path");
+        }
+
+        [Fact]
+        public void NotNormalizeS3RequestUri()
+        {
+            // Arrange
+            var requestUri = new Uri("https://example.s3.amazonaws.com/resource//path");
+
+            // Act
+            var actual = CanonicalRequest.GetCanonicalResourcePath("s3", requestUri);
+
+            // Assert
+            actual.ShouldBe("/resource//path");
+        }
+
         [Theory]
         [InlineData("A", "a")]
         [InlineData("AA", "aa")]
         [InlineData("A-A", "a-a")]
-        public void LowerCaseHeaderNames(string headerName, string expected)
+        public void TransformHeaderNamesToLowercase(string headerName, string expected)
         {
             // Arrange
             var headers = new HttpRequestMessage().Headers;
