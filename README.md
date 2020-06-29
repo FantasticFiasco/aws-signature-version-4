@@ -85,22 +85,22 @@ This project comes with a pledge, providing transparency on supported and unsupp
     - :x: `post-x-www-form-urlencoded` - This scenario defines a request that isn't supported by AWS S3.
     - :x: `post-x-www-form-urlencoded-parameters` - This scenario defines a request that isn't supported by AWS S3.
 - :heavy_check_mark: All characters are supported in S3 object keys with the following exceptions:
-  - Plus (`+`)
-  - Backslash (`\`)
-  - Left curly brace (`{`)
-  - Right curly brace (`}`)
-  - Left square bracket (`[`)
-  - Right square bracket (`]`)
-  - 'Less Than' symbol (`<`)
-  - 'Greater Than' symbol (`>`)
-  - Grave accent / back tick (`` ` ``)
-  - 'Pound' character (`#`)
-  - Caret (`^`)
-  - Percent character (`%`)
-  - Tilde (`~`)
-  - Vertical bar / pipe (`|`)
-  - Non-printable ASCII characters (128–255 decimal characters)
-  - Quotation marks
+  - :x: Plus (`+`)
+  - :x: Backslash (`\`)
+  - :x: Left curly brace (`{`)
+  - :x: Right curly brace (`}`)
+  - :x: Left square bracket (`[`)
+  - :x: Right square bracket (`]`)
+  - :x: 'Less Than' symbol (`<`)
+  - :x: 'Greater Than' symbol (`>`)
+  - :x: Grave accent / back tick (`` ` ``)
+  - :x: 'Pound' character (`#`)
+  - :x: Caret (`^`)
+  - :x: Percent character (`%`)
+  - :x: Tilde (`~`)
+  - :x: Vertical bar / pipe (`|`)
+  - :x: Non-printable ASCII characters (128–255 decimal characters)
+  - :x: Quotation marks
 - Authentication method
   - :heavy_check_mark: HTTP header authentication is supported
   - :x: Query string authentication is not supported
