@@ -3,14 +3,14 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.Authentication;
-using AwsSignatureVersion4.Integration.Contents;
+using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Contents;
 using Shouldly;
 using Xunit;
 
-namespace AwsSignatureVersion4.Integration
+namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class PostAsyncShould : IntegrationBase
+    public class PostAsyncShould : ApiGatewayIntegrationBase
     {
         public PostAsyncShould(IntegrationTestContext context)
             : base(context)

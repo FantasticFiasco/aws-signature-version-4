@@ -4,15 +4,7 @@
 
 Integration tests targeting AWS can be found in the `Integration` directory. All integration tests are marked with the xUnit trait `Integration` and are excluded from the ReSharper test runner.
 
-These tests depend on secrets that during CI is set as environment variables. For local development one can create a file in this directory called `local-integration-test-variables.txt`, with the following structure.
-
-```
-SOME_VARIABLE_1=some-value-1
-SOME_VARIABLE_2=some-value-2
-...
-```
-
-This file is ignored by Git and will not be committed.
+These tests depend on secrets that in CI automatically is set using environment variables. For local development you can set these variables in Visual Studio.
 
 ## Test suite
 

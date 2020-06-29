@@ -2,15 +2,15 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
-using AwsSignatureVersion4.Integration.Authentication;
 using AwsSignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 
-namespace AwsSignatureVersion4.Integration
+namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class SendAsyncShould : IntegrationBase, IClassFixture<TestSuiteContext>
+    public class SendAsyncShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
     {
         private readonly TestSuiteContext testSuiteContext;
 
@@ -299,14 +299,12 @@ namespace AwsSignatureVersion4.Integration
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        public async Task SucceedGivenHttpCompletionOption(
-            IamAuthenticationType iamAuthenticationType,
-            string method)
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act

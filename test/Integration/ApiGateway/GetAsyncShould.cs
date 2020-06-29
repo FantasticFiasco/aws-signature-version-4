@@ -3,15 +3,15 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Shouldly;
 using Xunit;
 
-namespace AwsSignatureVersion4.Integration
+namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class DeleteAsyncShould : IntegrationBase
+    public class GetAsyncShould : ApiGatewayIntegrationBase
     {
-        public DeleteAsyncShould(IntegrationTestContext context)
+        public GetAsyncShould(IntegrationTestContext context)
             : base(context)
         {
         }
@@ -22,7 +22,7 @@ namespace AwsSignatureVersion4.Integration
         public async Task Succeed(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await HttpClient.GetAsync(
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
@@ -44,7 +44,7 @@ namespace AwsSignatureVersion4.Integration
             };
 
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await HttpClient.GetAsync(
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
@@ -66,7 +66,7 @@ namespace AwsSignatureVersion4.Integration
             };
 
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await HttpClient.GetAsync(
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
@@ -88,8 +88,28 @@ namespace AwsSignatureVersion4.Integration
             };
 
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await HttpClient.GetAsync(
                 uriBuilder.Uri,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl,
+                completionOption,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -107,8 +127,30 @@ namespace AwsSignatureVersion4.Integration
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await HttpClient.GetAsync(
                 Context.ApiGatewayUrl,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenHttpCompletionOptionAndCancellationToken(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl,
+                completionOption,
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
@@ -127,7 +169,7 @@ namespace AwsSignatureVersion4.Integration
             var ct = new CancellationToken(true);
 
             // Act
-            var task = HttpClient.DeleteAsync(
+            var task = HttpClient.GetAsync(
                 Context.ApiGatewayUrl,
                 ct,
                 Context.RegionName,

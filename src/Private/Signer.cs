@@ -23,10 +23,12 @@ namespace AwsSignatureVersion4.Private
             if (request.Headers.Contains(HeaderKeys.AuthorizationHeader)) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (regionName == null) throw new ArgumentNullException(nameof(regionName));
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
-            if (serviceName == "s3") throw new NotSupportedException(ErrorMessages.S3NotSupported);
+            if (serviceName == ServiceName.S3 && request.Method == HttpMethod.Post) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPost);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
             UpdateRequestUri(httpClient, request);
+
+            var contentHash = await ContentHash.CalculateAsync(request.Content);
 
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());
@@ -34,9 +36,10 @@ namespace AwsSignatureVersion4.Private
             // Add conditional headers
             request.AddHeaderIf(credentials.UseToken, HeaderKeys.XAmzSecurityTokenHeader, credentials.Token);
             request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri.Host);
+            request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
 
             // Build the canonical request
-            var (canonicalRequest, signedHeaders) = await CanonicalRequest.BuildAsync(request, httpClient.DefaultRequestHeaders);
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(serviceName, request, httpClient.DefaultRequestHeaders, contentHash);
 
             // Build the string to sign
             var (stringToSign, credentialScope) = StringToSign.Build(

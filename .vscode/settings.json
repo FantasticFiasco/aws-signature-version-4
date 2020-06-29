@@ -1,20 +1,4 @@
 {
-  "files.exclude": {
-    "**/.git": true,
-    "**/*.js": {
-      "when": "$(basename).ts"
-    },
-    "**/*.d.ts": {
-      "when": "$(basename).ts"
-    }
-  },
-  "spellright.language": [
-    "English (American)"
-  ],
-  "spellright.documentTypes": [
-    "markdown",
-    "latex",
-    "plaintext"
-  ],
-  "tslint.autoFixOnSave": true
+  "spellright.language": ["English (American)"],
+  "spellright.documentTypes": ["markdown", "latex", "plaintext"]
 }

@@ -3,15 +3,15 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Shouldly;
 using Xunit;
 
-namespace AwsSignatureVersion4.Integration
+namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class GetAsyncShould : IntegrationBase
+    public class DeleteAsyncShould : ApiGatewayIntegrationBase
     {
-        public GetAsyncShould(IntegrationTestContext context)
+        public DeleteAsyncShould(IntegrationTestContext context)
             : base(context)
         {
         }
@@ -22,7 +22,7 @@ namespace AwsSignatureVersion4.Integration
         public async Task Succeed(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var response = await HttpClient.GetAsync(
+            var response = await HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
@@ -44,7 +44,7 @@ namespace AwsSignatureVersion4.Integration
             };
 
             // Act
-            var response = await HttpClient.GetAsync(
+            var response = await HttpClient.DeleteAsync(
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
@@ -66,7 +66,7 @@ namespace AwsSignatureVersion4.Integration
             };
 
             // Act
-            var response = await HttpClient.GetAsync(
+            var response = await HttpClient.DeleteAsync(
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
@@ -88,28 +88,8 @@ namespace AwsSignatureVersion4.Integration
             };
 
             // Act
-            var response = await HttpClient.GetAsync(
+            var response = await HttpClient.DeleteAsync(
                 uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
-
-            // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        }
-
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var completionOption = HttpCompletionOption.ResponseContentRead;
-
-            // Act
-            var response = await HttpClient.GetAsync(
-                Context.ApiGatewayUrl,
-                completionOption,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
@@ -127,7 +107,7 @@ namespace AwsSignatureVersion4.Integration
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.GetAsync(
+            var response = await HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl,
                 ct,
                 Context.RegionName,
@@ -147,7 +127,7 @@ namespace AwsSignatureVersion4.Integration
             var ct = new CancellationToken(true);
 
             // Act
-            var task = HttpClient.GetAsync(
+            var task = HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl,
                 ct,
                 Context.RegionName,
@@ -156,28 +136,6 @@ namespace AwsSignatureVersion4.Integration
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
-        }
-
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOptionAndCancellationToken(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var completionOption = HttpCompletionOption.ResponseContentRead;
-            var ct = new CancellationToken();
-
-            // Act
-            var response = await HttpClient.GetAsync(
-                Context.ApiGatewayUrl,
-                completionOption,
-                ct,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
-
-            // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
     }
 }

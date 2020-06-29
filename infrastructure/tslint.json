@@ -1,14 +1,20 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {
-      "interface-name": [false],
-      "no-console": [false],
-      "no-unused-expression": false,
-      "quotemark": [true, "single"]
+  "extends": "tslint:recommended",
+  "linterOptions": {
+    "exclude": [
+      "**/node_modules/**"
+    ]
+  },
+  "rules": {
+    "max-line-length": {
+      "options": [140]
     },
-    "rulesDirectory": []
+    "no-any": true,
+    "no-console": false,
+    "no-unused-expression": false,
+    "only-arrow-functions": false,
+    "quotemark": [true, "single"],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "unified-signatures": false
+  }
 }

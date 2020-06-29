@@ -3,18 +3,22 @@ image: Visual Studio 2017
 environment:
   NODEJS_VERSION: "12"
   AWS_REGION: eu-west-1
-  AWS_USER_ACCESS_KEY_ID:
-    secure: 1KlzKnv8s7AYHur0ChvyffOqhiMJw8TEZPRZLFdj5G0=
-  AWS_USER_SECRET_ACCESS_KEY:
-    secure: nuGsgyWKz7qWDAzuOwlyYrasb+C8b6dE7LGPGrl5TGa7ZblhgSYZVhLbuW5kPxwz
-  AWS_ROLE_ACCESS_KEY_ID:
-    secure: jLdRp0Quemmo2psEeItdHYSfHIeqXlw+0HE80SyUhTs=
-  AWS_ROLE_SECRET_ACCESS_KEY:
-    secure: QzEfvFFWtaeLirFnHHiGaKjDPWeBfZIqQVxJhIQ0zrVJ7vfaYsmwPHm9QZVS5e1l
+  AWS_USER_WITH_PERMISSIONS_ACCESS_KEY_ID:
+    secure: UUnqjTdDAOPsXNlSLd8RVh/SxFHmi8FjzCMA2o6n6WU=
+  AWS_USER_WITH_PERMISSIONS_SECRET_ACCESS_KEY:
+    secure: NFm9uQM1oBz/mApinnfpPuz7548Z6t4ELhCL67rcEnhXFhxd3Q7fVPedMl3ivptS
+  AWS_USER_WITHOUT_PERMISSIONS_ACCESS_KEY_ID:
+    secure: kZAMQ+wisq4dzi1NZ5h3dCyfYQ6NKdK4ebordLprRUs=
+  AWS_USER_WITHOUT_PERMISSIONS_SECRET_ACCESS_KEY:
+    secure: REDMo1cR7OSnQbuaJh3+zQ+mQQSQtqfQ2dNjWTGTkYA8up/ylKWovTcP3wDv9ZTo
   AWS_ROLE_ARN:
-    secure: CVjaIRrwBKMLa+ZIqgA4E4oiK9sUOGZncU78nup5xam1Lrl0RQgOTiEqTlfonNKP
+    secure: CVjaIRrwBKMLa+ZIqgA4E+IiYq5h16hz1UEvPGs0ZMizXZUYbb1km3rvJ8SIlxE1EXLeeD+oxKHszpaalDarUg==
   AWS_API_GATEWAY_URL:
-    secure: bwh7XZg8Kv/Q1eQ/KrXij51CvsKnzrplc/miKaBscohWX0WMuRNRLv+dfIp7N1fa/DkALSRZv/3GmS/XgK+qQw==
+    secure: Z+vOna9KGyaWi5k/U5ab36OfevgxyzvsKQLHEreflf7IfqAEETxl0mMVQRkPPzxgPY5n/uZi49JVXuezT9ofrA==
+  AWS_S3_BUCKET_NAME:
+    secure: 16d1j1uMCzq81pv5W2QQsGBUtu1Hou48y+Mfcfk8jGbBPVHRToKBjVZZussk3yZ9
+  AWS_S3_BUCKET_URL:
+    secure: lvefZ1hszL1/6CpAqHdHniRnLQ1zuNeTJnGSkvVZV/r9KJdh6t+GjVPlS8iAgraKG2WicZ1OOi2D38nenkkWW2Eh8V0vxx9XIaUO0oQguGk=
   CODECOV_TOKEN:
     secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
 
