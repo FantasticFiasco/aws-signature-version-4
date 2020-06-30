@@ -32,6 +32,7 @@ test: off
 
 artifacts:
   - path: ./artifacts/*.*nupkg
+    name: NuGet
     type: NuGetPackage
 
 deploy:
@@ -40,7 +41,7 @@ deploy:
     description: TODO
     auth_token:
       secure: de2wnJZf6k7NY0XriDpf9BkrQ4MR5ZfDDWMM+H/K4OK3w0GpuJAMRj5PrO6tKu0K
-    artifact: /.*\.nupkg/
+    artifact: NuGet
     draft: true
     on:
       APPVEYOR_REPO_TAG: true
