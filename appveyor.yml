@@ -32,7 +32,6 @@ test: off
 
 artifacts:
   - path: ./artifacts/*.*nupkg
-    name: NuGet
     type: NuGetPackage
 
 deploy:
