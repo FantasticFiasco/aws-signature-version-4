@@ -37,6 +37,7 @@ artifacts:
 
 deploy:
   - provider: GitHub
+    tag: ${APPVEYOR_REPO_TAG_NAME}
     release: Release ${APPVEYOR_REPO_TAG_NAME}
     description: TODO
     auth_token:
