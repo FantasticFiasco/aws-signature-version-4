@@ -14,6 +14,7 @@ __Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignature
 
 - [Introduction](#introduction)
 - [Super simple to use](#super-simple-to-use)
+- [Credentials](#credentials)
 - [The pledge](#the-pledge)
 - [Install via NuGet](#install-via-nuget)
 - [Donations](#donations)
@@ -42,9 +43,11 @@ These overloads are built to integrate with `HttpClient`, i.e. `HttpClient.BaseA
 The following example is demonstrating how one would send a `GET /resources` request to an IAM authenticated AWS API Gateway on host `www.acme.com`.
 
 ```csharp
-var client = new HttpClient();
+// Don't specify credentials in source code, this is for demo only! See next chapter for more
+// information.
 var credentials = new ImmutableCredentials("<access key id>", "<secret access key>", null);
 
+var client = new HttpClient();
 var response = await client.GetAsync(
   "https://www.acme.com/resources",
   regionName: "us-west-1",
@@ -53,6 +56,14 @@ var response = await client.GetAsync(
 ```
 
 Please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test) directory for other examples.
+
+## Credentials
+
+We've come a long way, but let's back up a step. Credentials should not be specified in source code, so where do they come from?
+
+It all starts with a [principal](https://docs.aws.amazon.com/IAM/latest/UserGuide/intro-structure.html#intro-structure-principal), i.e. an entity identifying itself using authentication. In some situations the principal is a [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html) and in other situations it is an entity assuming a [IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html). Whatever your principal is, it has the capability of providing credentials.
+
+How the credentials are provided depend on where you run your code. If you run your code in a ECS Task you get your credentials using [ECSTaskCredentials](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/Runtime/TECSTaskCredentials.html). Other runtimes will require other credential providers, all of them are listed in the namespace [Amazon.Runtime](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/index.html?page=Runtime/NRuntime.html&tocid=Amazon_Runtime).
 
 ## The pledge
 
