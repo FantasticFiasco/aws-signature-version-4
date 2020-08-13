@@ -31,7 +31,7 @@ build_script:
 test: off
 
 artifacts:
-  - path: ./artifacts/*.*nupkg
+  - path: artifacts/*.*nupkg
     name: NuGet
     type: NuGetPackage
 
