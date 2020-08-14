@@ -22,7 +22,7 @@ Write-Host "[build] dotnet cli v$(dotnet --version)"
 $VERSION_SUFFIX_ARG = If ($IS_TAGGED_BUILD -eq $true) { "" } Else { "--version-suffix=sha-$GIT_SHA" }
 dotnet build -c Release $VERSION_SUFFIX_ARG
 if ($LASTEXITCODE -ne 0) { exit 1 }
-dotnet pack -c Release -o ./../artifacts --no-build $VERSION_SUFFIX_ARG
+dotnet pack -c Release -o ./artifacts --no-build $VERSION_SUFFIX_ARG
 if ($LASTEXITCODE -ne 0) { exit 1 }
 
 # -------------------------------------------------------------------------------------------------

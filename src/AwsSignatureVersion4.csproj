@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="assets\aws-signature-version-4.png" Pack="true" PackagePath="\"/>
+    <None Include="assets\aws-signature-version-4.png" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
