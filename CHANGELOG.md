@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 - NuGet package does not show an icon
 - Configure [SourceLink](https://github.com/dotnet/sourcelink) to embed untracked sources
+- Configure [SourceLink](https://github.com/dotnet/sourcelink) to use deterministic builds when running on AppVeyor
 
 ## [1.3.0] - 2020-06-29
 
