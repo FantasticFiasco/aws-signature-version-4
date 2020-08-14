@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [1.3.1] - 2020-08-14
+
 ### :syringe: Fixed
 
 - NuGet package does not show an icon
