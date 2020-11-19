@@ -1,11 +1,13 @@
 {
-  "extends": [
-    "github>FantasticFiasco/renovate-config"
-  ],
+  "extends": ["github>FantasticFiasco/renovate-config"],
   "packageRules": [
     {
       "packagePatterns": ["^@aws-cdk", "^aws-cdk"],
       "groupName": "AWS CDK packages"
+    },
+    {
+      "packageNames": ["AWSSDK.Core", "AWSSDK.S3", "AWSSDK.SecurityToken"],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<prerelease>.*)$"
     }
   ]
 }
