@@ -6,6 +6,11 @@
     {
       "packagePatterns": ["^@aws-cdk", "^aws-cdk"],
       "groupName": "AWS CDK packages"
+    },
+    {
+      "datasources": ["nuget"],
+      "packagePatterns": ["^AWSSDK."],
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<prerelease>.*)$"
     }
   ]
 }
