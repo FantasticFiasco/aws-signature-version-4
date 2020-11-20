@@ -27,7 +27,7 @@
     "@aws-cdk/core": "1.74.0",
     "@types/node": "14.14.9",
     "aws-cdk": "1.74.0",
-    "prettier": "2.1.2",
+    "prettier": "2.2.0",
     "rimraf": "3.0.2",
     "source-map-support": "0.5.19",
     "tslint": "6.1.3",
