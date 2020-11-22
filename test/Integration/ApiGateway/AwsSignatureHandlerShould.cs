@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
-using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
 
@@ -56,14 +55,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(IamAuthenticationType.User).CreateClient("integration");
             var request = BuildRequest(scenarioName);
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(IamAuthenticationType.User)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -107,15 +100,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(IamAuthenticationType.Role).CreateClient("integration");
             var request = BuildRequest(scenarioName);
 
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(IamAuthenticationType.Role)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
-            
             // Act
             var response = await httpClient.SendAsync(request);
 
@@ -137,15 +124,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value2", "value2" });
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -168,15 +150,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -199,15 +176,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -230,19 +202,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -265,20 +232,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=Value1&Param1=value2"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
-
+            
             // Act
             var response = await httpClient.SendAsync(request);
 
@@ -300,20 +262,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=value2&Param1=Value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
-
+            
             // Act
             var response = await httpClient.SendAsync(request);
 
@@ -327,16 +284,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
-
-            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType)));
-
-            using var httpClient = HttpClientFactory.CreateClient("integration");
-
+            
             // Act
             var response = await httpClient.SendAsync(request, completionOption);
 

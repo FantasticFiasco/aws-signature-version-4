@@ -10,14 +10,16 @@ namespace AwsSignatureVersion4.Integration
     [Trait("Category", "Integration")]
     public abstract class IntegrationBase : IClassFixture<IntegrationTestContext>, IDisposable
     {
+        private readonly IServiceCollection serviceCollection;
+
         protected IntegrationBase(IntegrationTestContext context)
         {
             Context = context;
 
             HttpClient = new HttpClient();
 
-            ServiceCollection = new ServiceCollection();
-            ServiceCollection
+            serviceCollection = new ServiceCollection();
+            serviceCollection
                 .AddTransient<AwsSignatureHandler>()
                 .AddHttpClient("integration")
                 .AddHttpMessageHandler<AwsSignatureHandler>();
@@ -25,18 +27,20 @@ namespace AwsSignatureVersion4.Integration
 
         protected IntegrationTestContext Context { get; }
 
-        #region Properties serving tests that use HttpClient
+        #region Members serving tests that use HttpClient
 
         protected HttpClient HttpClient { get; }
 
         #endregion
 
-        #region Properties serving tests that use IHttpClientFactory
+        #region Members serving tests that use IHttpClientFactory
 
-        protected IServiceCollection ServiceCollection { get; }
-
-        protected IHttpClientFactory HttpClientFactory =>
-            ServiceCollection
+        protected IHttpClientFactory HttpClientFactory(IamAuthenticationType iamAuthenticationType) =>
+            serviceCollection
+                .AddTransient(_ => new AwsSignatureHandlerOptions(
+                    Context.RegionName,
+                    Context.ServiceName,
+                    ResolveCredentials(iamAuthenticationType)))
                 .BuildServiceProvider()
                 .GetService<IHttpClientFactory>();
 
