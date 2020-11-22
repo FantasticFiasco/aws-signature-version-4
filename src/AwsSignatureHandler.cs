@@ -7,15 +7,33 @@ using AwsSignatureVersion4.Private;
 
 namespace AwsSignatureVersion4
 {
+    /// <summary>
+    /// HTTP message handler capable of signing requests using Signature Version 4.
+    /// <para/>
+    /// This class is designed to be compatible with
+    /// <see href="https://docs.microsoft.com/dotnet/api/system.net.http.ihttpclientfactory">
+    /// IHttpClientFactory</see> and its request pipeline. For samples of its usage, please see
+    /// <see href="https://docs.microsoft.com/aspnet/web-api/overview/advanced/http-message-handlers">
+    /// HTTP Message Handlers in ASP.NET Web API</see>.
+    /// </summary>
+    /// <remarks>
+    /// Please make sure to leave the request unchanged after having it signed. Any new changes in
+    /// subsequent message handlers will render the signature invalid.
+    /// </remarks>
     public class AwsSignatureHandler : DelegatingHandler
     {
-        private readonly AwsSignatureHandlerOptions options;
+        private readonly AwsSignatureHandlerSettings settings;
 
-        public AwsSignatureHandler(AwsSignatureHandlerOptions options)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AwsSignatureHandler"/> class.
+        /// </summary>
+        /// <param name="settings">The signature settings.</param>
+        public AwsSignatureHandler(AwsSignatureHandlerSettings settings)
         {
-            this.options = options ?? throw new ArgumentNullException(nameof(options));
+            this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
+        /// <inheritdoc />
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             await Signer.SignAsync(
@@ -23,9 +41,9 @@ namespace AwsSignatureVersion4
                 null,
                 new KeyValuePair<string, IEnumerable<string>>[0],
                 DateTime.UtcNow,
-                options.RegionName,
-                options.ServiceName,
-                options.Credentials);
+                settings.RegionName,
+                settings.ServiceName,
+                settings.Credentials);
 
             return await base.SendAsync(request, cancellationToken);
         }

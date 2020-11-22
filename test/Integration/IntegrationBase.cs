@@ -37,7 +37,7 @@ namespace AwsSignatureVersion4.Integration
 
         protected IHttpClientFactory HttpClientFactory(IamAuthenticationType iamAuthenticationType) =>
             serviceCollection
-                .AddTransient(_ => new AwsSignatureHandlerOptions(
+                .AddTransient(_ => new AwsSignatureHandlerSettings(
                     Context.RegionName,
                     Context.ServiceName,
                     ResolveCredentials(iamAuthenticationType)))
