@@ -22,6 +22,9 @@ namespace AwsSignatureVersion4
     /// </remarks>
     public class AwsSignatureHandler : DelegatingHandler
     {
+        private static readonly KeyValuePair<string, IEnumerable<string>>[] EmptyRequestHeaders =
+            new KeyValuePair<string, IEnumerable<string>>[0];
+
         private readonly AwsSignatureHandlerSettings settings;
 
         /// <summary>
@@ -39,7 +42,7 @@ namespace AwsSignatureVersion4
             await Signer.SignAsync(
                 request,
                 null,
-                new KeyValuePair<string, IEnumerable<string>>[0],
+                EmptyRequestHeaders,
                 DateTime.UtcNow,
                 settings.RegionName,
                 settings.ServiceName,
