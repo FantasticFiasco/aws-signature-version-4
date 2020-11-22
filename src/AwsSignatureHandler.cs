@@ -8,16 +8,16 @@ using AwsSignatureVersion4.Private;
 namespace AwsSignatureVersion4
 {
     /// <summary>
-    /// HTTP message handler capable of signing requests using Signature Version 4.
-    /// <para/>
-    /// This class is designed to be compatible with
+    /// HTTP message handler capable of signing requests using Signature Version 4. This class is
+    /// designed to be compatible with
     /// <see href="https://docs.microsoft.com/dotnet/api/system.net.http.ihttpclientfactory">
-    /// IHttpClientFactory</see> and its request pipeline. For samples of its usage, please see
+    /// IHttpClientFactory</see> and its request pipeline. For more information about message
+    /// handlers and their usage, please see
     /// <see href="https://docs.microsoft.com/aspnet/web-api/overview/advanced/http-message-handlers">
     /// HTTP Message Handlers in ASP.NET Web API</see>.
     /// </summary>
     /// <remarks>
-    /// Please make sure to leave the request unchanged after having it signed. Any new changes in
+    /// Please make sure to leave the request unchanged after having it signed. Any changes in
     /// subsequent message handlers will render the signature invalid.
     /// </remarks>
     public class AwsSignatureHandler : DelegatingHandler
