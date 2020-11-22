@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -16,15 +18,31 @@ namespace AwsSignatureVersion4
         [Fact]
         public async void Test()
         {
-            var second = new HttpClientHandler();
-            var first = new AwsSignatureHandler
-            {
-                InnerHandler = second
-            };
+            //var second = new HttpClientHandler();
+            //var first = new AwsSignatureHandler
+            //{
+            //    InnerHandler = second
+            //};
 
-            var client = new HttpClient(first);
-            var response = await client.GetStringAsync("https://www.google.com");
-            output .WriteLine(response);
+            //var client = new HttpClient(first);
+
+            var services = new ServiceCollection();
+            services.AddTransient<AwsSignatureHandler>();
+
+            services.AddHttpClient("test",
+                    c =>
+                    {
+                        c.BaseAddress = new Uri("https://www.google.com");
+                    })
+                .AddHttpMessageHandler<AwsSignatureHandler>();
+
+            var client = services
+                .BuildServiceProvider()
+                .GetService<IHttpClientFactory>()
+                .CreateClient("test");
+
+            var response = await client.GetStringAsync("/");
+            output.WriteLine(response);
         }
     }
 }
