@@ -2,7 +2,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Amazon.Runtime;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
@@ -59,7 +58,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var request = BuildRequest(scenarioName);
 
-            ServiceCollection.AddTransient<AwsSignatureHandlerOptions>(_ => new AwsSignatureHandlerOptions(
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(IamAuthenticationType.User)));
@@ -68,6 +67,278 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Act
             var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("get-header-key-duplicate")]
+        [InlineData("get-header-value-multiline")]
+        [InlineData("get-header-value-order")]
+        [InlineData("get-header-value-trim")]
+        [InlineData("get-unreserved")]
+        [InlineData("get-utf8")]
+        [InlineData("get-vanilla")]
+        [InlineData("get-vanilla-empty-query-key")]
+        [InlineData("get-vanilla-query")]
+        [InlineData("get-vanilla-query-order-key")]
+        [InlineData("get-vanilla-query-order-key-case")]
+        [InlineData("get-vanilla-query-order-value")]
+        [InlineData("get-vanilla-query-unreserved", Skip = SkipReasons.NotSupportedByApiGateway)]
+        [InlineData("get-vanilla-utf8-query")]
+        [InlineData("normalize-path", "get-relative")]
+        [InlineData("normalize-path", "get-relative-relative")]
+        [InlineData("normalize-path", "get-slash")]
+        [InlineData("normalize-path", "get-slash-dot-slash")]
+        [InlineData("normalize-path", "get-slashes")]
+        [InlineData("normalize-path", "get-slash-pointless-dot")]
+        [InlineData("normalize-path", "get-space")]
+        [InlineData("post-header-key-case")]
+        [InlineData("post-header-key-sort")]
+        [InlineData("post-header-value-case")]
+        [InlineData("post-sts-token", "post-sts-header-after")]
+        [InlineData("post-sts-token", "post-sts-header-before", Skip = SkipReasons.RedundantStsTokenScenario)]
+        [InlineData("post-vanilla")]
+        [InlineData("post-vanilla-empty-query-value")]
+        [InlineData("post-vanilla-query")]
+        [InlineData("post-x-www-form-urlencoded")]
+        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
+        public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
+        {
+            // Arrange
+            var request = BuildRequest(scenarioName);
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(IamAuthenticationType.Role)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+            
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenHeaderWithDuplicateValues(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            request.AddHeaders("My-Header1", new[] { "value2", "value2" });
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenHeaderWithUnorderedValues(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenHeaderWithWhitespaceCharacters(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenQuery(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            {
+                Query = "Param1=value1"
+            };
+
+            var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenOrderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            {
+                Query = "Param1=Value1&Param1=value2"
+            };
+
+            var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenUnorderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            {
+                Query = "Param1=value2&Param1=Value1"
+            };
+
+            var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await httpClient.SendAsync(request, completionOption);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -90,30 +361,5 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             return request;
         }
-
-
-
-        //[Fact]
-        //public async void Test()
-        //{
-        //    var services = new ServiceCollection();
-        //    services.AddTransient<AwsSignatureHandler>();
-        //    services.AddTransient<AwsSignatureHandlerOptions>(provider => new AwsSignatureHandlerOptions("", "", new ImmutableCredentials("a", "b", "c")));
-
-        //    services.AddHttpClient("test",
-        //            c =>
-        //            {
-        //                c.BaseAddress = new Uri("https://www.google.com");
-        //                c.DefaultRequestHeaders.Add("SOME-HEADER", "value");
-        //            })
-        //        .AddHttpMessageHandler<AwsSignatureHandler>();
-
-        //    var client = services
-        //        .BuildServiceProvider()
-        //        .GetService<IHttpClientFactory>()
-        //        .CreateClient("test");
-
-        //    var response = await client.GetStringAsync("/");
-        //}
     }
 }
