@@ -56,14 +56,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
             // Arrange
             var request = BuildRequest(scenarioName);
-            var authenticationType = IamAuthenticationType.User;
+            var iamAuthenticationType = IamAuthenticationType.User;
 
             // Act
             var response = await HttpClient.SendAsync(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(authenticationType));
+                ResolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -105,14 +105,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
             // Arrange
             var request = BuildRequest(scenarioName);
-            var authenticationType = IamAuthenticationType.Role;
+            var iamAuthenticationType = IamAuthenticationType.Role;
 
             // Act
             var response = await HttpClient.SendAsync(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(authenticationType));
+                ResolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);

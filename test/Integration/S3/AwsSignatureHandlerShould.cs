@@ -4,16 +4,17 @@ using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Integration.S3
 {
-    public class SendAsyncShould : S3IntegrationBase, IClassFixture<TestSuiteContext>
+    public class AwsSignatureHandlerShould : S3IntegrationBase, IClassFixture<TestSuiteContext>
     {
         private readonly TestSuiteContext testSuiteContext;
 
-        public SendAsyncShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
+        public AwsSignatureHandlerShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
             : base(context)
         {
             this.testSuiteContext = testSuiteContext;
@@ -57,14 +58,18 @@ namespace AwsSignatureVersion4.Integration.S3
             var request = BuildRequest(scenarioName);
             var iamAuthenticationType = IamAuthenticationType.User;
 
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+            
+
             await UploadRequiredObjectAsync(scenarioName);
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -108,14 +113,17 @@ namespace AwsSignatureVersion4.Integration.S3
             var request = BuildRequest(scenarioName);
             var iamAuthenticationType = IamAuthenticationType.Role;
 
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
             await UploadRequiredObjectAsync(scenarioName);
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -132,13 +140,15 @@ namespace AwsSignatureVersion4.Integration.S3
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
-            // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                completionOption,
+            ServiceCollection.AddTransient(_ => new AwsSignatureHandlerOptions(
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveCredentials(iamAuthenticationType)));
+
+            using var httpClient = HttpClientFactory.CreateClient("integration");
+
+            // Act
+            var response = await HttpClient.SendAsync(request, completionOption);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
