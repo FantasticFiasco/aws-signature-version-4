@@ -48,14 +48,12 @@ namespace AwsSignatureVersion4.Integration
 
         public void Dispose() => HttpClient?.Dispose();
 
-        protected ImmutableCredentials ResolveCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            switch (iamAuthenticationType)
+        protected ImmutableCredentials ResolveCredentials(IamAuthenticationType iamAuthenticationType) =>
+            iamAuthenticationType switch
             {
-                case IamAuthenticationType.User: return Context.UserCredentials.GetCredentials();
-                case IamAuthenticationType.Role: return Context.RoleCredentials.GetCredentials();
-                default: throw new NotImplementedException($"The authentication type {iamAuthenticationType} is not implemented");
-            }
-        }
+                IamAuthenticationType.User => Context.UserCredentials.GetCredentials(),
+                IamAuthenticationType.Role => Context.RoleCredentials.GetCredentials(),
+                _ => throw new NotImplementedException($"The authentication type {iamAuthenticationType} is not implemented")
+            };
     }
 }
