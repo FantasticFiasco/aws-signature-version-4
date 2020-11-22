@@ -253,7 +253,5 @@ namespace System.Net.Http
 
             return await self.SendAsync(request, completionOption, cancellationToken);
         }
-
-        
     }
 }
