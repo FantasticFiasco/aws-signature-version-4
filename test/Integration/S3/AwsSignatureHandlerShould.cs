@@ -126,7 +126,7 @@ namespace AwsSignatureVersion4.Integration.S3
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
-            var response = await HttpClient.SendAsync(request, completionOption);
+            var response = await httpClient.SendAsync(request, completionOption);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
