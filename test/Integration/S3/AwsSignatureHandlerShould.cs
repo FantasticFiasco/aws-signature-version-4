@@ -120,6 +120,7 @@ namespace AwsSignatureVersion4.Integration.S3
         {
             // Arrange
             var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
             var requestUri = $"{Context.S3BucketUrl}/{bucketObject.Key}";
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
