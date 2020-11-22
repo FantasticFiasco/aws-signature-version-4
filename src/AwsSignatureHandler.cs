@@ -19,6 +19,7 @@ namespace AwsSignatureVersion4
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Debug.WriteLine(request.RequestUri);
+            Debug.WriteLine(request.Headers);
 
             return base.SendAsync(request, cancellationToken);
         }

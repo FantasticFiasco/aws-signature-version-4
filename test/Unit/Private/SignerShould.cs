@@ -64,8 +64,8 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Act
             var actual = await Signer.SignAsync(
-                httpClient,
                 scenario.Request,
+                httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
                 context.ServiceName,
@@ -96,8 +96,8 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Act
             await Signer.SignAsync(
-                httpClient,
                 request,
+                httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
                 context.ServiceName,
@@ -118,8 +118,8 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Act
             await Signer.SignAsync(
-                httpClient,
                 request,
+                httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
                 context.ServiceName,
@@ -138,8 +138,8 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Act
             var actual = Signer.SignAsync(
-                httpClient,
                 request,
+                httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
                 context.ServiceName,
@@ -158,8 +158,8 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Act
             var actual = Signer.SignAsync(
-                httpClient,
                 request,
+                httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
                 context.ServiceName,
@@ -178,8 +178,8 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Act
             var actual = Signer.SignAsync(
-                httpClient,
                 request,
+                httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
                 context.ServiceName,

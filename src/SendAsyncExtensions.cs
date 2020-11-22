@@ -242,9 +242,40 @@ namespace System.Net.Http
         {
             if (self == null) throw new ArgumentNullException(nameof(self));
 
-            await Signer.SignAsync(self, request, DateTime.UtcNow, regionName, serviceName, credentials);
+            UpdateRequestUri(self, request);
+
+            await Signer.SignAsync(request, self.DefaultRequestHeaders, DateTime.UtcNow, regionName, serviceName, credentials);
 
             return await self.SendAsync(request, completionOption, cancellationToken);
+        }
+
+        private static void UpdateRequestUri(HttpClient httpClient, HttpRequestMessage request)
+        {
+            if (request.RequestUri == null && httpClient.BaseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+
+            Uri requestUri = null;
+
+            if (request.RequestUri == null)
+            {
+                requestUri = httpClient.BaseAddress;
+            }
+            else
+            {
+                // If the request Uri is an absolute Uri, just use it. Otherwise try to combine it
+                // with the base Uri.
+                if (!request.RequestUri.IsAbsoluteUri)
+                {
+                    if (httpClient.BaseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+
+                    requestUri = new Uri(httpClient.BaseAddress, request.RequestUri);
+                }
+            }
+
+            // We modified the original request Uri. Assign the new Uri to the request message.
+            if (requestUri != null)
+            {
+                request.RequestUri = requestUri;
+            }
         }
     }
 }

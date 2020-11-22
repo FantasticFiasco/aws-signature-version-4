@@ -30,8 +30,8 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Act
             await Signer.SignAsync(
-                httpClient,
                 request,
+                httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
                 "s3",

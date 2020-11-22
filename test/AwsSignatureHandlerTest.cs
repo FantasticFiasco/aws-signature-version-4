@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using Amazon.Runtime;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,11 +29,13 @@ namespace AwsSignatureVersion4
 
             var services = new ServiceCollection();
             services.AddTransient<AwsSignatureHandler>();
+            services.AddTransient<AwsSignatureHandlerOptions>(provider => new AwsSignatureHandlerOptions("", "", new ImmutableCredentials("a", "b", "c")));
 
             services.AddHttpClient("test",
                     c =>
                     {
                         c.BaseAddress = new Uri("https://www.google.com");
+                        c.DefaultRequestHeaders.Add("SOME-HEADER", "value");
                     })
                 .AddHttpMessageHandler<AwsSignatureHandler>();
 
