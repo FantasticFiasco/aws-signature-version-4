@@ -65,6 +65,7 @@ namespace AwsSignatureVersion4.Unit.Private
             // Act
             var actual = await Signer.SignAsync(
                 scenario.Request,
+                httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
@@ -97,6 +98,7 @@ namespace AwsSignatureVersion4.Unit.Private
             // Act
             await Signer.SignAsync(
                 request,
+                httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
@@ -119,6 +121,7 @@ namespace AwsSignatureVersion4.Unit.Private
             // Act
             await Signer.SignAsync(
                 request,
+                httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
@@ -139,6 +142,7 @@ namespace AwsSignatureVersion4.Unit.Private
             // Act
             var actual = Signer.SignAsync(
                 request,
+                httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
@@ -159,6 +163,7 @@ namespace AwsSignatureVersion4.Unit.Private
             // Act
             var actual = Signer.SignAsync(
                 request,
+                httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
@@ -179,6 +184,7 @@ namespace AwsSignatureVersion4.Unit.Private
             // Act
             var actual = Signer.SignAsync(
                 request,
+                httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,

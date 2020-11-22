@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.Util;
@@ -11,7 +11,8 @@ namespace AwsSignatureVersion4.Private
     {
         public static async Task<Result> SignAsync(
             HttpRequestMessage request,
-            HttpRequestHeaders defaultRequestHeaders,
+            Uri baseAddress,
+            IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultRequestHeaders,
             DateTime now,
             string regionName,
             string serviceName,
@@ -25,6 +26,8 @@ namespace AwsSignatureVersion4.Private
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
             if (serviceName == ServiceName.S3 && request.Method == HttpMethod.Post) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPost);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            UpdateRequestUri(request, baseAddress);
 
             var contentHash = await ContentHash.CalculateAsync(request.Content);
 
@@ -60,6 +63,35 @@ namespace AwsSignatureVersion4.Private
             request.Headers.TryAddWithoutValidation(HeaderKeys.AuthorizationHeader, authorizationHeader);
 
             return new Result(canonicalRequest, stringToSign, authorizationHeader);
+        }
+
+        private static void UpdateRequestUri(HttpRequestMessage request, Uri baseAddress)
+        {
+            if (request.RequestUri == null && baseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+
+            Uri requestUri = null;
+
+            if (request.RequestUri == null)
+            {
+                requestUri = baseAddress;
+            }
+            else
+            {
+                // If the request Uri is an absolute Uri, just use it. Otherwise try to combine it
+                // with the base Uri.
+                if (!request.RequestUri.IsAbsoluteUri)
+                {
+                    if (baseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+
+                    requestUri = new Uri(baseAddress, request.RequestUri);
+                }
+            }
+
+            // We modified the original request Uri. Assign the new Uri to the request message.
+            if (requestUri != null)
+            {
+                request.RequestUri = requestUri;
+            }
         }
     }
 }

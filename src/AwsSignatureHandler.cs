@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime;
+using AwsSignatureVersion4.Private;
 
 namespace AwsSignatureVersion4
 {
@@ -16,12 +17,18 @@ namespace AwsSignatureVersion4
             this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            Debug.WriteLine(request.RequestUri);
-            Debug.WriteLine(request.Headers);
+            await Signer.SignAsync(
+                request,
+                null,
+                new KeyValuePair<string, IEnumerable<string>>[0],
+                DateTime.UtcNow,
+                options.RegionName,
+                options.ServiceName,
+                options.Credentials);
 
-            return base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 

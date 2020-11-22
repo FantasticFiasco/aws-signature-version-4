@@ -31,6 +31,7 @@ namespace AwsSignatureVersion4.Unit.Private
             // Act
             await Signer.SignAsync(
                 request,
+                httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
                 context.UtcNow,
                 context.RegionName,
