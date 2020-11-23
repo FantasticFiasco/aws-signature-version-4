@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Amazon.Util;
 using AwsSignatureVersion4.Private;
 
 namespace AwsSignatureVersion4
@@ -37,8 +38,17 @@ namespace AwsSignatureVersion4
         }
 
         /// <inheritdoc />
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
+            // Given the idempotent nature of message handlers, lets remove request headers that
+            // might have been added by an prior attempt to send the request
+            request.Headers.Remove(HeaderKeys.AuthorizationHeader);
+            request.Headers.Remove(HeaderKeys.XAmzContentSha256Header);
+            request.Headers.Remove(HeaderKeys.XAmzDateHeader);
+            request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
+            
             await Signer.SignAsync(
                 request,
                 null,
