@@ -84,15 +84,6 @@ namespace AwsSignatureVersion4.Unit
             }
         }
 
-        private static Task<HttpResponseMessage> InvokeSendAsync(
-            AwsSignatureHandler handler,
-            HttpRequestMessage request,
-            CancellationToken ct) =>
-            handler
-                .GetType()
-                .GetMethod("SendAsync", BindingFlags.Instance | BindingFlags.NonPublic)
-                .Invoke(handler, new object[] { request, ct }) as Task<HttpResponseMessage>;
-
         private static AwsSignatureHandlerSettings CreateSettings(string serviceName) =>
             new AwsSignatureHandlerSettings(
                 "us-east-1",
@@ -102,7 +93,16 @@ namespace AwsSignatureVersion4.Unit
                     "some secret access key",
                     "some token"));
 
-        class SinkHandler : HttpMessageHandler
+        private static Task<HttpResponseMessage> InvokeSendAsync(
+            AwsSignatureHandler handler,
+            HttpRequestMessage request,
+            CancellationToken ct) =>
+            handler
+                .GetType()
+                .GetMethod("SendAsync", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(handler, new object[] { request, ct }) as Task<HttpResponseMessage>;
+
+        private class SinkHandler : HttpMessageHandler
         {
             public HttpRequestMessage Request { get; private set; }
 
