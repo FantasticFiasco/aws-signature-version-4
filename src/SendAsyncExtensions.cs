@@ -242,7 +242,14 @@ namespace System.Net.Http
         {
             if (self == null) throw new ArgumentNullException(nameof(self));
 
-            await Signer.SignAsync(self, request, DateTime.UtcNow, regionName, serviceName, credentials);
+            await Signer.SignAsync(
+                request,
+                self.BaseAddress,
+                self.DefaultRequestHeaders,
+                DateTime.UtcNow,
+                regionName,
+                serviceName,
+                credentials);
 
             return await self.SendAsync(request, completionOption, cancellationToken);
         }

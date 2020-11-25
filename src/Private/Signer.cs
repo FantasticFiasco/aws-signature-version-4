@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Runtime;
@@ -9,14 +10,14 @@ namespace AwsSignatureVersion4.Private
     public static class Signer
     {
         public static async Task<Result> SignAsync(
-            HttpClient httpClient,
             HttpRequestMessage request,
+            Uri baseAddress,
+            IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultRequestHeaders,
             DateTime now,
             string regionName,
             string serviceName,
             ImmutableCredentials credentials)
         {
-            if (httpClient == null) throw new ArgumentNullException(nameof(httpClient));
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (request.Headers.Contains(HeaderKeys.XAmzDateHeader)) throw new ArgumentException(ErrorMessages.XAmzDateHeaderExists, nameof(request));
             if (request.Headers.Authorization != null) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
@@ -26,7 +27,7 @@ namespace AwsSignatureVersion4.Private
             if (serviceName == ServiceName.S3 && request.Method == HttpMethod.Post) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPost);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            UpdateRequestUri(httpClient, request);
+            UpdateRequestUri(request, baseAddress);
 
             var contentHash = await ContentHash.CalculateAsync(request.Content);
 
@@ -39,7 +40,7 @@ namespace AwsSignatureVersion4.Private
             request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
 
             // Build the canonical request
-            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(serviceName, request, httpClient.DefaultRequestHeaders, contentHash);
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(serviceName, request, defaultRequestHeaders, contentHash);
 
             // Build the string to sign
             var (stringToSign, credentialScope) = StringToSign.Build(
@@ -64,15 +65,15 @@ namespace AwsSignatureVersion4.Private
             return new Result(canonicalRequest, stringToSign, authorizationHeader);
         }
 
-        private static void UpdateRequestUri(HttpClient httpClient, HttpRequestMessage request)
+        private static void UpdateRequestUri(HttpRequestMessage request, Uri baseAddress)
         {
-            if (request.RequestUri == null && httpClient.BaseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+            if (request.RequestUri == null && baseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
 
             Uri requestUri = null;
 
             if (request.RequestUri == null)
             {
-                requestUri = httpClient.BaseAddress;
+                requestUri = baseAddress;
             }
             else
             {
@@ -80,9 +81,9 @@ namespace AwsSignatureVersion4.Private
                 // with the base Uri.
                 if (!request.RequestUri.IsAbsoluteUri)
                 {
-                    if (httpClient.BaseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+                    if (baseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
 
-                    requestUri = new Uri(httpClient.BaseAddress, request.RequestUri);
+                    requestUri = new Uri(baseAddress, request.RequestUri);
                 }
             }
 

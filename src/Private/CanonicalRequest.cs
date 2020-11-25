@@ -36,7 +36,7 @@ namespace AwsSignatureVersion4.Private
         public static (string, string) Build(
             string serviceName,
             HttpRequestMessage request,
-            HttpRequestHeaders defaultHeaders,
+            IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultHeaders,
             string contentHash)
         {
             var builder = new StringBuilder();
@@ -180,7 +180,7 @@ namespace AwsSignatureVersion4.Private
 
         public static SortedDictionary<string, List<string>> SortHeaders(
             HttpRequestHeaders headers,
-            HttpRequestHeaders defaultHeaders)
+            IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultHeaders)
         {
             var sortedHeaders = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
 

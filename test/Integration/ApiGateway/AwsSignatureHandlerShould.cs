@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,11 +10,11 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class SendAsyncShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
+    public class AwsSignatureHandlerShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
     {
         private readonly TestSuiteContext testSuiteContext;
 
-        public SendAsyncShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
+        public AwsSignatureHandlerShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
             : base(context)
         {
             this.testSuiteContext = testSuiteContext;
@@ -55,15 +55,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(IamAuthenticationType.User).CreateClient("integration");
             var request = BuildRequest(scenarioName);
-            var iamAuthenticationType = IamAuthenticationType.User;
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -104,15 +100,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(IamAuthenticationType.Role).CreateClient("integration");
             var request = BuildRequest(scenarioName);
-            var iamAuthenticationType = IamAuthenticationType.Role;
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -132,15 +124,13 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -160,15 +150,13 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -188,15 +176,13 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -216,6 +202,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=value1"
@@ -224,11 +212,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
 
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -248,19 +232,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=Value1&Param1=value2"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
-
+            
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -280,19 +262,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
                 Query = "Param1=value2&Param1=Value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
-
+            
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -304,16 +284,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
-
+            
             // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                completionOption,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+            var response = await httpClient.SendAsync(request, completionOption);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);

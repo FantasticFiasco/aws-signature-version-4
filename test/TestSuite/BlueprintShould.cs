@@ -31,14 +31,13 @@ namespace AwsSignatureVersion4.TestSuite
         public async Task BeUpToDate()
         {
             // Arrange
-            using (var stream = await client.GetStreamAsync(Url))
-            {
-                // Act
-                var hash = CreateHash(stream);
+            await using var stream = await client.GetStreamAsync(Url);
 
-                // Assert
-                hash.ShouldBe(TestSuiteHash);
-            }
+            // Act
+            var hash = CreateHash(stream);
+
+            // Assert
+            hash.ShouldBe(TestSuiteHash);
         }
 
         private string CreateHash(Stream stream)
