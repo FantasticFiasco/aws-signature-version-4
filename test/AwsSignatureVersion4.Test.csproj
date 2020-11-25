@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.3.111.38" />
-    <PackageReference Include="AWSSDK.SecurityToken" Version="3.3.105.22" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.3.105.43" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Shouldly" Version="4.0.1" />
