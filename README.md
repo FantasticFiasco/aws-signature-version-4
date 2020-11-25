@@ -1,5 +1,4 @@
 <h1 align="center">
-  <br>
   AwsSignatureVersion4
   <br>
 </h1>
@@ -15,8 +14,10 @@
   <a href="https://raw.githubusercontent.com/FantasticFiasco/aws-signature-version-4/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
 </p>
 
-__Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignatureVersion4)
-| __Platforms__ - .NET Framework 4.5, .NET Standard 2.0
+<p align="center">
+  <b>Package</b> - <a href="https://www.nuget.org/packages/AwsSignatureVersion4">AwsSignatureVersion4</a><br>
+  <b>Platforms</b> - .NET Framework 4.5, .NET Standard 2.0
+</p>
 
 ## Table of contents
 
