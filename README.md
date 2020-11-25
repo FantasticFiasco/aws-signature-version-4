@@ -1,11 +1,19 @@
-# AwsSignatureVersion4 - The buttoned-up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.
+<h1 align="center">
+  <br>
+  AwsSignatureVersion4
+  <br>
+</h1>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/96upkt8x02mhqi5b/branch/master?svg=true)](https://ci.appveyor.com/project/FantasticFiasco/aws-signature-version-4)
-[![codecov](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg)](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4)
-[![NuGet Version](http://img.shields.io/nuget/v/AwsSignatureVersion4.svg?style=flat)](https://www.nuget.org/packages/AwsSignatureVersion4/)
-[![SemVer compatible](https://img.shields.io/badge/%E2%9C%85-SemVer%20compatible-blue)](https://semver.org/)
-[![NuGet](https://img.shields.io/nuget/dt/AwsSignatureVersion4.svg)](https://www.nuget.org/packages/AwsSignatureVersion4/)
-[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://raw.githubusercontent.com/FantasticFiasco/aws-signature-version-4/master/LICENSE)
+<h4 align="center">The buttoned-up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.</h4>
+
+<p align="center">
+  <a href="https://ci.appveyor.com/project/FantasticFiasco/aws-signature-version-4"><img src="https://ci.appveyor.com/api/projects/status/96upkt8x02mhqi5b/branch/master?svg=true"></a>
+  <a href="https://codecov.io/gh/FantasticFiasco/aws-signature-version-4"><img src="https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg"></a>
+  <a href="https://www.nuget.org/packages/AwsSignatureVersion4/"><img src="http://img.shields.io/nuget/v/AwsSignatureVersion4.svg?style=flat"></a>
+  <a href="https://semver.org/"><img src="https://img.shields.io/badge/%E2%9C%85-SemVer%20compatible-blue"></a>
+  <a href="https://www.nuget.org/packages/AwsSignatureVersion4/"><img src="https://img.shields.io/nuget/dt/AwsSignatureVersion4.svg"></a>
+  <a href="https://raw.githubusercontent.com/FantasticFiasco/aws-signature-version-4/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
+</p>
 
 __Package__ - [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignatureVersion4)
 | __Platforms__ - .NET Framework 4.5, .NET Standard 2.0
@@ -32,7 +40,11 @@ So here we are, my attempt at implementing the Signature Version 4 algorithm in 
 
 ## Super simple to use
 
-The best API is the one you already know. This project extends the class `HttpClient` by providing additional overloads to `PostAsync`, `GetAsync`, `PutAsync`, `DeleteAsync` and `SendAsync`. These overloads accept the following additional arguments.
+The best API is the one you already know. By extending both `HttpClient` and `IHttpClientFactory` we hope you'll get an easy integration.
+
+### Integration with `HttpClient`
+
+ This project extends the class `HttpClient` by providing additional overloads to `PostAsync`, `GetAsync`, `PutAsync`, `DeleteAsync` and `SendAsync`. These overloads accept the following additional arguments.
 
 - `regionName` - The name of the AWS region, e.g. `us-west-1`
 - `serviceName` - The name of the service, e.g. `execute-api` for an AWS API Gateway
@@ -53,6 +65,29 @@ var response = await client.GetAsync(
   regionName: "us-west-1",
   serviceName: "execute-api",
   credentials: credentials);
+```
+
+Please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test) directory for other examples.
+
+### Integration with `IHttpClientFactory`
+
+This project supports `IHttpClientFactory` by means of providing a custom HTTP message handler called `AwsSignatureHandler`. Once injected into the pipeline of the HTTP client factory it will sign your requests before sending them over the network.
+
+`AwsSignatureHandler` takes an instance of `AwsSignatureHandlerSettings` as its only constructor argument, thus you will have to configure your dependency injection container to sufficiently resolve both these classes.
+
+The following example is demonstrating how one would configure the ASP .NET Core service collection to acknowledge a HTTP client named `my-client`. For more information regarding configuration, please see [Dependency injection in ASP.NET Core](https://docs.microsoft.com/aspnet/core/fundamentals/dependency-injection).
+
+```csharp
+// Don't specify credentials in source code, this is for demo only! See next chapter for more
+// information.
+var credentials = new ImmutableCredentials("<access key id>", "<secret access key>", null);
+services
+  .AddTransient<AwsSignatureHandler>()
+  .AddTransient(_ => new AwsSignatureHandlerSettings("us-west-1", "execute-api", credentials));
+
+services
+  .AddHttpClient("my-client")
+  .AddHttpMessageHandler<AwsSignatureHandler>();
 ```
 
 Please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test) directory for other examples.
