@@ -10,7 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ### :zap: Added
 
-- HTTP message handler `AwsSignatureHandler` designed to be compatible with [IHttpClientFactory](https://docs.microsoft.com/dotnet/api/system.net.http.ihttpclientfactory) and its request pipeline. For more information about message handlers and their usage, please see [HTTP Message Handlers in ASP.NET Web API](https://docs.microsoft.com/aspnet/web-api/overview/advanced/http-message-handlers).
+- HTTP message handler `AwsSignatureHandler` designed to be compatible with [IHttpClientFactory](https://docs.microsoft.com/dotnet/api/system.net.http.ihttpclientfactory) and its request pipeline. For more information about message handlers and their usage, please see [HTTP Message Handlers in ASP.NET Web API](https://docs.microsoft.com/aspnet/web-api/overview/advanced/http-message-handlers). (proposed by [@torepaulsson](https://github.com/torepaulsson))
 
 ## [1.3.1] - 2020-08-14
 
