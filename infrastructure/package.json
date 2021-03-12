@@ -25,7 +25,7 @@
     "@aws-cdk/aws-s3": "1.93.0",
     "@aws-cdk/aws-s3-deployment": "1.93.0",
     "@aws-cdk/core": "1.93.0",
-    "@types/node": "14.14.33",
+    "@types/node": "14.14.34",
     "aws-cdk": "1.93.0",
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
