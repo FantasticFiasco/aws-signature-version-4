@@ -1,0 +1,22 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+root = true
+
+[*]
+indent_style = space
+trim_trailing_whitespace = true
+end_of_line = lf
+insert_final_newline = true
+
+[*.json]
+indent_size = 2
+
+[*.md]
+indent_size = 2
+
+[*.ts]
+# Prettier (https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+# is responsible for formatting TypeScript code
+
+[*.{yaml,yml}]
+indent_size = 2

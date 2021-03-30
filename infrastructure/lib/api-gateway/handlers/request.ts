@@ -1,5 +1,9 @@
-export const handler = async (event: unknown, context: unknown) => {
-    return {
-        statusCode: 200,
-    };
-};
+interface Response {
+  statusCode: number
+}
+
+export const handler = async (): Promise<Response> => {
+  return {
+    statusCode: 200,
+  }
+}
