@@ -1,28 +1,28 @@
 # -------------------------------------------------------------------------------------------------
 # LOGO
 # -------------------------------------------------------------------------------------------------
-$LOGO = (Invoke-WebRequest "https://raw.githubusercontent.com/FantasticFiasco/logo/master/logo.raw").toString();
-Write-Host "$LOGO" -ForegroundColor Green
+$logo = (Invoke-WebRequest "https://raw.githubusercontent.com/FantasticFiasco/logo/master/logo.raw").toString();
+Write-Host "$logo" -ForegroundColor Green
 
 # -------------------------------------------------------------------------------------------------
 # VARIABLES
 # -------------------------------------------------------------------------------------------------
-$GIT_SHA = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
-$IS_TAGGED_BUILD = If ("$env:APPVEYOR_REPO_TAG" -eq "true") { $true } Else { $false }
-$IS_PULL_REQUEST = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } Else { $true }
-Write-Host "[info] git sha: $GIT_SHA"
-Write-Host "[info] is git tag: $IS_TAGGED_BUILD"
-Write-Host "[info] is pull request: $IS_PULL_REQUEST"
+$git_sha = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
+$is_tagged_build = If ("$env:APPVEYOR_REPO_TAG" -eq "true") { $true } Else { $false }
+$is_pull_request = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } Else { $true }
+Write-Host "[info] git sha: $git_sha"
+Write-Host "[info] is git tag: $is_tagged_build"
+Write-Host "[info] is pull request: $is_pull_request"
 
 # -------------------------------------------------------------------------------------------------
 # BUILD
 # -------------------------------------------------------------------------------------------------
 Write-Host "[build] build started"
 Write-Host "[build] dotnet cli v$(dotnet --version)"
-$VERSION_SUFFIX_ARG = If ($IS_TAGGED_BUILD -eq $true) { "" } Else { "--version-suffix=sha-$GIT_SHA" }
-dotnet build -c Release $VERSION_SUFFIX_ARG
+$version_suffix_arg = If ($is_tagged_build -eq $true) { "" } Else { "--version-suffix=sha-$git_sha" }
+dotnet build -c Release $version_suffix_arg
 if ($LASTEXITCODE -ne 0) { exit 1 }
-dotnet pack -c Release -o ./artifacts --no-build $VERSION_SUFFIX_ARG
+dotnet pack -c Release -o ./artifacts --no-build $version_suffix_arg
 if ($LASTEXITCODE -ne 0) { exit 1 }
 
 # -------------------------------------------------------------------------------------------------
@@ -32,8 +32,8 @@ Write-Host "[test] test started"
 
 # Exclude integration tests if we run as part of a pull requests. Integration tests rely on
 # secrets, which are omitted by AppVeyor on pull requests.
-$TEST_FILTER = If ($IS_PULL_REQUEST -eq $true) { "--filter Category!=Integration" } Else { "" }
-Write-Host "[test] test filter: $TEST_FILTER"
+$test_filter = If ($is_pull_request -eq $true) { "--filter Category!=Integration" } Else { "" }
+Write-Host "[test] test filter: $test_filter"
 
 dotnet tool install --global coverlet.console
 coverlet ./test/bin/Release/net5.0/AwsSignatureVersion4.Test.dll `
@@ -43,7 +43,7 @@ coverlet ./test/bin/Release/net5.0/AwsSignatureVersion4.Test.dll `
     --format opencover
 if ($LASTEXITCODE -ne 0) { exit 1 }
 
-If ($IS_PULL_REQUEST -eq $false)
+If ($is_pull_request -eq $false)
 {
     Write-Host "[test] upload coverage report"
     Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
