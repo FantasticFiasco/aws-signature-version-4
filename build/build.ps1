@@ -30,24 +30,17 @@ if ($LASTEXITCODE -ne 0) { exit 1 }
 # -------------------------------------------------------------------------------------------------
 Write-Host "[test] test started"
 
-# Exclude integration tests if we run as part of a pull requests. Integration tests rely on
-# secrets, which are omitted by AppVeyor on pull requests.
-$test_filter = If ($is_pull_request -eq $true) { "--filter Category!=Integration" } Else { "" }
-Write-Host "[test] test filter: $test_filter"
+if ($is_pull_request -eq $true) {
+    # Exclude integration tests if we run as part of a pull requests. Integration tests rely on
+    # secrets, which are omitted by AppVeyor on pull requests.
+    dotnet test -c Release --no-build --filter Category!=Integration
+    if ($LASTEXITCODE -ne 0) { exit 1 }
+}
+else {
+    dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
+    if ($LASTEXITCODE -ne 0) { exit 1 }
 
-dotnet tool install --global coverlet.console
-coverlet ./test/bin/Release/net5.0/AwsSignatureVersion4.Test.dll `
-    --target "dotnet" `
-    --targetargs "test --configuration Release --no-build ${TEST_FILTER}" `
-    --exclude "[xunit.*]*" `
-    --format opencover
-if ($LASTEXITCODE -ne 0) { exit 1 }
-
-If ($is_pull_request -eq $false)
-{
-    Write-Host "[test] upload coverage report"
-    Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
-    bash codecov.sh -f "coverage.opencover.xml"
+    ls .\test\
 }
 
 # -------------------------------------------------------------------------------------------------
