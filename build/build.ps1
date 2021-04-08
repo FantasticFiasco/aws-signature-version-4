@@ -40,7 +40,17 @@ else {
     dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
     if ($LASTEXITCODE -ne 0) { exit 1 }
 
-    ls .\test\
+    foreach ($testResult in Get-ChildItem .\test\TestResults\*)
+    {
+        Push-Location $testResult
+
+        Write-Host "[test] upload coverage report from $testResult"
+        Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
+        bash codecov.sh -f "coverage.cobertura.xml"
+        if ($LASTEXITCODE -ne 0) { exit 1 }
+
+        Pop-Location
+    }
 }
 
 # -------------------------------------------------------------------------------------------------
