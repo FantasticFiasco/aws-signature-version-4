@@ -12,6 +12,10 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.3.111.38" />
     <PackageReference Include="AWSSDK.SecurityToken" Version="3.3.105.43" />
+    <PackageReference Include="coverlet.collector" Version="3.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
