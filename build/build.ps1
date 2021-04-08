@@ -1,8 +1,16 @@
+function Print {
+    param (
+        $Object
+    )
+
+    Write-Host "$Object" -ForegroundColor Green
+}
+
 # -------------------------------------------------------------------------------------------------
 # LOGO
 # -------------------------------------------------------------------------------------------------
 $logo = (Invoke-WebRequest "https://raw.githubusercontent.com/FantasticFiasco/logo/master/logo.raw").toString();
-Write-Host "$logo" -ForegroundColor Green
+Print "$logo"
 
 # -------------------------------------------------------------------------------------------------
 # VARIABLES
