@@ -18,7 +18,7 @@ function Print {
 # LOGO
 # -------------------------------------------------------------------------------------------------
 $logo = (Invoke-WebRequest "https://raw.githubusercontent.com/FantasticFiasco/logo/master/logo.raw").toString();
-Print -Message "$logo"
+Print -Message $logo
 
 # -------------------------------------------------------------------------------------------------
 # VARIABLES
