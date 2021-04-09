@@ -8,9 +8,9 @@ function Print {
     )
 
     if ($Category -eq "") {
-        Print "$Message" -ForegroundColor Green
+        Write-Host "$Message" -ForegroundColor Green
     } else {
-        Print "[$Category] $Message" -ForegroundColor Green
+        Write-Host "[$Category] $Message" -ForegroundColor Green
     }
 }
 
