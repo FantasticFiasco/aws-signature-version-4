@@ -27,14 +27,14 @@ $git_sha = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
 $is_tagged_build = If ("$env:APPVEYOR_REPO_TAG" -eq "true") { $true } Else { $false }
 $is_pull_request = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } Else { $true }
 Print "info" "git sha: $git_sha"
-Print "[info] is git tag: $is_tagged_build"
-Print "[info] is pull request: $is_pull_request"
+Print "info" "is git tag: $is_tagged_build"
+Print "info" "is pull request: $is_pull_request"
 
 # -------------------------------------------------------------------------------------------------
 # BUILD
 # -------------------------------------------------------------------------------------------------
-Print "[build] build started"
-Print "[build] dotnet cli v$(dotnet --version)"
+Print "build" "build started"
+Print "build" "dotnet cli v$(dotnet --version)"
 $version_suffix_arg = If ($is_tagged_build -eq $true) { "" } Else { "--version-suffix=sha-$git_sha" }
 dotnet build -c Release $version_suffix_arg
 if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -44,7 +44,7 @@ if ($LASTEXITCODE -ne 0) { exit 1 }
 # -------------------------------------------------------------------------------------------------
 # TEST
 # -------------------------------------------------------------------------------------------------
-Print "[test] test started"
+Print "test" "test started"
 
 if ($is_pull_request -eq $true) {
     # Exclude integration tests if we run as part of a pull requests. Integration tests rely on
@@ -60,7 +60,7 @@ else {
     {
         Push-Location $testResult
 
-        Print "[test] upload coverage report from $testResult"
+        Print "test" "upload coverage report from $testResult"
         Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
         bash codecov.sh -f "coverage.cobertura.xml"
         if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -72,7 +72,7 @@ else {
 # -------------------------------------------------------------------------------------------------
 # INFRASTRUCTURE
 # -------------------------------------------------------------------------------------------------
-Print "[infrastructure] build started"
-Print "[infrastructure] node $(node --version)"
+Print "infrastructure" "build started"
+Print "infrastructure" "node $(node --version)"
 yarn --cwd ./infrastructure
 yarn --cwd ./infrastructure build
