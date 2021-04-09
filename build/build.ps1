@@ -3,14 +3,14 @@
 # -------------------------------------------------------------------------------------------------
 function Print {
     param (
-        $Category,
-        $Message
+        [string]$Category,
+        [string]$Message
     )
 
-    if ($Category -eq "") {
-        Write-Host "$Message" -ForegroundColor Green
-    } else {
+    if ($Category) {
         Write-Host "[$Category] $Message" -ForegroundColor Green
+    } else {
+        Write-Host "$Message" -ForegroundColor Green
     }
 }
 
