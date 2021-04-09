@@ -1,16 +1,24 @@
+# -------------------------------------------------------------------------------------------------
+# COMMON FUNCTIONS
+# -------------------------------------------------------------------------------------------------
 function Print {
     param (
-        $Object
+        $Category,
+        $Message
     )
 
-    Write-Host "$Object" -ForegroundColor Green
+    if ($Category -eq "") {
+        Print "$Message" -ForegroundColor Green
+    } else {
+        Print "[$Category] $Message" -ForegroundColor Green
+    }
 }
 
 # -------------------------------------------------------------------------------------------------
 # LOGO
 # -------------------------------------------------------------------------------------------------
 $logo = (Invoke-WebRequest "https://raw.githubusercontent.com/FantasticFiasco/logo/master/logo.raw").toString();
-Print "$logo"
+Print -Message "$logo"
 
 # -------------------------------------------------------------------------------------------------
 # VARIABLES
@@ -18,15 +26,15 @@ Print "$logo"
 $git_sha = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
 $is_tagged_build = If ("$env:APPVEYOR_REPO_TAG" -eq "true") { $true } Else { $false }
 $is_pull_request = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } Else { $true }
-Write-Host "[info] git sha: $git_sha"
-Write-Host "[info] is git tag: $is_tagged_build"
-Write-Host "[info] is pull request: $is_pull_request"
+Print "info" "git sha: $git_sha"
+Print "[info] is git tag: $is_tagged_build"
+Print "[info] is pull request: $is_pull_request"
 
 # -------------------------------------------------------------------------------------------------
 # BUILD
 # -------------------------------------------------------------------------------------------------
-Write-Host "[build] build started"
-Write-Host "[build] dotnet cli v$(dotnet --version)"
+Print "[build] build started"
+Print "[build] dotnet cli v$(dotnet --version)"
 $version_suffix_arg = If ($is_tagged_build -eq $true) { "" } Else { "--version-suffix=sha-$git_sha" }
 dotnet build -c Release $version_suffix_arg
 if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -36,7 +44,7 @@ if ($LASTEXITCODE -ne 0) { exit 1 }
 # -------------------------------------------------------------------------------------------------
 # TEST
 # -------------------------------------------------------------------------------------------------
-Write-Host "[test] test started"
+Print "[test] test started"
 
 if ($is_pull_request -eq $true) {
     # Exclude integration tests if we run as part of a pull requests. Integration tests rely on
@@ -52,7 +60,7 @@ else {
     {
         Push-Location $testResult
 
-        Write-Host "[test] upload coverage report from $testResult"
+        Print "[test] upload coverage report from $testResult"
         Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
         bash codecov.sh -f "coverage.cobertura.xml"
         if ($LASTEXITCODE -ne 0) { exit 1 }
@@ -64,7 +72,7 @@ else {
 # -------------------------------------------------------------------------------------------------
 # INFRASTRUCTURE
 # -------------------------------------------------------------------------------------------------
-Write-Host "[infrastructure] build started"
-Write-Host "[infrastructure] node $(node --version)"
+Print "[infrastructure] build started"
+Print "[infrastructure] node $(node --version)"
 yarn --cwd ./infrastructure
 yarn --cwd ./infrastructure build
