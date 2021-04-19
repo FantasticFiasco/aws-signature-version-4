@@ -4,13 +4,13 @@ environment:
   NODEJS_VERSION: "12"
   AWS_REGION: eu-west-1
   AWS_USER_WITH_PERMISSIONS_ACCESS_KEY_ID:
-    secure: UUnqjTdDAOPsXNlSLd8RVh/SxFHmi8FjzCMA2o6n6WU=
+    secure: Uik9tC1iBQQhnuKKnI2tCrSa/wpbFkESCACsScrkRVA=
   AWS_USER_WITH_PERMISSIONS_SECRET_ACCESS_KEY:
-    secure: NFm9uQM1oBz/mApinnfpPuz7548Z6t4ELhCL67rcEnhXFhxd3Q7fVPedMl3ivptS
+    secure: 1XujlUnim3e1NezoNnZwL9UP9+OMiama/hHtygjwgfGR64ACkdGIaI3L+xEktMtc
   AWS_USER_WITHOUT_PERMISSIONS_ACCESS_KEY_ID:
-    secure: kZAMQ+wisq4dzi1NZ5h3dCyfYQ6NKdK4ebordLprRUs=
+    secure: E0OC2RYBaTPkfSGrLxTOuyNNkvu5sh6REYzaJzFlsoY=
   AWS_USER_WITHOUT_PERMISSIONS_SECRET_ACCESS_KEY:
-    secure: REDMo1cR7OSnQbuaJh3+zQ+mQQSQtqfQ2dNjWTGTkYA8up/ylKWovTcP3wDv9ZTo
+    secure: CakQHLZJeDwSzYD00AYZ1p8b3oByegF+hfXNoQfhprYij0HRTVk+Og5pkf8Z7De2
   AWS_ROLE_ARN:
     secure: CVjaIRrwBKMLa+ZIqgA4E+IiYq5h16hz1UEvPGs0ZMizXZUYbb1km3rvJ8SIlxE1EXLeeD+oxKHszpaalDarUg==
   AWS_API_GATEWAY_URL:
@@ -20,7 +20,7 @@ environment:
   AWS_S3_BUCKET_URL:
     secure: lvefZ1hszL1/6CpAqHdHniRnLQ1zuNeTJnGSkvVZV/r9KJdh6t+GjVPlS8iAgraKG2WicZ1OOi2D38nenkkWW2Eh8V0vxx9XIaUO0oQguGk=
   CODECOV_TOKEN:
-    secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
+    secure: qzGgvFnseXRU4WdzFJUHKSLk84TcURa3dF8ynmrtqbvy/2tJXn9giNHUJBVNcFzy
 
 install:
   - ps: Install-Product node $env:NODEJS_VERSION
