@@ -20,7 +20,7 @@ environment:
   AWS_S3_BUCKET_URL:
     secure: lvefZ1hszL1/6CpAqHdHniRnLQ1zuNeTJnGSkvVZV/r9KJdh6t+GjVPlS8iAgraKG2WicZ1OOi2D38nenkkWW2Eh8V0vxx9XIaUO0oQguGk=
   CODECOV_TOKEN:
-    secure: 8KH9Y0pwlpZODSh7oItr7AJ4u2cr/TB9ir2TckofpZJHAKtUhhWyihjPcRHf1M34
+    secure: qzGgvFnseXRU4WdzFJUHKSLk84TcURa3dF8ynmrtqbvy/2tJXn9giNHUJBVNcFzy
 
 install:
   - ps: Install-Product node $env:NODEJS_VERSION
