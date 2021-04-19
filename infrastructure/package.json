@@ -38,7 +38,7 @@
   },
   "resolutions": {
     "bl": "4.1.0",
-    "lodash": ">=4.17.13",
+    "lodash": "4.17.21",
     "minimist": ">=1.2.2",
     "netmask": ">=2.0.1"
   }
