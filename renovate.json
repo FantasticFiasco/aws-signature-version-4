@@ -9,5 +9,6 @@
       "packageNames": ["AWSSDK.Core", "AWSSDK.S3", "AWSSDK.SecurityToken"],
       "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<prerelease>.*)$"
     }
-  ]
+  ],
+  "ignoreDeps": ["bl", "lodash", "minimist", "netmask"]
 }
