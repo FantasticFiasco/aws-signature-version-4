@@ -6,15 +6,12 @@
     "infrastructure": "bin/infrastructure.js"
   },
   "scripts": {
-    "clean": "rimraf \"./cdk.out\"; rimraf \"./+(bin|lib|resources)/**/*.+(d.ts|js|js.map)\"",
-    "prebuild": "yarn clean",
-    "build": "tsc",
+    "clean": "rimraf './cdk.out' './+(bin|lib)/**/*.+(d.ts|js|js.map)'",
+    "build": "yarn clean && tsc",
     "watch": "tsc -w",
     "cdk": "cdk",
-    "predeploy": "yarn build",
-    "deploy": "cdk deploy",
-    "predestroy": "yarn build",
-    "destroy": "cdk destroy",
+    "deploy": "yarn build && cdk deploy",
+    "destroy": "yarn build && cdk destroy",
     "lint": "eslint --ext .ts --max-warnings=0 . && prettier --check .",
     "lint:fix": "eslint --ext .ts --fix . && prettier --write ."
   },
