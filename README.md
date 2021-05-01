@@ -105,12 +105,12 @@ How the credentials are provided depend on where you run your code. If you run y
 
 This project comes with a pledge, providing transparency on supported and unsupported scenarios.
 
-- :heavy_check_mark: ~190 unit tests are passing before a release
-- :heavy_check_mark: ~300 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
-- :heavy_check_mark: ~200 integration tests targeting an IAM authenticated AWS S3 bucket are passing before a release
-- :heavy_check_mark: No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
-- :heavy_check_mark: [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/) is reused as much as possible, thus the dependency
-- :heavy_check_mark: [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios are passing, with the following exceptions:
+- :white_check_mark: ~190 unit tests are passing before a release
+- :white_check_mark: ~300 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
+- :white_check_mark: ~200 integration tests targeting an IAM authenticated AWS S3 bucket are passing before a release
+- :white_check_mark: No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
+- :white_check_mark: [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/) is reused as much as possible, thus the dependency
+- :white_check_mark: [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios are passing, with the following exceptions:
   - General
     - :x: `get-utf8` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
     - :x: `normalize-path/get-space` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
@@ -131,7 +131,7 @@ This project comes with a pledge, providing transparency on supported and unsupp
     - :x: `post-vanilla-query` - This scenario defines a request that isn't supported by AWS S3.
     - :x: `post-x-www-form-urlencoded` - This scenario defines a request that isn't supported by AWS S3.
     - :x: `post-x-www-form-urlencoded-parameters` - This scenario defines a request that isn't supported by AWS S3.
-- :heavy_check_mark: All characters are supported in S3 object keys with the following exceptions:
+- :white_check_mark: All characters are supported in S3 object keys with the following exceptions:
   - :x: Plus (`+`)
   - :x: Backslash (`\`)
   - :x: Left curly brace (`{`)
@@ -149,10 +149,10 @@ This project comes with a pledge, providing transparency on supported and unsupp
   - :x: Non-printable ASCII characters (128–255 decimal characters)
   - :x: Quotation marks
 - Authentication method
-  - :heavy_check_mark: HTTP header authentication is supported
+  - :white_check_mark: HTTP header authentication is supported
   - :x: Query string authentication is not supported
 - HTTP version
-  - :heavy_check_mark: HTTP/1.1 is supported
+  - :white_check_mark: HTTP/1.1 is supported
   - :x: HTTP/2 is not supported, please create an issue if you wish it to be supported
 
 ## Install via NuGet
