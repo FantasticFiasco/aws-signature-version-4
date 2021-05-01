@@ -6,7 +6,7 @@
     "infrastructure": "bin/infrastructure.js"
   },
   "scripts": {
-    "clean": "rimraf './cdk.out' './+(bin|lib)/**/*.+(d.ts|js|js.map)'",
+    "clean": "rimraf \"./cdk.out\" \"./+(bin|lib)/**/*.+(d.ts|js|js.map)\"",
     "build": "yarn clean && tsc",
     "watch": "tsc -w",
     "cdk": "cdk",
