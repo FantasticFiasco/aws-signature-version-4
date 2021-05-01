@@ -8,9 +8,9 @@ export class ApiGatewayStack extends Stack {
 
     // Create Lambda
     const requestHandler = new Function(this, 'ApiRequestHandler', {
-      code: Code.asset(`${__dirname}/handlers`),
+      code: Code.fromAsset(`${__dirname}/handlers`),
       handler: 'request.handler',
-      runtime: Runtime.NODEJS_10_X,
+      runtime: Runtime.NODEJS_14_X,
     })
 
     // Create API Gateway
@@ -32,7 +32,9 @@ export class ApiGatewayStack extends Stack {
     })
 
     new CfnOutput(this, 'ApiGatewayUrl', {
-      value: api.url.slice(0, -1), // Remove the trailing slash
+      value: api.url.endsWith('/')
+        ? api.url.slice(0, -1) // Remove the trailing slash
+        : api.url,
     })
   }
 }

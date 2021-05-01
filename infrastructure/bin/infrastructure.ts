@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import { App } from '@aws-cdk/core'
 import 'source-map-support/register'
 import { ApiGatewayStack, S3Stack, UsersStack } from '../lib'
