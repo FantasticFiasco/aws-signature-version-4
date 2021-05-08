@@ -27,7 +27,7 @@
     "@typescript-eslint/eslint-plugin": "4.22.1",
     "@typescript-eslint/parser": "4.22.1",
     "aws-cdk": "1.102.0",
-    "eslint": "7.25.0",
+    "eslint": "7.26.0",
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
     "source-map-support": "0.5.19",
