@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :syringe: Fixed
+
+- [#420](https://github.com/FantasticFiasco/aws-signature-version-4/issues/420) Improve error message in exception thrown when region or service name is omitted
+
 ## [1.4.0] - 2020-11-26
 
 ### :zap: Added

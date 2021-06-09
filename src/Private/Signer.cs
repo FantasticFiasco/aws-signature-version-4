@@ -23,7 +23,9 @@ namespace AwsSignatureVersion4.Private
             if (request.Headers.Authorization != null) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (request.Headers.Contains(HeaderKeys.AuthorizationHeader)) throw new ArgumentException(ErrorMessages.AuthorizationHeaderExists, nameof(request));
             if (regionName == null) throw new ArgumentNullException(nameof(regionName));
+            if (regionName == string.Empty) throw new ArgumentException(ErrorMessages.InvalidRegionName, nameof(regionName));
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
+            if (serviceName == string.Empty) throw new ArgumentException(ErrorMessages.InvalidServiceName, nameof(serviceName));
             if (serviceName == ServiceName.S3 && request.Method == HttpMethod.Post) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPost);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
