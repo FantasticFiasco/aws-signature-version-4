@@ -63,8 +63,8 @@ else {
     {
         #Push-Location $testResult
         $file_path = Split-Path -Path $testResult -Leaf -Resolve
-        $file_path = "test\TestResults\$temp"
-        Write-Host $temp
+        $file_path = "test\TestResults\$file_path"
+
 
 
 
