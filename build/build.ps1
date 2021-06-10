@@ -63,7 +63,7 @@ else {
     {
         #Push-Location $testResult
         $file_path = Split-Path -Path $testResult -Leaf -Resolve
-        $file_path = ".\test\TestResults\$file_path\coverage.cobertura.xml"
+        $file_path = "test\\TestResults\\$file_path\\coverage.cobertura.xml"
 
 
 
