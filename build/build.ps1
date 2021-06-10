@@ -65,7 +65,9 @@ else {
         Get-ChildItem
 
         Print "test" "upload coverage report from $testResult"
-        # Invoke-WebRequest -Uri "https://uploader.codecov.io/latest/codecov.exe" -Outfile codecov.exe
+        Invoke-WebRequest -Uri "https://uploader.codecov.io/latest/codecov.exe" -Outfile codecov.exe
+
+        Get-ChildItem
         # .\codecov.exe -f "coverage.cobertura.xml"
         if ($LASTEXITCODE -ne 0) { exit 1 }
 
