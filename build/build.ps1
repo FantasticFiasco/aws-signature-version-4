@@ -56,23 +56,29 @@ else {
     dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
     if ($LASTEXITCODE -ne 0) { exit 1 }
 
+    Print "test" "download codecov uploader"
+    Invoke-WebRequest -Uri https://uploader.codecov.io/latest/codecov.exe -Outfile codecov.exe
+
     foreach ($testResult in Get-ChildItem .\test\TestResults\*)
     {
-        Push-Location $testResult
+        #Push-Location $testResult
+        $temp = Split-Path -Path $testResult -Leaf -Resolve
+        Write-Host $temp
 
-        Print "Test result dir: $testResult"
-        Get-Location
-        Get-ChildItem
+        $temp = "test\TestResults\$temp"
+        Write-Host $temp
 
-        Print "test" "upload coverage report from $testResult"
-        Invoke-WebRequest -Uri https://uploader.codecov.io/latest/codecov.exe -Outfile codecov.exe
 
-        $temp = Join-Path -Path $testResult -ChildPath "coverage.cobertura.xml"
-        Print "$temp"
 
-        Get-ChildItem
+        # Print "test" "upload coverage report from $testResult"
+
+
+        #$temp = Join-Path -Path $testResult -ChildPath "coverage.cobertura.xml"
+        #Print "$temp"
+
+        #Get-ChildItem
         # .\codecov.exe -f .\coverage.cobertura.xml
-        .\codecov.exe -f $temp
+        #.\codecov.exe -f $temp
         if ($LASTEXITCODE -ne 0) { exit 1 }
 
         Pop-Location
