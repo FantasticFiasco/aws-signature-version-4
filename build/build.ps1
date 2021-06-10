@@ -67,8 +67,12 @@ else {
         Print "test" "upload coverage report from $testResult"
         Invoke-WebRequest -Uri https://uploader.codecov.io/latest/codecov.exe -Outfile codecov.exe
 
+        $temp = Join-Path -Path $testResult -ChildPath "coverage.cobertura.xml"
+        Print "$temp"
+
         Get-ChildItem
-        .\codecov.exe -f .\coverage.cobertura.xml
+        # .\codecov.exe -f .\coverage.cobertura.xml
+        .\codecov.exe -f $temp
         if ($LASTEXITCODE -ne 0) { exit 1 }
 
         Pop-Location
