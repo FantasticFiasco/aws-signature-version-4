@@ -62,15 +62,13 @@ else {
     foreach ($testResult in Get-ChildItem .\test\TestResults\*)
     {
         #Push-Location $testResult
-        $temp = Split-Path -Path $testResult -Leaf -Resolve
+        $file_path = Split-Path -Path $testResult -Leaf -Resolve
+        $file_path = "test\TestResults\$temp"
         Write-Host $temp
 
-        $temp = "test\TestResults\$temp"
-        Write-Host $temp
 
 
-
-        # Print "test" "upload coverage report from $testResult"
+        Print "test" "upload coverage report $file_path"
 
 
         #$temp = Join-Path -Path $testResult -ChildPath "coverage.cobertura.xml"
@@ -78,7 +76,7 @@ else {
 
         #Get-ChildItem
         # .\codecov.exe -f .\coverage.cobertura.xml
-        #.\codecov.exe -f $temp
+        .\codecov.exe -f $file_path
         if ($LASTEXITCODE -ne 0) { exit 1 }
 
         Pop-Location
