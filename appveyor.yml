@@ -34,7 +34,7 @@ artifacts:
   - path: artifacts/*.*nupkg
     name: NuGet
     type: NuGetPackage
-  - path: test/TestResults
+  - path: ./test/TestResults/*
     name: Code coverage
     type: zip
 
