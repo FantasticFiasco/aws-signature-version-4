@@ -34,9 +34,8 @@ artifacts:
   - path: artifacts/*.*nupkg
     name: NuGet
     type: NuGetPackage
-  - path: ./test/TestResults/*
+  - path: test/TestResults/*/coverage.cobertura.xml
     name: Code coverage
-    type: zip
 
 deploy:
   - provider: GitHub
