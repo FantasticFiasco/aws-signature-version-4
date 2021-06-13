@@ -14,6 +14,12 @@ function Print {
     }
 }
 
+function AssertLastExitCode {
+    if ($LASTEXITCODE -ne 0) {
+        exit 1
+    }
+}
+
 # -------------------------------------------------------------------------------------------------
 # LOGO
 # -------------------------------------------------------------------------------------------------
@@ -36,10 +42,12 @@ Print "info" "is pull request: $is_pull_request"
 Print "build" "build started"
 Print "build" "dotnet cli v$(dotnet --version)"
 $version_suffix_arg = If ($is_tagged_build -eq $true) { "" } Else { "--version-suffix=sha-$git_sha" }
+
 dotnet build -c Release $version_suffix_arg
-if ($LASTEXITCODE -ne 0) { exit 1 }
+AssertLastExitCode
+
 dotnet pack -c Release -o ./artifacts --no-build $version_suffix_arg
-if ($LASTEXITCODE -ne 0) { exit 1 }
+AssertLastExitCode
 
 # -------------------------------------------------------------------------------------------------
 # TEST
@@ -50,11 +58,11 @@ if ($is_pull_request -eq $true) {
     # Exclude integration tests if we run as part of a pull requests. Integration tests rely on
     # secrets, which are omitted by AppVeyor on pull requests.
     dotnet test -c Release --no-build --filter Category!=Integration
-    if ($LASTEXITCODE -ne 0) { exit 1 }
+    AssertLastExitCode
 }
 else {
     dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
-    if ($LASTEXITCODE -ne 0) { exit 1 }
+    AssertLastExitCode
 
     Print "test" "download codecov uploader"
     Invoke-WebRequest -Uri https://uploader.codecov.io/latest/codecov.exe -Outfile codecov.exe
@@ -63,13 +71,13 @@ else {
     {
         $relative_test_result = $test_result | Resolve-Path -Relative
 
-        // CodeCode uploader cant handle "\", thus we have to replace these with "/"
+        # CodeCode uploader cant handle "\", thus we have to replace these with "/"
         $relative_test_result = $relative_test_result -Replace "\\", "/"
 
         Print "test" "upload coverage report $relative_test_result"
 
         .\codecov.exe -f $relative_test_result
-        if ($LASTEXITCODE -ne 0) { exit 1 }
+        AssertLastExitCode
     }
 }
 
