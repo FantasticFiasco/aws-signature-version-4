@@ -59,7 +59,7 @@ else {
     Print "test" "download codecov uploader"
     Invoke-WebRequest -Uri https://uploader.codecov.io/latest/codecov.exe -Outfile codecov.exe
 
-    foreach ($test_result in Get-ChildItem .\test\TestResults\*)
+    foreach ($test_result in Get-ChildItem .\test\TestResults\*\coverage.cobertura.xml)
     {
         $relative_test_result = $test_result | Resolve-Path -Relative
 
