@@ -59,27 +59,17 @@ else {
     Print "test" "download codecov uploader"
     Invoke-WebRequest -Uri https://uploader.codecov.io/latest/codecov.exe -Outfile codecov.exe
 
-    foreach ($testResult in Get-ChildItem .\test\TestResults\*)
+    foreach ($test_result in Get-ChildItem .\test\TestResults\*)
     {
-        #Push-Location $testResult
-        $file_path = Split-Path -Path $testResult -Leaf -Resolve
-        $file_path = ".\test\TestResults\$file_path\coverage.cobertura.xml"
+        $relative_test_result = $test_result | Resolve-Path -Relative
 
+        // CodeCode uploader cant handle "\", thus we have to replace these with "/"
+        $relative_test_result = $relative_test_result -Replace "\\", "/"
 
+        Print "test" "upload coverage report $relative_test_result"
 
-
-        Print "test" "upload coverage report $file_path"
-
-
-        #$temp = Join-Path -Path $testResult -ChildPath "coverage.cobertura.xml"
-        #Print "$temp"
-
-        #Get-ChildItem
-        # .\codecov.exe -f .\coverage.cobertura.xml
-        .\codecov.exe -f $file_path
+        .\codecov.exe -f $relative_test_result
         if ($LASTEXITCODE -ne 0) { exit 1 }
-
-        Pop-Location
     }
 }
 
