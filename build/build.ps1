@@ -56,16 +56,20 @@ else {
     dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
     if ($LASTEXITCODE -ne 0) { exit 1 }
 
-    foreach ($testResult in Get-ChildItem .\test\TestResults\*)
+    Print "test" "download codecov uploader"
+    Invoke-WebRequest -Uri https://uploader.codecov.io/latest/codecov.exe -Outfile codecov.exe
+
+    foreach ($test_result in Get-ChildItem .\test\TestResults\*\coverage.cobertura.xml)
     {
-        Push-Location $testResult
+        $relative_test_result = $test_result | Resolve-Path -Relative
 
-        Print "test" "upload coverage report from $testResult"
-        Invoke-WebRequest -Uri "https://codecov.io/bash" -OutFile codecov.sh
-        bash codecov.sh -f "coverage.cobertura.xml"
+        // CodeCode uploader cant handle "\", thus we have to replace these with "/"
+        $relative_test_result = $relative_test_result -Replace "\\", "/"
+
+        Print "test" "upload coverage report $relative_test_result"
+
+        .\codecov.exe -f $relative_test_result
         if ($LASTEXITCODE -ne 0) { exit 1 }
-
-        Pop-Location
     }
 }
 
