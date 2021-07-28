@@ -11,7 +11,7 @@ namespace AwsSignatureVersion4.Private
     {
         public static async Task<Result> SignAsync(
             HttpRequestMessage request,
-            Uri baseAddress,
+            Uri? baseAddress,
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultRequestHeaders,
             DateTime now,
             string regionName,
@@ -67,11 +67,11 @@ namespace AwsSignatureVersion4.Private
             return new Result(canonicalRequest, stringToSign, authorizationHeader);
         }
 
-        private static void UpdateRequestUri(HttpRequestMessage request, Uri baseAddress)
+        private static void UpdateRequestUri(HttpRequestMessage request, Uri? baseAddress)
         {
             if (request.RequestUri == null && baseAddress == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
 
-            Uri requestUri = null;
+            Uri? requestUri = null;
 
             if (request.RequestUri == null)
             {
