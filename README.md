@@ -65,7 +65,7 @@ var response = await client.GetAsync(
   "https://www.acme.com/resources",
   regionName: "us-west-1",
   serviceName: "execute-api",
-  credentials: credentials);
+  credentials: credentials);  // credentials.GetCredentials() if inheriting from AWSCredentials
 ```
 
 Please see the [tests](https://github.com/FantasticFiasco/aws-signature-version-4/tree/master/test) directory for other examples.
