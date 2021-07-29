@@ -49,7 +49,7 @@ namespace AwsSignatureVersion4
             request.Headers.Remove(HeaderKeys.XAmzDateHeader);
             request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
 
-            var credentials = await settings.Credentials.GetCredentialsAsync();
+            var immutableCredentials = await settings.Credentials.GetCredentialsAsync();
 
             await Signer.SignAsync(
                 request,
@@ -58,7 +58,7 @@ namespace AwsSignatureVersion4
                 DateTime.UtcNow,
                 settings.RegionName,
                 settings.ServiceName,
-                credentials);
+                immutableCredentials);
 
             return await base.SendAsync(request, cancellationToken);
         }
