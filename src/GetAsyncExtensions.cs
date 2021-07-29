@@ -393,6 +393,7 @@ namespace System.Net.Http
             self.GetAsync(
                 requestUri,
                 completionOption,
+                CancellationToken.None,
                 regionName,
                 serviceName,
                 credentials);
@@ -450,6 +451,7 @@ namespace System.Net.Http
             self.GetAsync(
                 requestUri,
                 completionOption,
+                CancellationToken.None,
                 regionName,
                 serviceName,
                 credentials);
