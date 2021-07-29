@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- [#458](https://github.com/FantasticFiasco/aws-signature-version-4/issues/458) Improve support for AWS credentials inheriting from `Amazon.Runtime.AWSCredentials`
+
 ## [1.4.1] - 2021-06-09
 
 ### :syringe: Fixed
