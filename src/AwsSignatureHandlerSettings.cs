@@ -66,7 +66,7 @@ namespace AwsSignatureVersion4
         public string ServiceName { get; }
 
         /// <summary>
-        /// Gets the AWS credentials, providing the following parameters:
+        /// Gets the AWS credentials containing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
