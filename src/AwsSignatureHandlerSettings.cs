@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Amazon.Runtime;
+using AwsSignatureVersion4.Private;
 
 namespace AwsSignatureVersion4
 {
@@ -29,9 +29,7 @@ namespace AwsSignatureVersion4
         {
             RegionName = regionName ?? throw new ArgumentNullException(nameof(regionName));
             ServiceName = serviceName ?? throw new ArgumentNullException(nameof(serviceName));
-
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-            CredentialsProvider = () => Task.FromResult(credentials);
+            Credentials = new AWSCredentialsWrapper(credentials ?? throw new ArgumentNullException(nameof(credentials)));
         }
 
         /// <summary>
@@ -54,9 +52,7 @@ namespace AwsSignatureVersion4
         {
             RegionName = regionName ?? throw new ArgumentNullException(nameof(regionName));
             ServiceName = serviceName ?? throw new ArgumentNullException(nameof(serviceName));
-
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-            CredentialsProvider = credentials.GetCredentialsAsync;
+            Credentials = credentials ?? throw new ArgumentNullException(nameof(credentials));
         }
 
         /// <summary>
@@ -70,12 +66,12 @@ namespace AwsSignatureVersion4
         public string ServiceName { get; }
 
         /// <summary>
-        /// Gets the AWS credentials provider, providing the following parameters:
+        /// Gets the AWS credentials, providing the following parameters:
         /// - The AWS public key for the account making the service call.
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
         /// </summary>
-        public Func<Task<ImmutableCredentials>> CredentialsProvider { get; }
+        public AWSCredentials Credentials { get; }
     }
 }

@@ -49,7 +49,7 @@ namespace AwsSignatureVersion4
             request.Headers.Remove(HeaderKeys.XAmzDateHeader);
             request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
 
-            var credentials = await settings.CredentialsProvider();
+            var credentials = await settings.Credentials.GetCredentialsAsync();
 
             await Signer.SignAsync(
                 request,
