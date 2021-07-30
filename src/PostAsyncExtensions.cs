@@ -322,7 +322,6 @@ namespace System.Net.Http
 
             return response;
         }
-            
 
         /// <summary>
         /// Send a Signature Version 4 signed POST request with a cancellation token as an
