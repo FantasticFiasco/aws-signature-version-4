@@ -54,19 +54,27 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> PutAsync(
+        public static async Task<HttpResponseMessage> PutAsync(
             this HttpClient self,
             string requestUri,
             HttpContent content,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.PutAsync(
-                requestUri.ToUri(),
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.PutAsync(
+                requestUri,
                 content,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed PUT request to the specified Uri as an asynchronous
@@ -166,21 +174,28 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> PutAsync(
+        public static async Task<HttpResponseMessage> PutAsync(
             this HttpClient self,
             Uri requestUri,
             HttpContent content,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.PutAsync(
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.PutAsync(
                 requestUri,
                 content,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
 
+            return response;
+        }
+        
         /// <summary>
         /// Send a Signature Version 4 signed PUT request to the specified Uri as an asynchronous
         /// operation.
@@ -284,21 +299,29 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> PutAsync(
+        public static async Task<HttpResponseMessage> PutAsync(
             this HttpClient self,
             string requestUri,
             HttpContent content,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.PutAsync(
-                requestUri.ToUri(),
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.PutAsync(
+                requestUri,
                 content,
                 cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed PUT request with a cancellation token as an

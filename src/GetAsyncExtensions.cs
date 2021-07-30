@@ -51,18 +51,26 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             string requestUri,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.GetAsync(
-                requestUri.ToUri(),
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
+                requestUri,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
 
+            return response;
+        }
+        
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri as an asynchronous
         /// operation.
@@ -153,20 +161,26 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             Uri requestUri,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.GetAsync(
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
                 requestUri,
-                SendAsyncExtensions.DefaultCompletionOption,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
 
+            return response;
+        }
+        
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri as an asynchronous
         /// operation.
@@ -265,19 +279,27 @@ namespace System.Net.Http
         /// object will complete as soon as a response is available or the entire response
         /// including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             string requestUri,
             HttpCompletionOption completionOption,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.GetAsync(
-                requestUri.ToUri(),
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
+                requestUri,
                 completionOption,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri with an HTTP
@@ -383,20 +405,27 @@ namespace System.Net.Http
         /// object will complete as soon as a response is available or the entire response
         /// including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             Uri requestUri,
             HttpCompletionOption completionOption,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.GetAsync(
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
                 requestUri,
                 completionOption,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri with an HTTP
@@ -501,19 +530,27 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             string requestUri,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.GetAsync(
-                requestUri.ToUri(),
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
+                requestUri,
                 cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri with a cancellation
@@ -615,20 +652,27 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             Uri requestUri,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.GetAsync(
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
                 requestUri,
-                SendAsyncExtensions.DefaultCompletionOption,
                 cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri with a cancellation
@@ -737,21 +781,29 @@ namespace System.Net.Http
         /// object will complete as soon as a response is available or the entire response
         /// including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             string requestUri,
             HttpCompletionOption completionOption,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.GetAsync(
-                requestUri.ToUri(),
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
+                requestUri,
                 completionOption,
                 cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri with an HTTP
@@ -867,21 +919,29 @@ namespace System.Net.Http
         /// object will complete as soon as a response is available or the entire response
         /// including content is read.
         /// </remarks>
-        public static Task<HttpResponseMessage> GetAsync(
+        public static async Task<HttpResponseMessage> GetAsync(
             this HttpClient self,
             Uri requestUri,
             HttpCompletionOption completionOption,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
-            self.SendAsync(
-                new HttpRequestMessage(HttpMethod.Get, requestUri),
+            AWSCredentials credentials)
+        {
+            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+
+            var immutableCredentials = await credentials.GetCredentialsAsync();
+
+            var response = await self.GetAsync(
+                requestUri,
                 completionOption,
                 cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                immutableCredentials);
+
+            return response;
+        }
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri with an HTTP
