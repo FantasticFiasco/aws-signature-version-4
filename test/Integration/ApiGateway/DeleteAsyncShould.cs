@@ -19,7 +19,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task Succeed(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
             var response = await HttpClient.DeleteAsync(
@@ -27,6 +27,22 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl,
+                Context.RegionName,
+                Context.ServiceName,
+                await ResolveCredentials(iamAuthenticationType).GetCredentialsAsync());
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
