@@ -28,7 +28,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.StringContent,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             await actual.ShouldThrowAsync<NotSupportedException>();

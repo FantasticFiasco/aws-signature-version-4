@@ -40,7 +40,7 @@ namespace AwsSignatureVersion4.Integration
                 .AddTransient(_ => new AwsSignatureHandlerSettings(
                     Context.RegionName,
                     Context.ServiceName,
-                    ResolveCredentials(iamAuthenticationType)))
+                    ResolveMutableCredentials(iamAuthenticationType)))
                 .BuildServiceProvider()
                 .GetService<IHttpClientFactory>();
 
@@ -48,12 +48,15 @@ namespace AwsSignatureVersion4.Integration
 
         public void Dispose() => HttpClient?.Dispose();
 
-        protected AWSCredentials ResolveCredentials(IamAuthenticationType iamAuthenticationType) =>
+        protected AWSCredentials ResolveMutableCredentials(IamAuthenticationType iamAuthenticationType) =>
             iamAuthenticationType switch
             {
                 IamAuthenticationType.User => Context.UserCredentials,
                 IamAuthenticationType.Role => Context.RoleCredentials,
                 _ => throw new NotImplementedException($"The authentication type {iamAuthenticationType} is not implemented")
             };
+
+        protected ImmutableCredentials ResolveImmutableCredentials(IamAuthenticationType iamAuthenticationType) =>
+            ResolveMutableCredentials(iamAuthenticationType).GetCredentials();
     }
 }
