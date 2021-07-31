@@ -58,12 +58,12 @@ namespace AwsSignatureVersion4
         /// <summary>
         /// Gets the system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </summary>
-        public string RegionName { get; }
+        internal string RegionName { get; }
 
         /// <summary>
         /// Gets the signing name of the service, e.g. "execute-api".
         /// </summary>
-        public string ServiceName { get; }
+        internal string ServiceName { get; }
 
         /// <summary>
         /// Gets the AWS credentials containing the following parameters:
@@ -72,6 +72,6 @@ namespace AwsSignatureVersion4
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
         /// </summary>
-        public AWSCredentials Credentials { get; }
+        internal AWSCredentials Credentials { get; }
     }
 }

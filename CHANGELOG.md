@@ -12,20 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 **Migration guide**
 
-The property type of `AwsSignatureHandlerSettings.Credentials` has changed from `ImmutableCredentials` to `AWSCredentials`. If you accessed this property in your code and expect to receive an instance of `ImmutableCredentials`, please make the following changes.
-
-```csharp
-// Before migration
-var settings = new AwsSignatureHandlerSettings(...);
-var credentials = settings.Credentials;
-
-// After migration
-var settings = new AwsSignatureHandlerSettings(...);
-var credentials = await settings.Credentials.GetCredentialsAsync();
-// or
-var settings = new AwsSignatureHandlerSettings(...);
-var credentials = settings.Credentials.GetCredentials();
-```
+All properties of class `AwsSignatureHandlerSettings` have had their access modifiers changed from `public` to `internal`, thus the properties have been removed from the public API. If you experience a compilation error because of this, please refactor your code to access `RegionName`, `ServiceName` and the AWS credentials by other means.
 
 ## [1.4.1] - 2021-06-09
 
