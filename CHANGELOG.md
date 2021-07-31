@@ -8,7 +8,24 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ### :zap: Added
 
-- [#458](https://github.com/FantasticFiasco/aws-signature-version-4/issues/458) Improve support for AWS credentials inheriting from `Amazon.Runtime.AWSCredentials`
+- [#458](https://github.com/FantasticFiasco/aws-signature-version-4/issues/458) [BREAKING CHANGE] Improve support for AWS credentials inheriting from `Amazon.Runtime.AWSCredentials` (proposed by [@cliff-wakefield-acurus](https://github.com/cliff-wakefield-acurus))
+
+**Migration guide**
+
+The property type of `AwsSignatureHandlerSettings.Credentials` has changed from `ImmutableCredentials` to `AWSCredentials`. If you accessed this property in your code and expect to receive an instance of `ImmutableCredentials`, please make the following changes.
+
+```csharp
+// Before migration
+var settings = new AwsSignatureHandlerSettings(...);
+var credentials = settings.Credentials;
+
+// After migration
+var settings = new AwsSignatureHandlerSettings(...);
+var credentials = await settings.Credentials.GetCredentialsAsync();
+// or
+var settings = new AwsSignatureHandlerSettings(...);
+var credentials = settings.Credentials.GetCredentials();
+```
 
 ## [1.4.1] - 2021-06-09
 
