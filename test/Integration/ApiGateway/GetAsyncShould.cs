@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
 
@@ -16,10 +17,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
         }
 
+        #region GetAsync(string, string, string, <credentials>)
+
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task Succeed(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
             var response = await HttpClient.GetAsync(
@@ -35,7 +38,63 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        #endregion
+
+        #region GetAsync(Uri, string, string, <credentials>)
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        #endregion
+
+        #region GetAsync(string, HttpCompletionOption, string, string, <credentials>)
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var completionOption = HttpCompletionOption.ResponseContentRead;
@@ -55,7 +114,75 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl,
+                completionOption,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        #endregion
+
+        #region GetAsync(Uri, HttpCompletionOption, string, string, <credentials>)
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                completionOption,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                completionOption,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        #endregion
+
+        #region GetAsync(string, CancellationToken, string, string, <credentials>)
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var ct = new CancellationToken();
@@ -75,20 +202,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOptionAndCancellationToken(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var completionOption = HttpCompletionOption.ResponseContentRead;
             var ct = new CancellationToken();
 
             // Act
             var response = await HttpClient.GetAsync(
                 Context.ApiGatewayUrl,
-                completionOption,
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -113,6 +238,148 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
         }
+
+        #endregion
+
+        #region GetAsync(Uri, CancellationToken, string, string, <credentials>)
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        #endregion
+
+        #region GetAsync(string, HttpCompletionOption, CancellationToken, string, string, <credentials>)
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndCancellationTokenAndMutableCredentals(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl,
+                completionOption,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndCancellationTokenAndImmutableCredentals(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl,
+                completionOption,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        #endregion
+
+        #region GetAsync(Uri, HttpCompletionOption, CancellationToken, string, string, <credentials>)
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndCancellationTokenAndMutableCredentals(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                completionOption,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndCancellationTokenAndImmutableCredentals(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                completionOption,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        #endregion
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]

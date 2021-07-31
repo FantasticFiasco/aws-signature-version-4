@@ -17,6 +17,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
         }
 
+        #region DeleteAsync(string, string, string, <credentials>)
+
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
@@ -49,6 +51,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
+        #endregion
+
+        #region DeleteAsync(Uri, string, string, <credentials>)
+
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
@@ -80,6 +86,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
+
+        #endregion
+
+        #region DeleteAsync(string, CancellationToken, string, string, <credentials>)
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
@@ -120,6 +130,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
+
+        #endregion
+
+        #region DeleteAsync(Uri, CancellationToken, string, string, <credentials>)
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
@@ -180,6 +194,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
         }
+
+        #endregion
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
