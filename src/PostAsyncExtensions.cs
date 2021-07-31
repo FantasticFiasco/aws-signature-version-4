@@ -54,27 +54,20 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> PostAsync(
+        public static Task<HttpResponseMessage> PostAsync(
             this HttpClient self,
             string requestUri,
             HttpContent content,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.PostAsync(
+            AWSCredentials credentials) =>
+            self.PostAsync(
                 requestUri,
                 content,
+                CancellationToken.None,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send a Signature Version 4 signed POST request to the specified Uri as an asynchronous
@@ -124,8 +117,9 @@ namespace System.Net.Http
             string serviceName,
             ImmutableCredentials credentials) =>
             self.PostAsync(
-                requestUri.ToUri(),
+                requestUri,
                 content,
+                CancellationToken.None,
                 regionName,
                 serviceName,
                 credentials);
@@ -174,27 +168,20 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> PostAsync(
+        public static Task<HttpResponseMessage> PostAsync(
             this HttpClient self,
             Uri requestUri,
             HttpContent content,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.PostAsync(
+            AWSCredentials credentials) =>
+            self.PostAsync(
                 requestUri,
                 content,
+                CancellationToken.None,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send a Signature Version 4 signed POST request to the specified Uri as an asynchronous
@@ -299,29 +286,21 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> PostAsync(
+        public static Task<HttpResponseMessage> PostAsync(
             this HttpClient self,
             string requestUri,
             HttpContent content,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.PostAsync(
-                requestUri,
+            AWSCredentials credentials) =>
+            self.PostAsync(
+                requestUri.ToUri(),
                 content,
                 cancellationToken,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send a Signature Version 4 signed POST request with a cancellation token as an

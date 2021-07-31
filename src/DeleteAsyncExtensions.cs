@@ -51,25 +51,18 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> DeleteAsync(
+        public static Task<HttpResponseMessage> DeleteAsync(
             this HttpClient self,
             string requestUri,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.DeleteAsync(
+            AWSCredentials credentials) =>
+            self.DeleteAsync(
                 requestUri,
+                CancellationToken.None,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send a Signature Version 4 signed DELETE request to the specified Uri as an
@@ -115,7 +108,8 @@ namespace System.Net.Http
             string serviceName,
             ImmutableCredentials credentials) =>
             self.DeleteAsync(
-                requestUri.ToUri(),
+                requestUri,
+                CancellationToken.None,
                 regionName,
                 serviceName,
                 credentials);
@@ -161,25 +155,18 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> DeleteAsync(
+        public static Task<HttpResponseMessage> DeleteAsync(
             this HttpClient self,
             Uri requestUri,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.DeleteAsync(
+            AWSCredentials credentials) =>
+            self.DeleteAsync(
                 requestUri,
+                CancellationToken.None,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send a Signature Version 4 signed DELETE request to the specified Uri as an
@@ -276,27 +263,19 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> DeleteAsync(
+        public static Task<HttpResponseMessage> DeleteAsync(
             this HttpClient self,
             string requestUri,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.DeleteAsync(
-                requestUri,
+            AWSCredentials credentials) =>
+            self.DeleteAsync(
+                requestUri.ToUri(),
                 cancellationToken,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send a Signature Version 4 signed DELETE request to the specified Uri with a

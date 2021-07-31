@@ -54,25 +54,19 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> SendAsync(
+        public static Task<HttpResponseMessage> SendAsync(
             this HttpClient self,
             HttpRequestMessage request,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.SendAsync(
+            AWSCredentials credentials) =>
+            self.SendAsync(
                 request,
+                DefaultCompletionOption,
+                CancellationToken.None,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
@@ -176,28 +170,21 @@ namespace System.Net.Http
         /// object will complete as soon as a response is available or the entire response
         /// including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> SendAsync(
+        public static Task<HttpResponseMessage> SendAsync(
             this HttpClient self,
             HttpRequestMessage request,
             HttpCompletionOption completionOption,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.SendAsync(
+            AWSCredentials credentials) =>
+            self.SendAsync(
                 request,
                 completionOption,
+                CancellationToken.None,
                 regionName,
                 serviceName,
-                immutableCredentials);
+                credentials);
 
-            return response;
-        }
-        
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
         /// </summary>
@@ -304,27 +291,20 @@ namespace System.Net.Http
         /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
         /// complete once the entire response including content is read.
         /// </remarks>
-        public static async Task<HttpResponseMessage> SendAsync(
+        public static Task<HttpResponseMessage> SendAsync(
             this HttpClient self,
             HttpRequestMessage request,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
-        {
-            if (credentials == null) throw new ArgumentNullException(nameof(credentials));
-
-            var immutableCredentials = await credentials.GetCredentialsAsync();
-
-            var response = await self.SendAsync(
+            AWSCredentials credentials) =>
+            self.SendAsync(
                 request,
+                DefaultCompletionOption,
                 cancellationToken,
                 regionName,
                 serviceName,
-                immutableCredentials);
-
-            return response;
-        }
+                credentials);
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
