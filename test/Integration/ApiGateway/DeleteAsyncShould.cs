@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
 
@@ -51,7 +52,39 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var ct = new CancellationToken();
@@ -63,6 +96,66 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl,
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl.ToUri(),
+                ct,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
