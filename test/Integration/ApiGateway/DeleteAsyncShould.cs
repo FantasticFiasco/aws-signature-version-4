@@ -26,7 +26,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -42,7 +42,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
-                await ResolveCredentials(iamAuthenticationType).GetCredentialsAsync());
+                ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -62,7 +62,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -82,7 +82,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
@@ -104,7 +104,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -126,7 +126,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -148,7 +148,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);

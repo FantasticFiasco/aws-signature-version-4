@@ -64,7 +64,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 request,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -115,7 +115,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 request,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -138,7 +138,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 completionOption,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);

@@ -30,7 +30,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -53,7 +53,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -76,7 +76,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
@@ -101,7 +101,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -126,7 +126,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -151,7 +151,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 contentType.ToJsonContent(),
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);

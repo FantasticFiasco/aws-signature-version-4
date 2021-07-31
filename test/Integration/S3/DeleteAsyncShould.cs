@@ -28,7 +28,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -47,7 +47,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -66,7 +66,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -91,7 +91,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -110,7 +110,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -129,7 +129,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -150,7 +150,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -173,7 +173,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{Context.S3BucketUrl}/{key}",
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NoContent);
@@ -194,7 +194,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
