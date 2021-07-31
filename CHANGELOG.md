@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [2.0.0] - 2021-08-01
+
 ### :zap: Added
 
 - [#458](https://github.com/FantasticFiasco/aws-signature-version-4/issues/458) [BREAKING CHANGE] Improve support for AWS credentials inheriting from `Amazon.Runtime.AWSCredentials` (proposed by [@cliff-wakefield-acurus](https://github.com/cliff-wakefield-acurus))
