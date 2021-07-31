@@ -21,6 +21,27 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+            var completionOption = HttpCompletionOption.ResponseContentRead;
+
+            // Act
+            var response = await HttpClient.SendAsync(
+                request,
+                completionOption,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
         [InlineData("get-header-value-order")]
@@ -290,27 +311,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveCredentials(iamAuthenticationType));
-
-            // Assert
-            response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        }
-
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
-            var completionOption = HttpCompletionOption.ResponseContentRead;
-
-            // Act
-            var response = await HttpClient.SendAsync(
-                request,
-                completionOption,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveCredentials(iamAuthenticationType));
