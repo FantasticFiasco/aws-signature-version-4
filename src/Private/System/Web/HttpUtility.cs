@@ -40,7 +40,7 @@ using System.Web.Util;
 // ReSharper disable once CheckNamespace
 namespace System.Web
 {
-    public sealed class HttpUtility
+    internal sealed class HttpUtility
     {
         private sealed class HttpQSCollection : NameValueCollection
         {
