@@ -31,8 +31,6 @@
 //
 
 using System.Collections.Specialized;
-using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Web.Util;
 
@@ -143,48 +141,9 @@ namespace System.Web
             return result;
         }
 
-        public static string HtmlDecode(string s) => HttpEncoder.HtmlDecode(s);
-
-        public static void HtmlDecode(string s, TextWriter output) => HttpEncoder.HtmlDecode(s, output);
-
-        public static string HtmlEncode(string s) => HttpEncoder.HtmlEncode(s);
-
-        public static string HtmlEncode(object value) => HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture) ?? string.Empty);
-
-        public static void HtmlEncode(string? s, TextWriter output) => HttpEncoder.HtmlEncode(s, output);
-
-        public static string HtmlAttributeEncode(string s) => HttpEncoder.HtmlAttributeEncode(s);
-
-        public static void HtmlAttributeEncode(string? s, TextWriter output) => HttpEncoder.HtmlAttributeEncode(s, output);
-
         public static string UrlEncode(string str) => UrlEncode(str, Encoding.UTF8);
 
-        public static string UrlPathEncode(string str) => HttpEncoder.UrlPathEncode(str);
-
         public static string UrlEncode(string str, Encoding e) => Encoding.ASCII.GetString(UrlEncodeToBytes(str, e));
-
-        public static string UrlEncode(byte[] bytes) => Encoding.ASCII.GetString(UrlEncodeToBytes(bytes));
-
-        public static string UrlEncode(byte[] bytes, int offset, int count) => Encoding.ASCII.GetString(UrlEncodeToBytes(bytes, offset, count));
-
-        public static byte[] UrlEncodeToBytes(string str) => UrlEncodeToBytes(str, Encoding.UTF8);
-
-        public static byte[] UrlEncodeToBytes(byte[] bytes) => UrlEncodeToBytes(bytes, 0, bytes.Length);
-
-        [Obsolete(
-             "This method produces non-standards-compliant output and has interoperability issues. The preferred alternative is UrlEncodeToBytes(String)."
-         )]
-        public static byte[] UrlEncodeUnicodeToBytes(string str) => Encoding.ASCII.GetBytes(UrlEncodeUnicode(str));
-
-        public static string UrlDecode(string str) => UrlDecode(str, Encoding.UTF8);
-
-        public static string UrlDecode(byte[] bytes, Encoding e) => bytes == null ? null : UrlDecode(bytes, 0, bytes.Length, e);
-
-        public static byte[] UrlDecodeToBytes(string str) => UrlDecodeToBytes(str, Encoding.UTF8);
-
-        public static byte[] UrlDecodeToBytes(string str, Encoding e) => UrlDecodeToBytes(e.GetBytes(str));
-
-        public static byte[] UrlDecodeToBytes(byte[] bytes) => UrlDecodeToBytes(bytes, 0, bytes.Length);
 
         public static byte[] UrlEncodeToBytes(string str, Encoding e)
         {
@@ -192,27 +151,6 @@ namespace System.Web
             return HttpEncoder.UrlEncode(bytes, 0, bytes.Length, alwaysCreateNewReturnValue: false);
         }
 
-        public static byte[] UrlEncodeToBytes(byte[] bytes, int offset, int count) => HttpEncoder.UrlEncode(bytes, offset, count, alwaysCreateNewReturnValue: true);
-
-        [Obsolete(
-             "This method produces non-standards-compliant output and has interoperability issues. The preferred alternative is UrlEncode(String)."
-         )]
-
-        public static string UrlEncodeUnicode(string str) => HttpEncoder.UrlEncodeUnicode(str);
-
         public static string UrlDecode(string str, Encoding e) => HttpEncoder.UrlDecode(str, e);
-
-        public static string UrlDecode(byte[] bytes, int offset, int count, Encoding e) =>
-            HttpEncoder.UrlDecode(bytes, offset, count, e);
-
-        public static byte[] UrlDecodeToBytes(byte[] bytes, int offset, int count) => HttpEncoder.UrlDecode(bytes, offset, count);
-
-        public static string JavaScriptStringEncode(string? value) => HttpEncoder.JavaScriptStringEncode(value);
-
-        public static string JavaScriptStringEncode(string? value, bool addDoubleQuotes)
-        {
-            string encoded = HttpEncoder.JavaScriptStringEncode(value);
-            return addDoubleQuotes ? "\"" + encoded + "\"" : encoded;
-        }
     }
 }
