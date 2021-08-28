@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- [#476](https://github.com/FantasticFiasco/aws-signature-version-4/issues/476) Support for [Unity](https://unity.com/) game engine
+
 ## [2.0.0] - 2021-08-01
 
 ### :zap: Added
