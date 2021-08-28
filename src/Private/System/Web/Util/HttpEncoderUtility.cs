@@ -50,12 +50,8 @@ namespace System.Web.Util
 
             return false;
         }
-
-        //  Helper to encode spaces only
-        internal static string UrlEncodeSpaces(string str) => str.Contains(" ") ? str.Replace(" ", "%20") : str;
     }
 }
 
 #pragma warning restore IDE0066 // Use 'switch' expression
-
 #endif
