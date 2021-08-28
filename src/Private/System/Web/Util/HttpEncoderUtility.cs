@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if NET45
+#pragma warning disable IDE0066 // Use 'switch' expression
+
 using System.Diagnostics;
 
 // ReSharper disable once CheckNamespace
@@ -52,3 +55,7 @@ namespace System.Web.Util
         internal static string UrlEncodeSpaces(string str) => str.Contains(" ") ? str.Replace(" ", "%20") : str;
     }
 }
+
+#pragma warning restore IDE0066 // Use 'switch' expression
+
+#endif

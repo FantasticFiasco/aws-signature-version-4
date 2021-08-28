@@ -30,11 +30,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if NET45
+#pragma warning disable IDE0007 // Use implicit type
+
 using System.Collections.Specialized;
 using System.Text;
 using System.Web.Util;
-
-#if NET45
 
 // ReSharper disable once CheckNamespace
 namespace System.Web
@@ -156,4 +157,6 @@ namespace System.Web
         public static string UrlDecode(string str, Encoding e) => HttpEncoder.UrlDecode(str, e);
     }
 }
+
+#pragma warning restore IDE0007 // Use implicit type
 #endif

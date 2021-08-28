@@ -2,8 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if NET45
+#pragma warning disable IDE0007 // Use implicit type
+
 using System.Diagnostics;
-using System.Globalization;
 using System.Text;
 
 // ReSharper disable once CheckNamespace
@@ -11,26 +13,6 @@ namespace System.Web.Util
 {
     internal static class HttpEncoder
     {
-        private static void AppendCharAsUnicodeJavaScript(StringBuilder builder, char c)
-        {
-            builder.Append("\\u");
-            builder.Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
-        }
-
-        private static bool CharRequiresJavaScriptEncoding(char c) =>
-            c < 0x20 // control chars always have to be encoded
-                || c == '\"' // chars which must be encoded per JSON spec
-                || c == '\\'
-                || c == '\'' // HTML-sensitive chars encoded for safety
-                || c == '<'
-                || c == '>'
-                || (c == '&')
-                || c == '\u0085' // newline chars (see Unicode 6.2, Table 5-1 [http://www.unicode.org/versions/Unicode6.2.0/ch05.pdf]) have to be encoded
-                || c == '\u2028'
-                || c == '\u2029';
-
-        private static bool IsNonAsciiByte(byte b) => b >= 0x7F || b < 0x20;
-
         internal static string UrlDecode(string value, Encoding encoding)
         {
             int count = value.Length;
@@ -175,59 +157,6 @@ namespace System.Web.Util
             return expandedBytes;
         }
 
-        //  Helper to encode the non-ASCII url characters only
-        private static string UrlEncodeNonAscii(string str, Encoding e)
-        {
-            if (str == null) throw new ArgumentNullException(nameof(str));
-            if (e == null) throw new ArgumentNullException(nameof(e));
-            
-            byte[] bytes = e.GetBytes(str);
-            byte[] encodedBytes = UrlEncodeNonAscii(bytes, 0, bytes.Length);
-            return Encoding.ASCII.GetString(encodedBytes);
-        }
-
-        private static byte[] UrlEncodeNonAscii(byte[] bytes, int offset, int count)
-        {
-            int cNonAscii = 0;
-
-            // count them first
-            for (int i = 0; i < count; i++)
-            {
-                if (IsNonAsciiByte(bytes[offset + i]))
-                {
-                    cNonAscii++;
-                }
-            }
-
-            // nothing to expand?
-            if (cNonAscii == 0)
-            {
-                return bytes;
-            }
-
-            // expand not 'safe' characters into %XX, spaces to +s
-            byte[] expandedBytes = new byte[count + cNonAscii * 2];
-            int pos = 0;
-
-            for (int i = 0; i < count; i++)
-            {
-                byte b = bytes[offset + i];
-
-                if (IsNonAsciiByte(b))
-                {
-                    expandedBytes[pos++] = (byte)'%';
-                    expandedBytes[pos++] = (byte)HttpEncoderUtility.IntToHex((b >> 4) & 0xf);
-                    expandedBytes[pos++] = (byte)HttpEncoderUtility.IntToHex(b & 0x0f);
-                }
-                else
-                {
-                    expandedBytes[pos++] = b;
-                }
-            }
-
-            return expandedBytes;
-        }
-
         private static bool ValidateUrlEncodingParameters(byte[] bytes, int offset, int count)
         {
             if (bytes == null)
@@ -323,3 +252,6 @@ namespace System.Web.Util
         }
     }
 }
+
+#pragma warning restore IDE0007 // Use implicit type
+#endif

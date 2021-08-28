@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if NET45
+#pragma warning disable IDE0007 // Use implicit type
+
 // ReSharper disable once CheckNamespace
 namespace System.Web.Util
 {
@@ -70,3 +73,6 @@ namespace System.Web.Util
         }
     }
 }
+
+#pragma warning restore IDE0007 // Use implicit type
+#endif
