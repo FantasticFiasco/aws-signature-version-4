@@ -3,8 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
+// ReSharper disable once CheckNamespace
 namespace System.Web.Util
 {
     internal static class HttpEncoderUtility
@@ -49,7 +49,6 @@ namespace System.Web.Util
         }
 
         //  Helper to encode spaces only
-        [return: NotNullIfNotNull("str")]
-        internal static string? UrlEncodeSpaces(string? str) => str != null && str.Contains(' ') ? str.Replace(" ", "%20") : str;
+        internal static string UrlEncodeSpaces(string str) => str.Contains(" ") ? str.Replace(" ", "%20") : str;
     }
 }

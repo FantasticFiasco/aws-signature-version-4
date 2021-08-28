@@ -31,12 +31,12 @@
 //
 
 using System.Collections.Specialized;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Web.Util;
 
+// ReSharper disable once CheckNamespace
 namespace System.Web
 {
     public sealed class HttpUtility
@@ -143,99 +143,69 @@ namespace System.Web
             return result;
         }
 
-        [return: NotNullIfNotNull("s")]
-        public static string? HtmlDecode(string? s) => HttpEncoder.HtmlDecode(s);
+        public static string HtmlDecode(string s) => HttpEncoder.HtmlDecode(s);
 
-        public static void HtmlDecode(string? s, TextWriter output) => HttpEncoder.HtmlDecode(s, output);
+        public static void HtmlDecode(string s, TextWriter output) => HttpEncoder.HtmlDecode(s, output);
 
-        [return: NotNullIfNotNull("s")]
-        public static string? HtmlEncode(string? s) => HttpEncoder.HtmlEncode(s);
+        public static string HtmlEncode(string s) => HttpEncoder.HtmlEncode(s);
 
-        [return: NotNullIfNotNull("value")]
-        public static string? HtmlEncode(object? value) =>
-            value == null ? null : HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture) ?? string.Empty);
+        public static string HtmlEncode(object value) => HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture) ?? string.Empty);
 
         public static void HtmlEncode(string? s, TextWriter output) => HttpEncoder.HtmlEncode(s, output);
 
-        [return: NotNullIfNotNull("s")]
-        public static string? HtmlAttributeEncode(string? s) => HttpEncoder.HtmlAttributeEncode(s);
+        public static string HtmlAttributeEncode(string s) => HttpEncoder.HtmlAttributeEncode(s);
 
         public static void HtmlAttributeEncode(string? s, TextWriter output) => HttpEncoder.HtmlAttributeEncode(s, output);
 
-        [return: NotNullIfNotNull("str")]
-        public static string? UrlEncode(string? str) => UrlEncode(str, Encoding.UTF8);
+        public static string UrlEncode(string str) => UrlEncode(str, Encoding.UTF8);
 
-        [return: NotNullIfNotNull("str")]
-        public static string? UrlPathEncode(string? str) => HttpEncoder.UrlPathEncode(str);
+        public static string UrlPathEncode(string str) => HttpEncoder.UrlPathEncode(str);
 
-        [return: NotNullIfNotNull("str")]
-        public static string? UrlEncode(string? str, Encoding e) =>
-            str == null ? null : Encoding.ASCII.GetString(UrlEncodeToBytes(str, e));
+        public static string UrlEncode(string str, Encoding e) => Encoding.ASCII.GetString(UrlEncodeToBytes(str, e));
 
-        [return: NotNullIfNotNull("bytes")]
-        public static string? UrlEncode(byte[]? bytes) => bytes == null ? null : Encoding.ASCII.GetString(UrlEncodeToBytes(bytes));
+        public static string UrlEncode(byte[] bytes) => Encoding.ASCII.GetString(UrlEncodeToBytes(bytes));
 
-        [return: NotNullIfNotNull("bytes")]
-        public static string? UrlEncode(byte[]? bytes, int offset, int count) => bytes == null ? null : Encoding.ASCII.GetString(UrlEncodeToBytes(bytes, offset, count));
+        public static string UrlEncode(byte[] bytes, int offset, int count) => Encoding.ASCII.GetString(UrlEncodeToBytes(bytes, offset, count));
 
-        [return: NotNullIfNotNull("str")]
-        public static byte[]? UrlEncodeToBytes(string? str) => UrlEncodeToBytes(str, Encoding.UTF8);
+        public static byte[] UrlEncodeToBytes(string str) => UrlEncodeToBytes(str, Encoding.UTF8);
 
-        [return: NotNullIfNotNull("bytes")]
-        public static byte[]? UrlEncodeToBytes(byte[]? bytes) => bytes == null ? null : UrlEncodeToBytes(bytes, 0, bytes.Length);
+        public static byte[] UrlEncodeToBytes(byte[] bytes) => UrlEncodeToBytes(bytes, 0, bytes.Length);
 
         [Obsolete(
              "This method produces non-standards-compliant output and has interoperability issues. The preferred alternative is UrlEncodeToBytes(String)."
          )]
-        [return: NotNullIfNotNull("str")]
-        public static byte[]? UrlEncodeUnicodeToBytes(string? str) => str == null ? null : Encoding.ASCII.GetBytes(UrlEncodeUnicode(str));
+        public static byte[] UrlEncodeUnicodeToBytes(string str) => Encoding.ASCII.GetBytes(UrlEncodeUnicode(str));
 
-        [return: NotNullIfNotNull("str")]
-        public static string? UrlDecode(string? str) => UrlDecode(str, Encoding.UTF8);
+        public static string UrlDecode(string str) => UrlDecode(str, Encoding.UTF8);
 
-        [return: NotNullIfNotNull("bytes")]
-        public static string? UrlDecode(byte[]? bytes, Encoding e) => bytes == null ? null : UrlDecode(bytes, 0, bytes.Length, e);
+        public static string UrlDecode(byte[] bytes, Encoding e) => bytes == null ? null : UrlDecode(bytes, 0, bytes.Length, e);
 
-        [return: NotNullIfNotNull("str")]
-        public static byte[]? UrlDecodeToBytes(string? str) => UrlDecodeToBytes(str, Encoding.UTF8);
+        public static byte[] UrlDecodeToBytes(string str) => UrlDecodeToBytes(str, Encoding.UTF8);
 
-        [return: NotNullIfNotNull("str")]
-        public static byte[]? UrlDecodeToBytes(string? str, Encoding e) => str == null ? null : UrlDecodeToBytes(e.GetBytes(str));
+        public static byte[] UrlDecodeToBytes(string str, Encoding e) => UrlDecodeToBytes(e.GetBytes(str));
 
-        [return: NotNullIfNotNull("bytes")]
-        public static byte[]? UrlDecodeToBytes(byte[]? bytes) => bytes == null ? null : UrlDecodeToBytes(bytes, 0, bytes.Length);
+        public static byte[] UrlDecodeToBytes(byte[] bytes) => UrlDecodeToBytes(bytes, 0, bytes.Length);
 
-        [return: NotNullIfNotNull("str")]
-        public static byte[]? UrlEncodeToBytes(string? str, Encoding e)
+        public static byte[] UrlEncodeToBytes(string str, Encoding e)
         {
-            if (str == null)
-            {
-                return null;
-            }
-
             byte[] bytes = e.GetBytes(str);
             return HttpEncoder.UrlEncode(bytes, 0, bytes.Length, alwaysCreateNewReturnValue: false);
         }
 
-        [return: NotNullIfNotNull("bytes")]
-        public static byte[]? UrlEncodeToBytes(byte[]? bytes, int offset, int count) => HttpEncoder.UrlEncode(bytes, offset, count, alwaysCreateNewReturnValue: true);
+        public static byte[] UrlEncodeToBytes(byte[] bytes, int offset, int count) => HttpEncoder.UrlEncode(bytes, offset, count, alwaysCreateNewReturnValue: true);
 
         [Obsolete(
              "This method produces non-standards-compliant output and has interoperability issues. The preferred alternative is UrlEncode(String)."
          )]
 
-        [return: NotNullIfNotNull("str")]
-        public static string? UrlEncodeUnicode(string? str) => HttpEncoder.UrlEncodeUnicode(str);
+        public static string UrlEncodeUnicode(string str) => HttpEncoder.UrlEncodeUnicode(str);
 
-        [return: NotNullIfNotNull("str")]
-        public static string? UrlDecode(string? str, Encoding e) => HttpEncoder.UrlDecode(str, e);
+        public static string UrlDecode(string str, Encoding e) => HttpEncoder.UrlDecode(str, e);
 
-        [return: NotNullIfNotNull("bytes")]
-        public static string? UrlDecode(byte[]? bytes, int offset, int count, Encoding e) =>
+        public static string UrlDecode(byte[] bytes, int offset, int count, Encoding e) =>
             HttpEncoder.UrlDecode(bytes, offset, count, e);
 
-        [return: NotNullIfNotNull("bytes")]
-        public static byte[]? UrlDecodeToBytes(byte[]? bytes, int offset, int count) => HttpEncoder.UrlDecode(bytes, offset, count);
+        public static byte[] UrlDecodeToBytes(byte[] bytes, int offset, int count) => HttpEncoder.UrlDecode(bytes, offset, count);
 
         public static string JavaScriptStringEncode(string? value) => HttpEncoder.JavaScriptStringEncode(value);
 
