@@ -147,7 +147,7 @@ namespace System.Web
 
         public static string UrlEncode(string str, Encoding e) => Encoding.ASCII.GetString(UrlEncodeToBytes(str, e));
 
-        public static byte[] UrlEncodeToBytes(string str, Encoding e)
+        public static byte[]? UrlEncodeToBytes(string str, Encoding e)
         {
             byte[] bytes = e.GetBytes(str);
             return HttpEncoder.UrlEncode(bytes, 0, bytes.Length, alwaysCreateNewReturnValue: false);
