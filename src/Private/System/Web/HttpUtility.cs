@@ -34,6 +34,8 @@ using System.Collections.Specialized;
 using System.Text;
 using System.Web.Util;
 
+#if NET45
+
 // ReSharper disable once CheckNamespace
 namespace System.Web
 {
@@ -154,3 +156,4 @@ namespace System.Web
         public static string UrlDecode(string str, Encoding e) => HttpEncoder.UrlDecode(str, e);
     }
 }
+#endif

@@ -25,16 +25,18 @@
     <PackageReference Include="AWSSDK.Core" Version="3.3.101.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="assets\aws-signature-version-4.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <!-- .NET 4.5 -->
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <Reference Include="System" />
     <Reference Include="System.Net.Http" />
     <Reference Include="Microsoft.CSharp" />
 
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="assets\aws-signature-version-4.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <!-- SourceLink -->

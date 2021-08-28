@@ -3,10 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
-using System.Net;
 using System.Text;
 
 // ReSharper disable once CheckNamespace
@@ -100,7 +97,7 @@ namespace System.Web.Util
             return Utf16StringValidator.ValidateString(helper.GetString());
         }
 
-        internal static byte[] UrlEncode(byte[] bytes, int offset, int count, bool alwaysCreateNewReturnValue)
+        internal static byte[]? UrlEncode(byte[] bytes, int offset, int count, bool alwaysCreateNewReturnValue)
         {
             byte[]? encoded = UrlEncode(bytes, offset, count);
 
@@ -181,8 +178,9 @@ namespace System.Web.Util
         //  Helper to encode the non-ASCII url characters only
         private static string UrlEncodeNonAscii(string str, Encoding e)
         {
-            Debug.Assert(!string.IsNullOrEmpty(str));
-            Debug.Assert(e != null);
+            if (str == null) throw new ArgumentNullException(nameof(str));
+            if (e == null) throw new ArgumentNullException(nameof(e));
+            
             byte[] bytes = e.GetBytes(str);
             byte[] encodedBytes = UrlEncodeNonAscii(bytes, 0, bytes.Length);
             return Encoding.ASCII.GetString(encodedBytes);
@@ -228,27 +226,6 @@ namespace System.Web.Util
             }
 
             return expandedBytes;
-        }
-
-        // This is the original UrlPathEncode(string)
-        [SuppressMessage("Microsoft.Design", "CA1055:UriReturnValuesShouldNotBeStrings",
-            Justification = "Does not represent an entire URL, just a portion.")]
-        private static string UrlPathEncodeImpl(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return value;
-            }
-
-            // recurse in case there is a query string
-            int i = value.IndexOf('?');
-            if (i >= 0)
-            {
-                return string.Concat(UrlPathEncodeImpl(value.Substring(0, i)), value.AsSpan(i));
-            }
-
-            // encode DBCS characters and spaces only
-            return HttpEncoderUtility.UrlEncodeSpaces(UrlEncodeNonAscii(value, Encoding.UTF8));
         }
 
         private static bool ValidateUrlEncodingParameters(byte[] bytes, int offset, int count)
