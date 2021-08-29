@@ -41,13 +41,35 @@ Print "info" "is pull request: $is_pull_request"
 # -------------------------------------------------------------------------------------------------
 Print "build" "build started"
 Print "build" "dotnet cli v$(dotnet --version)"
-$version_suffix_arg = If ($is_tagged_build -eq $true) { "" } Else { "--version-suffix=sha-$git_sha" }
 
-dotnet build -c Release $version_suffix_arg
-AssertLastExitCode
+[xml]$build_props = Get-Content -Path .\Directory.Build.props
+$version_prefix = $build_props.Project.PropertyGroup.VersionPrefix
+Print "info" "build props version prefix: $version_prefix"
+$version_suffix = $build_props.Project.PropertyGroup.VersionSuffix
+Print "info" "build props version suffix: $version_suffix"
 
-dotnet pack -c Release -o ./artifacts --no-build $version_suffix_arg
-AssertLastExitCode
+if ($is_tagged_build) {
+    Print "build" "build"
+    dotnet build -c Release
+    AssertLastExitCode
+
+    Print "build" "pack"
+    dotnet pack -c Release -o .\artifacts --no-build
+    AssertLastExitCode
+} else {
+    # Use git tag if version suffix isn't specified
+    if ($version_suffix -eq "") {
+        $version_suffix = $git_sha
+    }
+
+    Print "build" "build"
+    dotnet build -c Release --version-suffix=$version_suffix
+    AssertLastExitCode
+
+    Print "build" "pack"
+    dotnet pack -c Release -o .\artifacts --version-suffix=$version_suffix --no-build
+    AssertLastExitCode
+}
 
 # -------------------------------------------------------------------------------------------------
 # TEST
@@ -59,8 +81,7 @@ if ($is_pull_request -eq $true) {
     # secrets, which are omitted by AppVeyor on pull requests.
     dotnet test -c Release --no-build --filter Category!=Integration
     AssertLastExitCode
-}
-else {
+} else {
     dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
     AssertLastExitCode
 
