@@ -54,7 +54,7 @@ namespace AwsSignatureVersion4.Unit
         [Theory]
         [InlineData("execute-api")]
         [InlineData("s3")]
-        public void SetHeadersSynchronouslyGivenAsyncFalse(string serviceName)
+        public void SetHeadersGivenAsyncFalse(string serviceName)
         {
             // Arrange
             var handler = new AwsSignatureHandler(CreateSettings(serviceName))
@@ -69,10 +69,9 @@ namespace AwsSignatureVersion4.Unit
             var ct = new CancellationToken();
 
             // Act
-            var sendTask = InvokeSend(handler, request, ct);
+            InvokeSend(handler, request, ct);
 
             // Assert
-            Assert.Equal(TaskStatus.RanToCompletion, sendTask.Status);
             sinkHandler.Request.Headers.Contains(HeaderKeys.AuthorizationHeader).ShouldBeTrue();
             sinkHandler.Request.Headers.Contains(HeaderKeys.HostHeader).ShouldBeTrue();
             sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzDateHeader).ShouldBeTrue();
@@ -119,7 +118,7 @@ namespace AwsSignatureVersion4.Unit
         [Theory]
         [InlineData("execute-api")]
         [InlineData("s3")]
-        public void ResetHeadersSynchronouslyGivenAsyncFalse(string serviceName)
+        public void ResetHeadersGivenAsyncFalse(string serviceName)
         {
             var handler = new AwsSignatureHandler(CreateSettings(serviceName))
             {
@@ -135,10 +134,9 @@ namespace AwsSignatureVersion4.Unit
             for (var i = 0; i < 2; i++)
             {
                 // Act
-                var sendTask = InvokeSend(handler, request, ct);
+                InvokeSend(handler, request, ct);
 
                 // Assert
-                Assert.Equal(TaskStatus.RanToCompletion, sendTask.Status);
                 sinkHandler.Request.Headers.Contains(HeaderKeys.AuthorizationHeader).ShouldBeTrue();
                 sinkHandler.Request.Headers.Contains(HeaderKeys.HostHeader).ShouldBeTrue();
                 sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzDateHeader).ShouldBeTrue();
@@ -168,14 +166,14 @@ namespace AwsSignatureVersion4.Unit
                 .GetMethod("SendAsync", BindingFlags.Instance | BindingFlags.NonPublic)
                 .Invoke(handler, new object[] { request, ct }) as Task<HttpResponseMessage>;
 
-        private static Task<HttpResponseMessage> InvokeSend(
+        private static HttpResponseMessage InvokeSend(
             AwsSignatureHandler handler,
             HttpRequestMessage request,
             CancellationToken ct) =>
             handler
                 .GetType()
                 .GetMethod("Send", BindingFlags.Instance | BindingFlags.NonPublic)
-                .Invoke(handler, new object[] { request, ct }) as Task<HttpResponseMessage>;
+                .Invoke(handler, new object[] { request, ct }) as HttpResponseMessage;
 
         private class SinkHandler : HttpMessageHandler
         {
@@ -192,7 +190,7 @@ namespace AwsSignatureVersion4.Unit
             {
                 Request = request;
 
-                return base.Send(request, cancellationToken);
+                return SendAsync(request, cancellationToken).GetAwaiter().GetResult();
             }
         }
 
