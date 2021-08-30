@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Runtime.Internal.Auth;
 using Amazon.Util;
@@ -25,8 +24,8 @@ namespace AwsSignatureVersion4.Private
                 return AWS4Signer.EmptyBodySha256;
             }
 
-            var data = await content.ReadAsByteArrayAsync();
-            var hash = AWS4Signer.ComputeHash(data);
+            var contentStream = await content.ReadAsStreamAsync();
+            var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
             return AWSSDKUtils.ToHex(hash, true);
         }
 
@@ -45,12 +44,10 @@ namespace AwsSignatureVersion4.Private
                 return AWS4Signer.EmptyBodySha256;
             }
 
-            // AWS4Signer.ComputeHash() simply calls CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(), but omits a Stream-based overload
-            var stream = content.ReadAsStream();
-            var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(stream);
+            var contentStream = content.ReadAsStream();
+            var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
             return AWSSDKUtils.ToHex(hash, true);
         }
-
 #endif
     }
 }
