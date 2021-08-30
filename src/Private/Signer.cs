@@ -16,7 +16,11 @@ namespace AwsSignatureVersion4.Private
             DateTime now,
             string regionName,
             string serviceName,
-            ImmutableCredentials credentials)
+            ImmutableCredentials credentials
+#if NET5_0_OR_GREATER
+            , bool async = true
+#endif
+            )
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
             if (request.Headers.Contains(HeaderKeys.XAmzDateHeader)) throw new ArgumentException(ErrorMessages.XAmzDateHeaderExists, nameof(request));
@@ -31,14 +35,20 @@ namespace AwsSignatureVersion4.Private
 
             UpdateRequestUri(request, baseAddress);
 
+#if NET5_0_OR_GREATER
+            var contentHash = async
+                    ? await ContentHash.CalculateAsync(request.Content)
+                    : ContentHash.Calculate(request.Content);
+#else
             var contentHash = await ContentHash.CalculateAsync(request.Content);
+#endif
 
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());
 
             // Add conditional headers
             request.AddHeaderIf(credentials.UseToken, HeaderKeys.XAmzSecurityTokenHeader, credentials.Token);
-            request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri.Host);
+            request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri!.Host);
             request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
 
             // Build the canonical request

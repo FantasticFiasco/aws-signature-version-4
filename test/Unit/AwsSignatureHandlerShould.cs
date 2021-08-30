@@ -54,6 +54,38 @@ namespace AwsSignatureVersion4.Unit
         [Theory]
         [InlineData("execute-api")]
         [InlineData("s3")]
+        public void SetHeadersSynchronouslyGivenAsyncFalse(string serviceName)
+        {
+            // Arrange
+            var handler = new AwsSignatureHandler(CreateSettings(serviceName))
+            {
+                InnerHandler = sinkHandler
+            };
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                new Uri("https://example.amazonaws.com/resource/path"));
+
+            var ct = new CancellationToken();
+
+            // Act
+            var sendTask = InvokeSend(handler, request, ct);
+
+            // Assert
+            Assert.Equal(TaskStatus.RanToCompletion, sendTask.Status);
+            sinkHandler.Request.Headers.Contains(HeaderKeys.AuthorizationHeader).ShouldBeTrue();
+            sinkHandler.Request.Headers.Contains(HeaderKeys.HostHeader).ShouldBeTrue();
+            sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzDateHeader).ShouldBeTrue();
+            sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzSecurityTokenHeader).ShouldBeTrue();
+            if (serviceName == "s3")
+            {
+                sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzContentSha256Header).ShouldBeTrue();
+            }
+        }
+
+        [Theory]
+        [InlineData("execute-api")]
+        [InlineData("s3")]
         public async Task ResetHeaders(string serviceName)
         {
             var handler = new AwsSignatureHandler(CreateSettings(serviceName))
@@ -84,6 +116,40 @@ namespace AwsSignatureVersion4.Unit
             }
         }
 
+        [Theory]
+        [InlineData("execute-api")]
+        [InlineData("s3")]
+        public void ResetHeadersSynchronouslyGivenAsyncFalse(string serviceName)
+        {
+            var handler = new AwsSignatureHandler(CreateSettings(serviceName))
+            {
+                InnerHandler = sinkHandler
+            };
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                new Uri("https://example.amazonaws.com/resource/path"));
+
+            var ct = new CancellationToken();
+
+            for (var i = 0; i < 2; i++)
+            {
+                // Act
+                var sendTask = InvokeSend(handler, request, ct);
+
+                // Assert
+                Assert.Equal(TaskStatus.RanToCompletion, sendTask.Status);
+                sinkHandler.Request.Headers.Contains(HeaderKeys.AuthorizationHeader).ShouldBeTrue();
+                sinkHandler.Request.Headers.Contains(HeaderKeys.HostHeader).ShouldBeTrue();
+                sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzDateHeader).ShouldBeTrue();
+                sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzSecurityTokenHeader).ShouldBeTrue();
+                if (serviceName == "s3")
+                {
+                    sinkHandler.Request.Headers.Contains(HeaderKeys.XAmzContentSha256Header).ShouldBeTrue();
+                }
+            }
+        }
+
         private static AwsSignatureHandlerSettings CreateSettings(string serviceName) =>
             new AwsSignatureHandlerSettings(
                 "us-east-1",
@@ -100,6 +166,15 @@ namespace AwsSignatureVersion4.Unit
             handler
                 .GetType()
                 .GetMethod("SendAsync", BindingFlags.Instance | BindingFlags.NonPublic)
+                .Invoke(handler, new object[] { request, ct }) as Task<HttpResponseMessage>;
+
+        private static Task<HttpResponseMessage> InvokeSend(
+            AwsSignatureHandler handler,
+            HttpRequestMessage request,
+            CancellationToken ct) =>
+            handler
+                .GetType()
+                .GetMethod("Send", BindingFlags.Instance | BindingFlags.NonPublic)
                 .Invoke(handler, new object[] { request, ct }) as Task<HttpResponseMessage>;
 
         private class SinkHandler : HttpMessageHandler

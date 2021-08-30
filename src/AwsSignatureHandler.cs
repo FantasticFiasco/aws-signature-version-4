@@ -62,5 +62,38 @@ namespace AwsSignatureVersion4
 
             return await base.SendAsync(request, cancellationToken);
         }
+
+#if NET5_0_OR_GREATER
+
+        /// <inheritdoc />
+        protected override HttpResponseMessage Send(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            // Given the idempotent nature of message handlers, lets remove request headers that
+            // might have been added by an prior attempt to send the request
+            request.Headers.Remove(HeaderKeys.AuthorizationHeader);
+            request.Headers.Remove(HeaderKeys.XAmzContentSha256Header);
+            request.Headers.Remove(HeaderKeys.XAmzDateHeader);
+            request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
+
+            var immutableCredentials = settings.Credentials.GetCredentials();
+
+            var signingTask = Signer.SignAsync(
+                request,
+                null,
+                EmptyRequestHeaders,
+                DateTime.UtcNow,
+                settings.RegionName,
+                settings.ServiceName,
+                immutableCredentials,
+                async: false);
+
+            System.Diagnostics.Debug.Assert(signingTask.IsCompletedSuccessfully, "The operation should have completed synchronously.");
+
+            return base.Send(request, cancellationToken);
+        }
+
+#endif
     }
 }

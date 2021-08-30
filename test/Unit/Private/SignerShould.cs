@@ -81,6 +81,30 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Theory]
+        [InlineData("post-vanilla")]
+        public void CompleteSynchronouslyGivenAsyncFalse(params string[] scenarioName)
+        {
+            // Arrange
+            var scenario = context.LoadScenario(scenarioName);
+
+            // Act
+            var signingTask = Signer.SignAsync(
+                scenario.Request,
+                httpClient.BaseAddress,
+                httpClient.DefaultRequestHeaders,
+                context.UtcNow,
+                context.RegionName,
+                context.ServiceName,
+                context.Credentials,
+                async: false);
+
+            // Assert
+            Assert.Equal(TaskStatus.RanToCompletion, signingTask.Status);
+
+            scenario.Request.Headers.GetValues("Authorization").Single().ShouldBe(scenario.ExpectedAuthorizationHeader);
+        }
+
+        [Theory]
         [InlineData("https://github.com/FantasticFiasco", null, "https://github.com/FantasticFiasco")]
         [InlineData("https://github.com/", "FantasticFiasco", "https://github.com/FantasticFiasco")]
         [InlineData("https://github.com", "/FantasticFiasco", "https://github.com/FantasticFiasco")]
