@@ -14,7 +14,7 @@ namespace AwsSignatureVersion4.Unit
     public class AwsSignatureHandlerShould
     {
         private readonly SinkHandler sinkHandler;
-        
+
         public AwsSignatureHandlerShould()
         {
             sinkHandler = new SinkHandler();
@@ -98,7 +98,7 @@ namespace AwsSignatureVersion4.Unit
                 new Uri("https://example.amazonaws.com/resource/path"));
 
             var ct = new CancellationToken();
-            
+
             for (var i = 0; i < 2; i++)
             {
                 // Act
@@ -186,6 +186,13 @@ namespace AwsSignatureVersion4.Unit
                 Request = request;
 
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+            }
+
+            protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+            {
+                Request = request;
+
+                return base.Send(request, cancellationToken);
             }
         }
 
