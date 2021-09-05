@@ -39,6 +39,8 @@ namespace AwsSignatureVersion4.Private
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultHeaders,
             string contentHash)
         {
+            if (request.RequestUri == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+
             var builder = new StringBuilder();
 
             // The HTTP request method (GET, PUT, POST, etc.), followed by a newline character
@@ -54,7 +56,7 @@ namespace AwsSignatureVersion4.Private
             // URI-encoded twice (
             // <see href="https://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-query-string-auth.html">
             // except for Amazon S3 which only gets URI-encoded once</see>).
-            var canonicalResourcePath = GetCanonicalResourcePath(serviceName, request.RequestUri!);
+            var canonicalResourcePath = GetCanonicalResourcePath(serviceName, request.RequestUri);
 
             builder.Append($"{canonicalResourcePath}\n");
 
