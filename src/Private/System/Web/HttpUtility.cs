@@ -57,7 +57,7 @@ namespace System.Web
                     return "";
                 }
 
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 string?[] keys = AllKeys;
                 for (int i = 0; i < count; i++)
                 {
@@ -96,7 +96,7 @@ namespace System.Web
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            HttpQSCollection result = new HttpQSCollection();
+            HttpQSCollection result = new();
             int queryLength = query.Length;
             int namePos = queryLength > 0 && query[0] == '?' ? 1 : 0;
             if (queryLength == namePos)

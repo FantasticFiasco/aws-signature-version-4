@@ -8,7 +8,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
     public static class Extensions
     {
         public static StringContent ToJsonContent(this Type self) =>
-            new StringContent(
+            new(
                 JsonConvert.SerializeObject(Activator.CreateInstance(self)),
                 Encoding.UTF8,
                 "application/json");

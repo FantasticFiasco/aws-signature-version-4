@@ -157,7 +157,7 @@ namespace AwsSignatureVersion4.Unit
         #endregion
 
         private static AwsSignatureHandlerSettings CreateSettings(string serviceName) =>
-            new AwsSignatureHandlerSettings(
+            new(
                 "us-east-1",
                 serviceName,
                 new ImmutableCredentials(

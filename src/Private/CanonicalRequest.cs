@@ -19,7 +19,7 @@ namespace AwsSignatureVersion4.Private
         /// <summary>
         /// Gets or sets an instance capable of probing the environment.
         /// </summary>
-        public static EnvironmentProbe EnvironmentProbe { get; set; } = new EnvironmentProbe();
+        public static EnvironmentProbe EnvironmentProbe { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the header value separator. The default value is ", " and it is defined in

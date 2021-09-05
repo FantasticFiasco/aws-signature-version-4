@@ -13,7 +13,7 @@ namespace AwsSignatureVersion4.Private
         /// <summary>
         /// Converts string into an instance of an <see cref="Uri"/>.
         /// </summary>
-        public static Uri ToUri(this string self) => new Uri(self, UriKind.RelativeOrAbsolute);
+        public static Uri ToUri(this string self) => new(self, UriKind.RelativeOrAbsolute);
 
         /// <summary>
         /// Normalize string by reducing multiple sequential whitespaces into a single space.
