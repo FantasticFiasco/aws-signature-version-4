@@ -11,50 +11,77 @@ namespace AwsSignatureVersion4.Unit.Private
         private const string EmptyContentHash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
         [Fact]
-        public async Task SupportNullContent()
+        public async Task SupportNullContentAsync()
         {
             // Act
-            // ReSharper disable once MethodHasAsyncOverload
-            var actual1 = ContentHash.Calculate(null);
-            var actual2 = await ContentHash.CalculateAsync(null);
+            var actual = await ContentHash.CalculateAsync(null);
             
             // Assert
-            actual1.ShouldBe(EmptyContentHash);
-            actual2.ShouldBe(EmptyContentHash);
+            actual.ShouldBe(EmptyContentHash);
         }
 
         [Fact]
-        public async Task SupportEmptyStringContent()
+        public void SupportNullContent()
+        {
+            // Act
+            var actual = ContentHash.Calculate(null);
+
+            // Assert
+            actual.ShouldBe(EmptyContentHash);
+        }
+
+        [Fact]
+        public async Task SupportEmptyStringContentAsync()
         {
             // Arrange
             HttpContent content = new StringContent(string.Empty);
 
             // Act
-            // ReSharper disable once MethodHasAsyncOverload
-            var actual1 = ContentHash.Calculate(content);
-            var actual2 = await ContentHash.CalculateAsync(content);
+            var actual = await ContentHash.CalculateAsync(content);
 
             // Assert
-            actual1.ShouldBe(EmptyContentHash);
-            actual2.ShouldBe(EmptyContentHash);
+            actual.ShouldBe(EmptyContentHash);
         }
 
         [Fact]
-        public async Task CalculateValidHash()
+        public void SupportEmptyStringContent()
+        {
+            // Arrange
+            HttpContent content = new StringContent(string.Empty);
+
+            // Act
+            var actual = ContentHash.Calculate(content);
+            
+            // Assert
+            actual.ShouldBe(EmptyContentHash);
+        }
+
+        [Fact]
+        public async Task CalculateValidHashAsync()
         {
             // Arrange
             HttpContent content = new StringContent("foo");
 
             // Act
-            // ReSharper disable once MethodHasAsyncOverload
-            var actual1 = ContentHash.Calculate(content);
-            var actual2 = await ContentHash.CalculateAsync(content);
+            var actual = await ContentHash.CalculateAsync(content);
 
             // Assert
-            actual1.Length.ShouldBe(64);
-            actual2.Length.ShouldBe(64);
-            IsHex(actual1).ShouldBeTrue();
-            IsHex(actual2).ShouldBeTrue();
+            actual.Length.ShouldBe(64);
+            IsHex(actual).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void CalculateValidHash()
+        {
+            // Arrange
+            HttpContent content = new StringContent("foo");
+
+            // Act
+            var actual = ContentHash.Calculate(content);
+            
+            // Assert
+            actual.Length.ShouldBe(64);
+            IsHex(actual).ShouldBeTrue();
         }
 
         private static bool IsHex(string value)
