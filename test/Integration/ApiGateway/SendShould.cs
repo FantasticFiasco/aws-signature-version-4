@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;

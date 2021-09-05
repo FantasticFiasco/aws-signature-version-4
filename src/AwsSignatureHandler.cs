@@ -24,7 +24,7 @@ namespace AwsSignatureVersion4
     public class AwsSignatureHandler : DelegatingHandler
     {
         private static readonly KeyValuePair<string, IEnumerable<string>>[] EmptyRequestHeaders =
-            new KeyValuePair<string, IEnumerable<string>>[0];
+            Array.Empty<KeyValuePair<string, IEnumerable<string>>>();
 
         private readonly AwsSignatureHandlerSettings settings;
 
@@ -42,12 +42,7 @@ namespace AwsSignatureVersion4
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            // Given the idempotent nature of message handlers, lets remove request headers that
-            // might have been added by an prior attempt to send the request
-            request.Headers.Remove(HeaderKeys.AuthorizationHeader);
-            request.Headers.Remove(HeaderKeys.XAmzContentSha256Header);
-            request.Headers.Remove(HeaderKeys.XAmzDateHeader);
-            request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
+            RemoveHeaders(request);
 
             var immutableCredentials = await settings.Credentials.GetCredentialsAsync();
 
@@ -70,30 +65,34 @@ namespace AwsSignatureVersion4
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            // Given the idempotent nature of message handlers, lets remove request headers that
-            // might have been added by an prior attempt to send the request
-            request.Headers.Remove(HeaderKeys.AuthorizationHeader);
-            request.Headers.Remove(HeaderKeys.XAmzContentSha256Header);
-            request.Headers.Remove(HeaderKeys.XAmzDateHeader);
-            request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
+            RemoveHeaders(request);
 
             var immutableCredentials = settings.Credentials.GetCredentials();
 
-            var signingTask = Signer.SignAsync(
+            Signer.Sign(
                 request,
                 null,
                 EmptyRequestHeaders,
                 DateTime.UtcNow,
                 settings.RegionName,
                 settings.ServiceName,
-                immutableCredentials,
-                async: false);
-
-            System.Diagnostics.Debug.Assert(signingTask.IsCompletedSuccessfully, "The operation should have completed synchronously.");
+                immutableCredentials);
 
             return base.Send(request, cancellationToken);
         }
 
 #endif
+
+        /// <summary>
+        /// Given the idempotent nature of message handlers, lets remove request headers that
+        /// might have been added by an prior attempt to send the request.
+        /// </summary>
+        private static void RemoveHeaders(HttpRequestMessage request)
+        {
+            request.Headers.Remove(HeaderKeys.AuthorizationHeader);
+            request.Headers.Remove(HeaderKeys.XAmzContentSha256Header);
+            request.Headers.Remove(HeaderKeys.XAmzDateHeader);
+            request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
+        }
     }
 }

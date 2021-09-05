@@ -11,6 +11,8 @@ namespace AwsSignatureVersion4.TestSuite.Serialization
 
         protected string FilePath { get; }
 
-        public string Deserialize() => File.ReadAllText(FilePath);
+        public string Deserialize() => File.ReadAllText(FilePath)
+            // Make sure we compensate for line endings on Windows
+            .Replace("\r\n", "\n");
     }
 }

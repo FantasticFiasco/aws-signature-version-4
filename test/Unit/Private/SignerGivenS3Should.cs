@@ -22,8 +22,10 @@ namespace AwsSignatureVersion4.Unit.Private
             context.AdjustHeaderValueSeparator();
         }
 
+        #region Add X-Amz-Content-SHA256 header
+
         [Fact]
-        public async Task AddXAmzContentHeader()
+        public async Task AddXAmzContentHeaderAsync()
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
@@ -41,6 +43,28 @@ namespace AwsSignatureVersion4.Unit.Private
             // Assert
             request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
         }
+
+        [Fact]
+        public void AddXAmzContentHeader()
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
+
+            // Act
+            Signer.Sign(
+                request,
+                httpClient.BaseAddress,
+                httpClient.DefaultRequestHeaders,
+                context.UtcNow,
+                context.RegionName,
+                "s3",
+                context.Credentials);
+
+            // Assert
+            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
+        }
+
+        #endregion
 
         public void Dispose()
         {

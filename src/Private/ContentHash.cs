@@ -11,6 +11,7 @@ namespace AwsSignatureVersion4.Private
     /// </summary>
     public static class ContentHash
     {
+        /// <remarks>This method has a synchronous alternative.</remarks>
         public static async Task<string> CalculateAsync(HttpContent? content)
         {
             // Use a hash (digest) function like SHA256 to create a hashed value from the payload
@@ -31,6 +32,7 @@ namespace AwsSignatureVersion4.Private
 
 #if NET5_0_OR_GREATER
 
+        /// <remarks>This method has a asynchronous alternative.</remarks>
         public static string Calculate(HttpContent? content)
         {
             // Use a hash (digest) function like SHA256 to create a hashed value from the payload
@@ -48,6 +50,7 @@ namespace AwsSignatureVersion4.Private
             var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
             return AWSSDKUtils.ToHex(hash, true);
         }
+
 #endif
     }
 }
