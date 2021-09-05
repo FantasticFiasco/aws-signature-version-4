@@ -10,6 +10,8 @@ namespace AwsSignatureVersion4.Unit.Private
     {
         private const string EmptyContentHash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
+        #region Support null content
+
         [Fact]
         public async Task SupportNullContentAsync()
         {
@@ -29,6 +31,10 @@ namespace AwsSignatureVersion4.Unit.Private
             // Assert
             actual.ShouldBe(EmptyContentHash);
         }
+
+        #endregion
+
+        #region Support empty string content
 
         [Fact]
         public async Task SupportEmptyStringContentAsync()
@@ -55,6 +61,10 @@ namespace AwsSignatureVersion4.Unit.Private
             // Assert
             actual.ShouldBe(EmptyContentHash);
         }
+
+        #endregion
+
+        #region Calculate valid hash
 
         [Fact]
         public async Task CalculateValidHashAsync()
@@ -83,6 +93,8 @@ namespace AwsSignatureVersion4.Unit.Private
             actual.Length.ShouldBe(64);
             IsHex(actual).ShouldBeTrue();
         }
+
+        #endregion
 
         private static bool IsHex(string value)
         {
