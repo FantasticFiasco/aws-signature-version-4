@@ -168,12 +168,11 @@ namespace AwsSignatureVersion4.Private
                     sortedQueryParameters.Add(parameterName, parameterValues);
                 }
 
-                parameterValues.AddRange(queryParameters.GetValues(parameterName) ??
-#if NET45
-                    new string[0]);
-#else
-                    Array.Empty<string>());
-#endif
+                var queryParameterValues = queryParameters.GetValues(parameterName);
+                if (queryParameterValues?.Length > 0)
+                {
+                    parameterValues.AddRange(queryParameterValues);
+                }
             }
 
             // Sort the query parameter values
