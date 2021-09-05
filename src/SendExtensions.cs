@@ -1,7 +1,8 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
 using Amazon.Runtime;
 using AwsSignatureVersion4.Private;
+
+#if NET5_0_OR_GREATER
 
 // ReSharper disable once CheckNamespace
 namespace System.Net.Http
@@ -9,14 +10,12 @@ namespace System.Net.Http
     /// <summary>
     /// Extensions to <see cref="HttpClient"/> extending it to support AWS Signature Version 4.
     /// </summary>
-    public static class SendAsyncExtensions
+    public static class SendExtensions
     {
-        internal const HttpCompletionOption DefaultCompletionOption = HttpCompletionOption.ResponseContentRead;
-
-        #region SendAsync(HttpRequestMessage, string, string, <credentials>)
+        #region Send(HttpRequestMessage, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -38,7 +37,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -50,26 +49,22 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
-        /// complete once the entire response including content is read.
-        /// </remarks>
-        public static Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             string regionName,
             string serviceName,
             AWSCredentials credentials) =>
-            self.SendAsync(
+            self.Send(
                 request,
-                DefaultCompletionOption,
+                SendAsyncExtensions.DefaultCompletionOption,
                 CancellationToken.None,
                 regionName,
                 serviceName,
                 credentials);
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -91,7 +86,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -103,19 +98,15 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
-        /// complete once the entire response including content is read.
-        /// </remarks>
-        public static Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             string regionName,
             string serviceName,
             ImmutableCredentials credentials) =>
-            self.SendAsync(
+            self.Send(
                 request,
-                DefaultCompletionOption,
+                SendAsyncExtensions.DefaultCompletionOption,
                 CancellationToken.None,
                 regionName,
                 serviceName,
@@ -123,10 +114,10 @@ namespace System.Net.Http
 
         #endregion
 
-        #region SendAsync(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
+        #region Send(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -152,7 +143,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -164,20 +155,14 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. Depending on the value of the
-        /// <paramref name="completionOption"/> parameter, the returned <see cref="Task{TResult}"/>
-        /// object will complete as soon as a response is available or the entire response
-        /// including content is read.
-        /// </remarks>
-        public static Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             HttpCompletionOption completionOption,
             string regionName,
             string serviceName,
             AWSCredentials credentials) =>
-            self.SendAsync(
+            self.Send(
                 request,
                 completionOption,
                 CancellationToken.None,
@@ -186,7 +171,7 @@ namespace System.Net.Http
                 credentials);
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -212,7 +197,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -224,20 +209,14 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. Depending on the value of the
-        /// <paramref name="completionOption"/> parameter, the returned <see cref="Task{TResult}"/>
-        /// object will complete as soon as a response is available or the entire response
-        /// including content is read.
-        /// </remarks>
-        public static Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             HttpCompletionOption completionOption,
             string regionName,
             string serviceName,
             ImmutableCredentials credentials) =>
-            self.SendAsync(
+            self.Send(
                 request,
                 completionOption,
                 CancellationToken.None,
@@ -247,10 +226,10 @@ namespace System.Net.Http
 
         #endregion
 
-        #region SendAsync(HttpRequestMessage, CancellationToken, string, string, <credentials>)
+        #region Send(HttpRequestMessage, CancellationToken, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -275,7 +254,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -287,27 +266,23 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
-        /// complete once the entire response including content is read.
-        /// </remarks>
-        public static Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
             AWSCredentials credentials) =>
-            self.SendAsync(
+            self.Send(
                 request,
-                DefaultCompletionOption,
+                SendAsyncExtensions.DefaultCompletionOption,
                 cancellationToken,
                 regionName,
                 serviceName,
                 credentials);
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -332,7 +307,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -344,20 +319,16 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. The returned <see cref="Task{TResult}"/> object will
-        /// complete once the entire response including content is read.
-        /// </remarks>
-        public static Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             CancellationToken cancellationToken,
             string regionName,
             string serviceName,
             ImmutableCredentials credentials) =>
-            self.SendAsync(
+            self.Send(
                 request,
-                DefaultCompletionOption,
+                SendAsyncExtensions.DefaultCompletionOption,
                 cancellationToken,
                 regionName,
                 serviceName,
@@ -365,10 +336,10 @@ namespace System.Net.Http
 
         #endregion
 
-        #region SendAsync(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
+        #region Send(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -397,7 +368,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -409,13 +380,7 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. Depending on the value of the
-        /// <paramref name="completionOption"/> parameter, the returned <see cref="Task{TResult}"/>
-        /// object will complete as soon as a response is available or the entire response
-        /// including content is read.
-        /// </remarks>
-        public static async Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             HttpCompletionOption completionOption,
@@ -426,9 +391,9 @@ namespace System.Net.Http
         {
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            var immutableCredentials = await credentials.GetCredentialsAsync();
+            var immutableCredentials = credentials.GetCredentials();
 
-            var response = await self.SendAsync(
+            var response = self.Send(
                 request,
                 completionOption,
                 cancellationToken,
@@ -440,7 +405,7 @@ namespace System.Net.Http
         }
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
+        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -469,7 +434,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The task object representing the asynchronous operation.
+        /// The response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -481,13 +446,7 @@ namespace System.Net.Http
         /// The request failed due to an underlying issue such as network connectivity, DNS
         /// failure, server certificate validation or timeout.
         /// </exception>
-        /// <remarks>
-        /// This operation will not block. Depending on the value of the
-        /// <paramref name="completionOption"/> parameter, the returned <see cref="Task{TResult}"/>
-        /// object will complete as soon as a response is available or the entire response
-        /// including content is read.
-        /// </remarks>
-        public static async Task<HttpResponseMessage> SendAsync(
+        public static HttpResponseMessage Send(
             this HttpClient self,
             HttpRequestMessage request,
             HttpCompletionOption completionOption,
@@ -498,7 +457,7 @@ namespace System.Net.Http
         {
             if (self == null) throw new ArgumentNullException(nameof(self));
 
-            await Signer.SignAsync(
+            var signingTask = Signer.SignAsync(
                 request,
                 self.BaseAddress,
                 self.DefaultRequestHeaders,
@@ -507,9 +466,13 @@ namespace System.Net.Http
                 serviceName,
                 credentials);
 
-            return await self.SendAsync(request, completionOption, cancellationToken);
+            System.Diagnostics.Debug.Assert(signingTask.IsCompletedSuccessfully, "The operation should have completed synchronously.");
+
+            return self.Send(request, completionOption, cancellationToken);
         }
 
         #endregion
     }
 }
+
+#endif
