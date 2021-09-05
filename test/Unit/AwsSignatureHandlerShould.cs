@@ -20,10 +20,12 @@ namespace AwsSignatureVersion4.Unit
             sinkHandler = new SinkHandler();
         }
 
+        #region Set headers
+
         [Theory]
         [InlineData("execute-api")]
         [InlineData("s3")]
-        public async Task SetHeaders(string serviceName)
+        public async Task SetHeadersAsync(string serviceName)
         {
             // Arrange
             var handler = new AwsSignatureHandler(CreateSettings(serviceName))
@@ -54,7 +56,7 @@ namespace AwsSignatureVersion4.Unit
         [Theory]
         [InlineData("execute-api")]
         [InlineData("s3")]
-        public void SetHeadersGivenAsyncFalse(string serviceName)
+        public void SetHeaders(string serviceName)
         {
             // Arrange
             var handler = new AwsSignatureHandler(CreateSettings(serviceName))
@@ -82,10 +84,14 @@ namespace AwsSignatureVersion4.Unit
             }
         }
 
+        #endregion
+
+        #region Reset headers
+
         [Theory]
         [InlineData("execute-api")]
         [InlineData("s3")]
-        public async Task ResetHeaders(string serviceName)
+        public async Task ResetHeadersAsync(string serviceName)
         {
             var handler = new AwsSignatureHandler(CreateSettings(serviceName))
             {
@@ -118,7 +124,7 @@ namespace AwsSignatureVersion4.Unit
         [Theory]
         [InlineData("execute-api")]
         [InlineData("s3")]
-        public void ResetHeadersGivenAsyncFalse(string serviceName)
+        public void ResetHeaders(string serviceName)
         {
             var handler = new AwsSignatureHandler(CreateSettings(serviceName))
             {
@@ -147,6 +153,8 @@ namespace AwsSignatureVersion4.Unit
                 }
             }
         }
+
+        #endregion
 
         private static AwsSignatureHandlerSettings CreateSettings(string serviceName) =>
             new AwsSignatureHandlerSettings(
@@ -179,21 +187,21 @@ namespace AwsSignatureVersion4.Unit
         {
             public HttpRequestMessage Request { get; private set; }
 
-            protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+            protected override Task<HttpResponseMessage> SendAsync(
+                HttpRequestMessage request,
+                CancellationToken cancellationToken)
             {
-                Request = request;
-
-                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK));
+                return Task.FromResult(Send(request, cancellationToken));
             }
 
-            protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+            protected override HttpResponseMessage Send(
+                HttpRequestMessage request,
+                CancellationToken cancellationToken)
             {
                 Request = request;
 
-                return SendAsync(request, cancellationToken).GetAwaiter().GetResult();
+                return new HttpResponseMessage(HttpStatusCode.OK);
             }
         }
-
-
     }
 }
