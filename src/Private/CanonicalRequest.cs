@@ -83,7 +83,7 @@ namespace AwsSignatureVersion4.Private
             //    string for parameters that have no value.
             // e. Append the ampersand character (&) after each parameter value, except for the
             //    last value in the list.
-            var parameters = SortQueryParameters(request.RequestUri!.Query)
+            var parameters = SortQueryParameters(request.RequestUri.Query)
                 .SelectMany(
                     parameter => parameter.Value.Select(
                         parameterValue => $"{AWSSDKUtils.UrlEncode(parameter.Key, false)}={AWSSDKUtils.UrlEncode(parameterValue, false)}"));
