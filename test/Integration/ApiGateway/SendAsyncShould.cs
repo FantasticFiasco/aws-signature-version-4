@@ -272,7 +272,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(scenarioName);
+            var request = BuildRequest(testSuiteContext, Context, scenarioName);
             var iamAuthenticationType = IamAuthenticationType.User;
 
             // Act
@@ -321,7 +321,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(scenarioName);
+            var request = BuildRequest(testSuiteContext, Context, scenarioName);
             var iamAuthenticationType = IamAuthenticationType.Role;
 
             // Act
@@ -515,14 +515,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
 
-        private HttpRequestMessage BuildRequest(string[] scenarioName)
+        internal static HttpRequestMessage BuildRequest(
+            TestSuiteContext testSuiteContext,
+            IntegrationTestContext integrationTestContext,
+            string[] scenarioName)
         {
             var request = testSuiteContext.LoadScenario(scenarioName).Request;
 
             // Redirect the request to the AWS API Gateway
             request.RequestUri = request.RequestUri
                 .ToString()
-                .Replace("https://example.amazonaws.com", Context.ApiGatewayUrl)
+                .Replace("https://example.amazonaws.com", integrationTestContext.ApiGatewayUrl)
                 .ToUri();
 
             // The "Host" header is now invalid since we redirected the request to the AWS API
