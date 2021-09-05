@@ -14,23 +14,29 @@ namespace AwsSignatureVersion4.Unit.Private
         public async Task SupportNullContent()
         {
             // Act
-            var actual = await ContentHash.CalculateAsync(null);
-
+            // ReSharper disable once MethodHasAsyncOverload
+            var actual1 = ContentHash.Calculate(null);
+            var actual2 = await ContentHash.CalculateAsync(null);
+            
             // Assert
-            actual.ShouldBe(EmptyContentHash);
+            actual1.ShouldBe(EmptyContentHash);
+            actual2.ShouldBe(EmptyContentHash);
         }
 
         [Fact]
         public async Task SupportEmptyStringContent()
         {
             // Arrange
-            HttpContent content = new  StringContent(string.Empty);
+            HttpContent content = new StringContent(string.Empty);
 
             // Act
-            var actual = await ContentHash.CalculateAsync(content);
+            // ReSharper disable once MethodHasAsyncOverload
+            var actual1 = ContentHash.Calculate(content);
+            var actual2 = await ContentHash.CalculateAsync(content);
 
             // Assert
-            actual.ShouldBe(EmptyContentHash);
+            actual1.ShouldBe(EmptyContentHash);
+            actual2.ShouldBe(EmptyContentHash);
         }
 
         [Fact]
@@ -40,11 +46,15 @@ namespace AwsSignatureVersion4.Unit.Private
             HttpContent content = new StringContent("foo");
 
             // Act
-            var actual = await ContentHash.CalculateAsync(content);
+            // ReSharper disable once MethodHasAsyncOverload
+            var actual1 = ContentHash.Calculate(content);
+            var actual2 = await ContentHash.CalculateAsync(content);
 
             // Assert
-            actual.Length.ShouldBe(64);
-            IsHex(actual).ShouldBeTrue();
+            actual1.Length.ShouldBe(64);
+            actual2.Length.ShouldBe(64);
+            IsHex(actual1).ShouldBeTrue();
+            IsHex(actual2).ShouldBeTrue();
         }
 
         private static bool IsHex(string value)
