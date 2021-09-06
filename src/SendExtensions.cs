@@ -1,8 +1,9 @@
-﻿using System.Threading;
+﻿#if NET5_0_OR_GREATER
+
+using System.Threading;
+using System.Threading.Tasks;
 using Amazon.Runtime;
 using AwsSignatureVersion4.Private;
-
-#if NET5_0_OR_GREATER
 
 // ReSharper disable once CheckNamespace
 namespace System.Net.Http
@@ -15,7 +16,7 @@ namespace System.Net.Http
         #region Send(HttpRequestMessage, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -41,13 +42,17 @@ namespace System.Net.Http
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
-        /// </exception>
+        /// </exception> 
         /// <exception cref="InvalidOperationException">
         /// The request message was already sent by the <see cref="HttpClient"/> instance.
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -64,7 +69,7 @@ namespace System.Net.Http
                 credentials);
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -96,7 +101,11 @@ namespace System.Net.Http
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -117,7 +126,7 @@ namespace System.Net.Http
         #region Send(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -126,8 +135,8 @@ namespace System.Net.Http
         /// The HTTP request message to send.
         /// </param>
         /// <param name="completionOption">
-        /// When the operation should complete (as soon as a response is available or after reading
-        /// the whole response content).
+        /// One of the enumeration values that specifies when the operation should complete (as
+        /// soon as a response is available or after reading the response content).
         /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
@@ -153,7 +162,11 @@ namespace System.Net.Http
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -171,7 +184,7 @@ namespace System.Net.Http
                 credentials);
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -180,8 +193,8 @@ namespace System.Net.Http
         /// The HTTP request message to send.
         /// </param>
         /// <param name="completionOption">
-        /// When the operation should complete (as soon as a response is available or after reading
-        /// the whole response content).
+        /// One of the enumeration values that specifies when the operation should complete (as
+        /// soon as a response is available or after reading the response content).
         /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
@@ -207,7 +220,11 @@ namespace System.Net.Http
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -229,7 +246,7 @@ namespace System.Net.Http
         #region Send(HttpRequestMessage, CancellationToken, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -264,7 +281,15 @@ namespace System.Net.Http
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// The request was canceled.
+        /// <para/>
+        /// -or-
+        /// <para/>
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -282,7 +307,7 @@ namespace System.Net.Http
                 credentials);
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -317,7 +342,15 @@ namespace System.Net.Http
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// The request was canceled.
+        /// <para/>
+        /// -or-
+        /// <para/>
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -339,7 +372,7 @@ namespace System.Net.Http
         #region Send(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -348,8 +381,8 @@ namespace System.Net.Http
         /// The HTTP request message to send.
         /// </param>
         /// <param name="completionOption">
-        /// When the operation should complete (as soon as a response is available or after reading
-        /// the whole response content).
+        /// One of the enumeration values that specifies when the operation should complete (as
+        /// soon as a response is available or after reading the response content).
         /// </param>
         /// <param name="cancellationToken">
         /// The cancellation token to cancel operation.
@@ -378,7 +411,15 @@ namespace System.Net.Http
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// The request was canceled.
+        /// <para/>
+        /// -or-
+        /// <para/>
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -405,7 +446,7 @@ namespace System.Net.Http
         }
 
         /// <summary>
-        /// Send an Signature Version 4 signed HTTP request as a synchronous operation.
+        /// Send an Signature Version 4 signed HTTP request.
         /// </summary>
         /// <param name="self">
         /// The extension target.
@@ -414,8 +455,8 @@ namespace System.Net.Http
         /// The HTTP request message to send.
         /// </param>
         /// <param name="completionOption">
-        /// When the operation should complete (as soon as a response is available or after reading
-        /// the whole response content).
+        /// One of the enumeration values that specifies when the operation should complete (as
+        /// soon as a response is available or after reading the response content).
         /// </param>
         /// <param name="cancellationToken">
         /// The cancellation token to cancel operation.
@@ -444,7 +485,15 @@ namespace System.Net.Http
         /// </exception>
         /// <exception cref="HttpRequestException">
         /// The request failed due to an underlying issue such as network connectivity, DNS
-        /// failure, server certificate validation or timeout.
+        /// failure, or server certificate validation.
+        /// </exception>
+        /// <exception cref="TaskCanceledException">
+        /// The request was canceled.
+        /// <para/>
+        /// -or-
+        /// <para/>
+        /// If the <see cref="TaskCanceledException"/> exception nests the
+        /// <see cref="TimeoutException"/>: The request failed due to timeout.
         /// </exception>
         public static HttpResponseMessage Send(
             this HttpClient self,
@@ -457,7 +506,7 @@ namespace System.Net.Http
         {
             if (self == null) throw new ArgumentNullException(nameof(self));
 
-            var signingTask = Signer.SignAsync(
+            Signer.Sign(
                 request,
                 self.BaseAddress,
                 self.DefaultRequestHeaders,
@@ -465,8 +514,6 @@ namespace System.Net.Http
                 regionName,
                 serviceName,
                 credentials);
-
-            System.Diagnostics.Debug.Assert(signingTask.IsCompletedSuccessfully, "The operation should have completed synchronously.");
 
             return self.Send(request, completionOption, cancellationToken);
         }
