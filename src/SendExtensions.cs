@@ -38,7 +38,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -91,7 +91,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -152,7 +152,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -210,7 +210,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -271,7 +271,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -332,7 +332,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -401,7 +401,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
@@ -475,7 +475,7 @@ namespace System.Net.Http
         ///   security credentials, e.g. a role.
         /// </param>
         /// <returns>
-        /// The response message.
+        /// The HTTP response message.
         /// </returns>
         /// <exception cref="ArgumentNullException">
         /// The <paramref name="request"/> is null.
