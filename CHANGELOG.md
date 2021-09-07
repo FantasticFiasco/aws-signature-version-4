@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [2.1.1] - 2021-09-07
+
 ### :syringe: Fixed
 
 - [#478](https://github.com/FantasticFiasco/aws-signature-version-4/issues/478) Add support for `HttpClient.Send` on .NET 5 (contribution by [@Timovzl](https://github.com/Timovzl))
