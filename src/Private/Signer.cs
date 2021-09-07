@@ -9,11 +9,102 @@ namespace AwsSignatureVersion4.Private
 {
     public static class Signer
     {
+        /// <remarks>This method has a synchronous alternative.</remarks>
         public static async Task<Result> SignAsync(
             HttpRequestMessage request,
             Uri? baseAddress,
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultRequestHeaders,
             DateTime now,
+            string regionName,
+            string serviceName,
+            ImmutableCredentials credentials)
+        {
+            ValidateArguments(request, regionName, serviceName, credentials);
+
+            UpdateRequestUri(request, baseAddress);
+
+            var contentHash = await ContentHash.CalculateAsync(request.Content);
+
+            AddHeaders(request, now, serviceName, credentials, contentHash);
+
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(
+                serviceName,
+                request,
+                defaultRequestHeaders,
+                contentHash);
+
+            var (stringToSign, credentialScope) = StringToSign.Build(
+                    now,
+                    regionName,
+                    serviceName,
+                    canonicalRequest);
+
+            var authorizationHeader = AuthorizationHeader.Build(
+                    now,
+                    regionName,
+                    serviceName,
+                    credentials,
+                    signedHeaders,
+                    credentialScope,
+                    stringToSign);
+
+            // Add the authorization header
+            request.Headers.TryAddWithoutValidation(HeaderKeys.AuthorizationHeader, authorizationHeader);
+
+            return new Result(canonicalRequest, stringToSign, authorizationHeader);
+        }
+
+#if NET5_0_OR_GREATER
+
+        /// <remarks>This method has a asynchronous alternative.</remarks>
+        public static Result Sign(
+            HttpRequestMessage request,
+            Uri? baseAddress,
+            IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultRequestHeaders,
+            DateTime now,
+            string regionName,
+            string serviceName,
+            ImmutableCredentials credentials)
+        {
+            ValidateArguments(request, regionName, serviceName, credentials);
+
+            UpdateRequestUri(request, baseAddress);
+
+            var contentHash = ContentHash.Calculate(request.Content);
+
+            AddHeaders(request, now, serviceName, credentials, contentHash);
+
+            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(
+                serviceName,
+                request,
+                defaultRequestHeaders,
+                contentHash);
+
+            var (stringToSign, credentialScope) = StringToSign.Build(
+                    now,
+                    regionName,
+                    serviceName,
+                    canonicalRequest);
+
+            var authorizationHeader = AuthorizationHeader.Build(
+                    now,
+                    regionName,
+                    serviceName,
+                    credentials,
+                    signedHeaders,
+                    credentialScope,
+                    stringToSign);
+
+            // Add the authorization header
+            request.Headers.TryAddWithoutValidation(HeaderKeys.AuthorizationHeader, authorizationHeader);
+
+            return new Result(canonicalRequest, stringToSign, authorizationHeader);
+        }
+
+#endif
+
+        private static void ValidateArguments(
+            HttpRequestMessage request,
             string regionName,
             string serviceName,
             ImmutableCredentials credentials)
@@ -28,43 +119,22 @@ namespace AwsSignatureVersion4.Private
             if (serviceName == string.Empty) throw new ArgumentException(ErrorMessages.InvalidServiceName, nameof(serviceName));
             if (serviceName == ServiceName.S3 && request.Method == HttpMethod.Post) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPost);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
+        }
 
-            UpdateRequestUri(request, baseAddress);
-
-            var contentHash = await ContentHash.CalculateAsync(request.Content);
-
+        private static void AddHeaders(
+            HttpRequestMessage request,
+            DateTime now,
+            string serviceName,
+            ImmutableCredentials credentials,
+            string contentHash)
+        {
             // Add required headers
             request.AddHeader(HeaderKeys.XAmzDateHeader, now.ToIso8601BasicDateTime());
 
             // Add conditional headers
             request.AddHeaderIf(credentials.UseToken, HeaderKeys.XAmzSecurityTokenHeader, credentials.Token);
-            request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri.Host);
+            request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri!.Host);
             request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
-
-            // Build the canonical request
-            var (canonicalRequest, signedHeaders) = CanonicalRequest.Build(serviceName, request, defaultRequestHeaders, contentHash);
-
-            // Build the string to sign
-            var (stringToSign, credentialScope) = StringToSign.Build(
-                    now,
-                    regionName,
-                    serviceName,
-                    canonicalRequest);
-
-            // Build the authorization header
-            var authorizationHeader = AuthorizationHeader.Build(
-                    now,
-                    regionName,
-                    serviceName,
-                    credentials,
-                    signedHeaders,
-                    credentialScope,
-                    stringToSign);
-
-            // Add the authorization header
-            request.Headers.TryAddWithoutValidation(HeaderKeys.AuthorizationHeader, authorizationHeader);
-
-            return new Result(canonicalRequest, stringToSign, authorizationHeader);
         }
 
         private static void UpdateRequestUri(HttpRequestMessage request, Uri? baseAddress)

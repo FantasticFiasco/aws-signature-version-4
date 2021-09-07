@@ -2,7 +2,6 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
-using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
@@ -11,17 +10,17 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
-    public class SendAsyncShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
+    public class SendShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
     {
         private readonly TestSuiteContext testSuiteContext;
 
-        public SendAsyncShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
+        public SendShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
             : base(context)
         {
             this.testSuiteContext = testSuiteContext;
         }
 
-        #region SendAsync(HttpRequestMessage, string, string, <credentials>)
+        #region Send(HttpRequestMessage, string, string, <credentials>)
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
@@ -32,7 +31,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenMutableCredentials(
+        public void SucceedGivenMutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -40,7 +39,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -59,7 +58,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenImmutableCredentials(
+        public void SucceedGivenImmutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -67,7 +66,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -79,19 +78,19 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         #endregion
 
-        #region SendAsync(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
+        #region Send(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public void SucceedGivenHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 completionOption,
                 Context.RegionName,
@@ -105,14 +104,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public void SucceedGivenHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 completionOption,
                 Context.RegionName,
@@ -125,7 +124,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         #endregion
 
-        #region SendAsync(HttpRequestMessage, CancellationToken, string, string, <credentials>)
+        #region Send(HttpRequestMessage, CancellationToken, string, string, <credentials>)
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
@@ -136,7 +135,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenCancellationTokenAndMutableCredentials(
+        public void SucceedGivenCancellationTokenAndMutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -145,7 +144,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 ct,
                 Context.RegionName,
@@ -165,7 +164,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenCancellationTokenAndImmutableCredentials(
+        public void SucceedGivenCancellationTokenAndImmutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -174,7 +173,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 ct,
                 Context.RegionName,
@@ -187,12 +186,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         #endregion
 
-        #region SendAsync(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
+        #region Send(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public void SucceedGivenHttpCompletionOptionAndCancellationTokenMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
@@ -200,7 +199,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 completionOption,
                 ct,
@@ -215,7 +214,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public void SucceedGivenHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
@@ -223,7 +222,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 completionOption,
                 ct,
@@ -269,14 +268,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData("post-vanilla-query")]
         [InlineData("post-x-www-form-urlencoded")]
         [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
-        public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
+        public void PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(testSuiteContext, Context, scenarioName);
+            var request = SendAsyncShould.BuildRequest(testSuiteContext, Context, scenarioName);
             var iamAuthenticationType = IamAuthenticationType.User;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -318,14 +317,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData("post-vanilla-query")]
         [InlineData("post-x-www-form-urlencoded")]
         [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
-        public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
+        public void PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(testSuiteContext, Context, scenarioName);
+            var request = SendAsyncShould.BuildRequest(testSuiteContext, Context, scenarioName);
             var iamAuthenticationType = IamAuthenticationType.Role;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -344,7 +343,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenHeaderWithDuplicateValues(
+        public void SucceedGivenHeaderWithDuplicateValues(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -353,7 +352,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -372,7 +371,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenHeaderWithUnorderedValues(
+        public void SucceedGivenHeaderWithUnorderedValues(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -381,7 +380,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -400,7 +399,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenHeaderWithWhitespaceCharacters(
+        public void SucceedGivenHeaderWithWhitespaceCharacters(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -409,7 +408,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -428,7 +427,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenQuery(
+        public void SucceedGivenQuery(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -441,7 +440,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -460,7 +459,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenOrderedQuery(
+        public void SucceedGivenOrderedQuery(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -473,7 +472,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -492,7 +491,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public async Task SucceedGivenUnorderedQuery(
+        public void SucceedGivenUnorderedQuery(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -505,7 +504,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -513,27 +512,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        }
-
-        internal static HttpRequestMessage BuildRequest(
-            TestSuiteContext testSuiteContext,
-            IntegrationTestContext integrationTestContext,
-            string[] scenarioName)
-        {
-            var request = testSuiteContext.LoadScenario(scenarioName).Request;
-
-            // Redirect the request to the AWS API Gateway
-            request.RequestUri = request.RequestUri
-                .ToString()
-                .Replace("https://example.amazonaws.com", integrationTestContext.ApiGatewayUrl)
-                .ToUri();
-
-            // The "Host" header is now invalid since we redirected the request to the AWS API
-            // Gateway. Lets remove the header and have the signature implementation re-add it
-            // correctly.
-            request.Headers.Remove("Host");
-
-            return request;
         }
     }
 }

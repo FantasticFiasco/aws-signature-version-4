@@ -19,7 +19,7 @@ namespace AwsSignatureVersion4.Private
         /// <summary>
         /// Gets or sets an instance capable of probing the environment.
         /// </summary>
-        public static EnvironmentProbe EnvironmentProbe { get; set; } = new EnvironmentProbe();
+        public static EnvironmentProbe EnvironmentProbe { get; set; } = new();
 
         /// <summary>
         /// Gets or sets the header value separator. The default value is ", " and it is defined in
@@ -39,6 +39,8 @@ namespace AwsSignatureVersion4.Private
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultHeaders,
             string contentHash)
         {
+            if (request.RequestUri == null) throw new InvalidOperationException(ErrorMessages.InvalidRequestUri);
+
             var builder = new StringBuilder();
 
             // The HTTP request method (GET, PUT, POST, etc.), followed by a newline character
@@ -166,7 +168,11 @@ namespace AwsSignatureVersion4.Private
                     sortedQueryParameters.Add(parameterName, parameterValues);
                 }
 
-                parameterValues.AddRange(queryParameters.GetValues(parameterName));
+                var queryParameterValues = queryParameters.GetValues(parameterName);
+                if (queryParameterValues?.Length > 0)
+                {
+                    parameterValues.AddRange(queryParameterValues);
+                }
             }
 
             // Sort the query parameter values

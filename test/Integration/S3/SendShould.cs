@@ -2,18 +2,17 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
-using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Integration.S3
 {
-    public class SendAsyncShould : S3IntegrationBase, IClassFixture<TestSuiteContext>
+    public class SendShould : S3IntegrationBase, IClassFixture<TestSuiteContext>
     {
         private readonly TestSuiteContext testSuiteContext;
 
-        public SendAsyncShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
+        public SendShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
             : base(context)
         {
             this.testSuiteContext = testSuiteContext;
@@ -54,13 +53,13 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(testSuiteContext, Context, scenarioName);
+            var request = SendAsyncShould.BuildRequest(testSuiteContext, Context, scenarioName);
             var iamAuthenticationType = IamAuthenticationType.User;
 
-            await UploadRequiredObjectAsync(Bucket, scenarioName);
+            await SendAsyncShould.UploadRequiredObjectAsync(Bucket, scenarioName);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -105,13 +104,13 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(testSuiteContext, Context, scenarioName);
+            var request = SendAsyncShould.BuildRequest(testSuiteContext, Context, scenarioName);
             var iamAuthenticationType = IamAuthenticationType.Role;
 
-            await UploadRequiredObjectAsync(Bucket, scenarioName);
+            await SendAsyncShould.UploadRequiredObjectAsync(Bucket, scenarioName);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 Context.RegionName,
                 Context.ServiceName,
@@ -133,7 +132,7 @@ namespace AwsSignatureVersion4.Integration.S3
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = HttpClient.Send(
                 request,
                 completionOption,
                 Context.RegionName,
@@ -142,51 +141,6 @@ namespace AwsSignatureVersion4.Integration.S3
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        }
-
-        internal static async Task UploadRequiredObjectAsync(Bucket bucket, params string[] scenarioName)
-        {
-            if (scenarioName[0] == "get-unreserved" || scenarioName[0] == "get-vanilla-query-unreserved")
-            {
-                await bucket.PutObjectAsync("-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
-            }
-            else if (scenarioName[0] == "get-utf8" || scenarioName[0] == "get-vanilla-utf8-query")
-            {
-                await bucket.PutObjectAsync("ሴ");
-            }
-            else if (scenarioName.Length == 2 && scenarioName[0] == "normalize-path" && scenarioName[1] == "get-slashes")
-            {
-                await bucket.PutObjectAsync("/example//");
-            }
-            else if (scenarioName.Length == 2 && scenarioName[0] == "normalize-path" && scenarioName[1] == "get-space")
-            {
-                await bucket.PutObjectAsync("example space/");
-            }
-            else
-            {
-                await bucket.PutObjectAsync("/");
-            }
-        }
-
-        internal static HttpRequestMessage BuildRequest(
-            TestSuiteContext testSuiteContext,
-            IntegrationTestContext integrationTestContext,
-            string[] scenarioName)
-        {
-            var request = testSuiteContext.LoadScenario(scenarioName).Request;
-
-            // Redirect the request to the AWS S3 bucket
-            request.RequestUri = request.RequestUri
-                .ToString()
-                .Replace("https://example.amazonaws.com", integrationTestContext.S3BucketUrl)
-                .ToUri();
-
-            // The "Host" header is now invalid since we redirected the request to the AWS S3
-            // bucket. Lets remove the header and have the signature implementation re-add it
-            // correctly.
-            request.Headers.Remove("Host");
-
-            return request;
         }
     }
 }

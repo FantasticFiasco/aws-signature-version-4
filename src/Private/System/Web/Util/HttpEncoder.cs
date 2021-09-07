@@ -16,7 +16,7 @@ namespace System.Web.Util
         internal static string UrlDecode(string value, Encoding encoding)
         {
             int count = value.Length;
-            UrlDecoder helper = new UrlDecoder(count, encoding);
+            UrlDecoder helper = new(count, encoding);
 
             // go through the string's chars collapsing %XX and %uXXXX and
             // appending each char as char, with exception of %XX constructs

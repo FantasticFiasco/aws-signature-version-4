@@ -16,7 +16,7 @@ namespace AwsSignatureVersion4.TestSuite
 
         public string ServiceName { get; } = "service";
 
-        public DateTime UtcNow { get; } = new DateTime(
+        public DateTime UtcNow { get; } = new(
             2015,
             8,
             30,
@@ -25,7 +25,7 @@ namespace AwsSignatureVersion4.TestSuite
             00,
             DateTimeKind.Utc);
 
-        public ImmutableCredentials Credentials { get; } = new ImmutableCredentials(
+        public ImmutableCredentials Credentials { get; } = new(
             "AKIDEXAMPLE",
             "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
             null);

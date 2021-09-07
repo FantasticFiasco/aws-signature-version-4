@@ -42,12 +42,7 @@ namespace AwsSignatureVersion4
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            // Given the idempotent nature of message handlers, lets remove request headers that
-            // might have been added by an prior attempt to send the request
-            request.Headers.Remove(HeaderKeys.AuthorizationHeader);
-            request.Headers.Remove(HeaderKeys.XAmzContentSha256Header);
-            request.Headers.Remove(HeaderKeys.XAmzDateHeader);
-            request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
+            RemoveHeaders(request);
 
             var immutableCredentials = await settings.Credentials.GetCredentialsAsync();
 
@@ -61,6 +56,43 @@ namespace AwsSignatureVersion4
                 immutableCredentials);
 
             return await base.SendAsync(request, cancellationToken);
+        }
+
+#if NET5_0_OR_GREATER
+
+        /// <inheritdoc />
+        protected override HttpResponseMessage Send(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            RemoveHeaders(request);
+
+            var immutableCredentials = settings.Credentials.GetCredentials();
+
+            Signer.Sign(
+                request,
+                null,
+                EmptyRequestHeaders,
+                DateTime.UtcNow,
+                settings.RegionName,
+                settings.ServiceName,
+                immutableCredentials);
+
+            return base.Send(request, cancellationToken);
+        }
+
+#endif
+
+        /// <summary>
+        /// Given the idempotent nature of message handlers, lets remove request headers that
+        /// might have been added by an prior attempt to send the request.
+        /// </summary>
+        private static void RemoveHeaders(HttpRequestMessage request)
+        {
+            request.Headers.Remove(HeaderKeys.AuthorizationHeader);
+            request.Headers.Remove(HeaderKeys.XAmzContentSha256Header);
+            request.Headers.Remove(HeaderKeys.XAmzDateHeader);
+            request.Headers.Remove(HeaderKeys.XAmzSecurityTokenHeader);
         }
     }
 }

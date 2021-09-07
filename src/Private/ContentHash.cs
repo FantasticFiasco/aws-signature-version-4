@@ -11,7 +11,8 @@ namespace AwsSignatureVersion4.Private
     /// </summary>
     public static class ContentHash
     {
-        public static async Task<string> CalculateAsync(HttpContent content)
+        /// <remarks>This method has a synchronous alternative.</remarks>
+        public static async Task<string> CalculateAsync(HttpContent? content)
         {
             // Use a hash (digest) function like SHA256 to create a hashed value from the payload
             // in the body of the HTTP or HTTPS request.
@@ -24,9 +25,32 @@ namespace AwsSignatureVersion4.Private
                 return AWS4Signer.EmptyBodySha256;
             }
 
-            var data = await content.ReadAsByteArrayAsync();
-            var hash = AWS4Signer.ComputeHash(data);
+            var contentStream = await content.ReadAsStreamAsync();
+            var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
             return AWSSDKUtils.ToHex(hash, true);
         }
+
+#if NET5_0_OR_GREATER
+
+        /// <remarks>This method has a asynchronous alternative.</remarks>
+        public static string Calculate(HttpContent? content)
+        {
+            // Use a hash (digest) function like SHA256 to create a hashed value from the payload
+            // in the body of the HTTP or HTTPS request.
+            //
+            // If the payload is empty, use an empty string as the input to the hash function.
+            if (content == null)
+            {
+                // Per performance reasons, use the pre-computed hash of an empty string from the
+                // AWS SDK
+                return AWS4Signer.EmptyBodySha256;
+            }
+
+            var contentStream = content.ReadAsStream();
+            var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
+            return AWSSDKUtils.ToHex(hash, true);
+        }
+
+#endif
     }
 }
