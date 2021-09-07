@@ -16,7 +16,7 @@
 
 <p align="center">
   <b>Package</b> - <a href="https://www.nuget.org/packages/AwsSignatureVersion4">AwsSignatureVersion4</a><br>
-  <b>Platforms</b> - .NET Framework 4.5, .NET Standard 2.0
+  <b>Platforms</b> - .NET Framework 4.5, .NET Standard 2.0, .NET 5
 </p>
 
 ## Table of contents
@@ -105,8 +105,8 @@ How the credentials are provided depend on where you run your code. If you run y
 
 This project comes with a pledge, providing transparency on supported and unsupported scenarios.
 
-- :white_check_mark: ~190 unit tests are passing before a release
-- :white_check_mark: ~400 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
+- :white_check_mark: ~200 unit tests are passing before a release
+- :white_check_mark: ~500 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
 - :white_check_mark: ~200 integration tests targeting an IAM authenticated AWS S3 bucket are passing before a release
 - :white_check_mark: No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
 - :white_check_mark: [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/) is reused as much as possible, thus the dependency
