@@ -46,7 +46,7 @@ The best API is the one you already know. By extending both `HttpClient` and `IH
 
 ### Integration with `HttpClient`
 
- This project extends the class `HttpClient` by providing additional overloads to `PostAsync`, `GetAsync`, `PutAsync`, `DeleteAsync`, `SendAsync`, and the new synchronous addition of .NET 5, `Send`. These overloads accept the following additional arguments.
+ This project extends the class `HttpClient` by providing additional overloads to `PostAsync`, `GetAsync`, `PutAsync`, `DeleteAsync`, `SendAsync`, and the new synchronous addition to .NET 5, `Send`. These overloads accept the following additional arguments.
 
 - `regionName` - The name of the AWS region, e.g. `us-west-1`
 - `serviceName` - The name of the service, e.g. `execute-api` for an AWS API Gateway
