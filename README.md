@@ -19,9 +19,8 @@
   <b>Platforms</b> - .NET Framework 4.5, .NET Standard 2.0, .NET 5
 </p>
 
-## Table of contents
+## Table of contents <!-- omit in toc -->
 
-- [Table of contents](#table-of-contents)
 - [Introduction](#introduction)
 - [Super simple to use](#super-simple-to-use)
   - [Integration with `HttpClient`](#integration-with-httpclient)
