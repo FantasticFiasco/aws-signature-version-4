@@ -34,6 +34,7 @@
     "typescript": "4.4.3"
   },
   "resolutions": {
+    "ansi-regex": ">=5.0.1",
     "bl": ">=4.0.3",
     "lodash": ">=4.17.13",
     "minimist": ">=1.2.2",
