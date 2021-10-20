@@ -39,6 +39,7 @@
     "lodash": ">=4.17.13",
     "minimist": ">=1.2.2",
     "netmask": ">=2.0.1",
-    "pac-resolver": ">=5.0.0"
+    "pac-resolver": ">=5.0.0",
+    "vm2": ">=3.9.4"
   }
 }
