@@ -23,7 +23,7 @@
     "@aws-cdk/aws-s3": "1.130.0",
     "@aws-cdk/aws-s3-deployment": "1.130.0",
     "@aws-cdk/core": "1.130.0",
-    "@types/node": "16.11.6",
+    "@types/node": "16.11.7",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "aws-cdk": "1.130.0",
