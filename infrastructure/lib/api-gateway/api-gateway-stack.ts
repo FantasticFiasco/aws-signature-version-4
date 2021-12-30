@@ -1,6 +1,7 @@
-import { AuthorizationType, LambdaRestApi } from '@aws-cdk/aws-apigateway'
-import { Code, Function, Runtime } from '@aws-cdk/aws-lambda'
-import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/core'
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib'
+import { AuthorizationType, LambdaRestApi } from 'aws-cdk-lib/aws-apigateway'
+import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda'
+import { Construct } from 'constructs'
 
 export class ApiGatewayStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -16,10 +17,8 @@ export class ApiGatewayStack extends Stack {
     // Create API Gateway
     const api = new LambdaRestApi(this, 'Api', {
       handler: requestHandler,
-      options: {
-        description: 'REST API endpoint for Signature Version 4 tests',
-        restApiName: 'SignatureVersion4',
-      },
+      description: 'REST API endpoint for Signature Version 4 tests',
+      restApiName: 'SignatureVersion4',
       proxy: false,
     })
 
