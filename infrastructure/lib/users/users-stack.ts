@@ -1,5 +1,6 @@
-import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from '@aws-cdk/aws-iam'
-import { CfnOutput, Construct, Stack, StackProps } from '@aws-cdk/core'
+import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib'
+import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
+import { Construct } from 'constructs'
 
 export class UsersStack extends Stack {
   readonly userWithPermissions: IUser

@@ -1,6 +1,7 @@
-import { IIdentity } from '@aws-cdk/aws-iam'
-import { Bucket } from '@aws-cdk/aws-s3'
-import { CfnOutput, Construct, Duration, RemovalPolicy, Stack, StackProps } from '@aws-cdk/core'
+import { CfnOutput, Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
+import { IIdentity } from 'aws-cdk-lib/aws-iam'
+import { Bucket } from 'aws-cdk-lib/aws-s3'
+import { Construct } from 'constructs'
 
 export interface S3StackProps extends StackProps {
   readWriteAccess: IIdentity[]
