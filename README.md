@@ -100,7 +100,7 @@ We've come a long way, but let's back up a step. Credentials should not be speci
 
 It all starts with a [principal](https://docs.aws.amazon.com/IAM/latest/UserGuide/intro-structure.html#intro-structure-principal), i.e. an entity identifying itself using authentication. In some situations the principal is a [IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html) and in other situations it is an entity assuming a [IAM role](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html). Whatever your principal is, it has the capability of providing credentials.
 
-How the credentials are provided depend on where you run your code. If you run your code in a ECS Task you get your credentials using [ECSTaskCredentials](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/Runtime/TECSTaskCredentials.html). Other runtimes will require other credential providers, all of them are listed in the namespace [Amazon.Runtime](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/index.html?page=Runtime/NRuntime.html&tocid=Amazon_Runtime).
+How the credentials are provided depend on where you run your code. If you run your code in a ECS Task you get your credentials using [ECSTaskCredentials](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/items/Runtime/TECSTaskCredentials.html). Other runtime will require other credential providers, all of them are listed in the namespace [Amazon.Runtime](https://docs.aws.amazon.com/sdkfornet/v3/apidocs/index.html?page=Runtime/NRuntime.html&tocid=Amazon_Runtime).
 
 ## The pledge
 
