@@ -1,4 +1,7 @@
 {
-  "spellright.language": ["en", "English (American)"],
-  "spellright.documentTypes": ["markdown", "latex", "plaintext", "jsonc"]
+  "cSpell.words": ["AWSSDK"],
+  "yaml.validate": true,
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow": ["/.github/workflows/*"]
+  }
 }
