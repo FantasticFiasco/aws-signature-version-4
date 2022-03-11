@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- [#528](https://github.com/FantasticFiasco/aws-signature-version-4/issues/528) Add PatchAsync overloads
+
 ## [2.1.1] - 2021-09-07
 
 ### :syringe: Fixed
