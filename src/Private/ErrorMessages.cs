@@ -23,6 +23,9 @@ namespace AwsSignatureVersion4.Private
             "An invalid service name was provided. Please specify a valid service name, e.g. " +
             "\"execute-api\" for the API Gateway.";
 
+        public const string S3DoesNotSupportPatch = "Uploading files to S3 using PATCH is not " +
+            "supported by AWS, use PUT instead.";
+
         public const string S3DoesNotSupportPost = "Uploading files to S3 using POST is not " +
             "supported by AWS, use PUT instead.";
     }
