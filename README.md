@@ -46,7 +46,7 @@ The best API is the one you already know. By extending both `HttpClient` and `IH
 
 ### Integration with `HttpClient`
 
- This project extends the class `HttpClient` by providing additional overloads to `PostAsync`, `GetAsync`, `GetStringAsync`, `PutAsync`, `DeleteAsync`, `SendAsync`, and the new synchronous addition to .NET 5, `Send`. These overloads accept the following additional arguments.
+This project extends the class `HttpClient` by providing additional overloads to `DeleteAsync`, `GetAsync`, `GetStringAsync`, `PatchAsync`, `PostAsync`, `PutAsync`, `SendAsync`, and the new synchronous addition to .NET 5, `Send`. These overloads accept the following additional arguments.
 
 - `regionName` - The name of the AWS region, e.g. `us-west-1`
 - `serviceName` - The name of the service, e.g. `execute-api` for an AWS API Gateway
@@ -107,14 +107,14 @@ How the credentials are provided depend on where you run your code. If you run y
 This project comes with a pledge, providing transparency on supported and unsupported scenarios.
 
 - :white_check_mark: ~200 unit tests are passing before a release
-- :white_check_mark: ~500 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
+- :white_check_mark: ~600 integration tests targeting an IAM authenticated AWS API Gateway are passing before a release
 - :white_check_mark: ~200 integration tests targeting an IAM authenticated AWS S3 bucket are passing before a release
 - :white_check_mark: No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
 - :white_check_mark: [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/) is reused as much as possible, thus the dependency
 - :white_check_mark: [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios are passing, with the following exceptions:
   - General
-    - :x: `get-utf8` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
-    - :x: `normalize-path/get-space` - The signing algorithm states the following: *'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'*. This scenario does not URL encode the path segments twice, only once.
+    - :x: `get-utf8` - The signing algorithm states the following: _'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'_. This scenario does not URL encode the path segments twice, only once.
+    - :x: `normalize-path/get-space` - The signing algorithm states the following: _'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'_. This scenario does not URL encode the path segments twice, only once.
     - :x: `post-x-www-form-urlencoded` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, e.g. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
     - :x: `post-x-www-form-urlencoded-parameters` - This scenario is based on the fact that we need to specify the charset in the `Content-Type` header, e.g. `Content-Type:application/x-www-form-urlencoded; charset=utf-8`. This is not necessary because .NET will add this encoding if omitted by us. We can safely skip this test and rely on integration tests where actual content is sent to an AWS API Gateway.
   - API Gateway
