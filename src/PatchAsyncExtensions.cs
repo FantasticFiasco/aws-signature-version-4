@@ -12,6 +12,9 @@ namespace System.Net.Http
     /// </summary>
     public static class PatchAsyncExtensions
     {
+        // .NET Standard 2.0 does not support HttpMethod.Patch, thus we create the method here instead
+        private static readonly HttpMethod PatchMethod = new("PATCH");
+
         #region PatchAsync(string, HttpContent, string, string, <credentials>)
 
         /// <summary>
@@ -487,7 +490,7 @@ namespace System.Net.Http
             string serviceName,
             ImmutableCredentials credentials)
         {
-            var request = new HttpRequestMessage(new HttpMethod("PATCH"), requestUri)
+            var request = new HttpRequestMessage(PatchMethod, requestUri)
             {
                 Content = content
             };
