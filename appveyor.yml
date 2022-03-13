@@ -1,7 +1,7 @@
 image: Visual Studio 2022
 
 environment:
-  NODEJS_VERSION: "14"
+  NODEJS_VERSION: "16"
   AWS_REGION: eu-west-1
   AWS_USER_WITH_PERMISSIONS_ACCESS_KEY_ID:
     secure: Uik9tC1iBQQhnuKKnI2tCrSa/wpbFkESCACsScrkRVA=
