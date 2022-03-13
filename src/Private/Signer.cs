@@ -117,6 +117,7 @@ namespace AwsSignatureVersion4.Private
             if (regionName == string.Empty) throw new ArgumentException(ErrorMessages.InvalidRegionName, nameof(regionName));
             if (serviceName == null) throw new ArgumentNullException(nameof(serviceName));
             if (serviceName == string.Empty) throw new ArgumentException(ErrorMessages.InvalidServiceName, nameof(serviceName));
+            if (serviceName == ServiceName.S3 && request.Method == PatchAsyncExtensions.PatchMethod) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPatch);
             if (serviceName == ServiceName.S3 && request.Method == HttpMethod.Post) throw new NotSupportedException(ErrorMessages.S3DoesNotSupportPost);
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
         }
