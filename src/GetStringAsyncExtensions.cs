@@ -955,7 +955,7 @@ namespace System.Net.Http
             string serviceName,
             ImmutableCredentials credentials)
         {
-            var response = await self.GetAsync(
+            using var response = await self.GetAsync(
                 requestUri,
                 completionOption,
                 cancellationToken,
@@ -966,7 +966,6 @@ namespace System.Net.Http
             response.EnsureSuccessStatusCode();
 
             var content = response.Content;
-
             if (content == null)
             {
                 return string.Empty;
