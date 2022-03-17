@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Contents;
 using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
@@ -31,7 +32,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         [Theory]
@@ -47,7 +48,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         #endregion
@@ -67,7 +68,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         [Theory]
@@ -83,7 +84,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         #endregion
@@ -107,7 +108,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         [Theory]
@@ -127,13 +128,13 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var ct = new CancellationToken(true);
@@ -145,6 +146,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
+
+            while (task.Status == TaskStatus.WaitingForActivation)
+            {
+                await Task.Delay(1);
+            }
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
@@ -171,7 +177,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         [Theory]
@@ -191,7 +197,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         #endregion
@@ -215,7 +221,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         [Theory]
@@ -237,7 +243,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
 
         [Theory]
@@ -259,7 +265,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe("Not sure, please fill in");
+            stringContent.ShouldBe(new RichContent().ToJson());
         }
     }
 }

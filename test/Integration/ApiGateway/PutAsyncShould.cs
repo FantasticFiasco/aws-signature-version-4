@@ -178,7 +178,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, typeof(RichContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
         [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
-        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType, Type contentType)
+        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
             var ct = new CancellationToken(true);
@@ -191,6 +191,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
+
+            while (task.Status == TaskStatus.WaitingForActivation)
+            {
+                await Task.Delay(1);
+            }
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);

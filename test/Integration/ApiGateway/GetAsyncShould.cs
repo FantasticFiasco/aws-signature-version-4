@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Contents;
 using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
@@ -33,6 +35,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -49,6 +53,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         #endregion
@@ -69,6 +75,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -85,6 +93,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         #endregion
@@ -109,6 +119,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -129,6 +141,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         #endregion
@@ -153,6 +167,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -173,6 +189,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         #endregion
@@ -197,6 +215,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -217,12 +237,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var ct = new CancellationToken(true);
@@ -234,6 +256,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
+
+            while (task.Status == TaskStatus.WaitingForActivation)
+            {
+                await Task.Delay(1);
+            }
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
@@ -261,6 +288,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -281,6 +310,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         #endregion
@@ -307,6 +338,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -329,6 +362,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         #endregion
@@ -355,6 +390,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -377,6 +414,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>(cancellationToken: ct);
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         #endregion
@@ -401,6 +440,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -423,6 +464,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
 
         [Theory]
@@ -445,6 +488,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var body = await response.Content.ReadFromJsonAsync<RichContent>();
+            body.ShouldBeEquivalentTo(new RichContent());
         }
     }
 }
