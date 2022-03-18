@@ -121,7 +121,7 @@ namespace System.Net.Http
                 credentials,
                 CancellationToken.None);
 
-#endregion
+        #endregion
 
         #region Send(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
 
@@ -241,7 +241,7 @@ namespace System.Net.Http
                 credentials,
                 CancellationToken.None);
 
-#endregion
+        #endregion
 
         #region Send(HttpRequestMessage, CancellationToken, string, string, <credentials>)
 
@@ -367,7 +367,7 @@ namespace System.Net.Http
                 credentials,
                 cancellationToken);
 
-#endregion
+        #endregion
 
         #region Send(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
 
@@ -518,7 +518,7 @@ namespace System.Net.Http
             return self.Send(request, completionOption, cancellationToken);
         }
 
-#endregion
+        #endregion
     }
 }
 
