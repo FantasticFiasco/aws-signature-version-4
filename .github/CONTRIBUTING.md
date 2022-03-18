@@ -72,3 +72,17 @@ or in the case of multiple issues:
 ```
 Closes #123, #245, #992
 ```
+
+## Creating a release
+
+Update the following files:
+
+- `CHANGELOG.md`
+- `Directory.Build.props`
+
+Commit the files with a git commit message saying `release v<major>.<minor>.<patch>`, and then run the following commands:
+
+```
+git tag -a v<major>.<minor>.<patch> -m v<major>.<minor>.<patch> -s
+git push --follow-tags
+```
