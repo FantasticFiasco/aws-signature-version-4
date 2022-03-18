@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 ### :zap: Added
 
 - [#528](https://github.com/FantasticFiasco/aws-signature-version-4/issues/528) Add support for `HttpClient.PatchAsync` (contribution by [@mungojam](https://github.com/mungojam))
+- [#526](https://github.com/FantasticFiasco/aws-signature-version-4/issues/526) Add support for `HttpClient.GetStringAsync` (contribution by [@mungojam](https://github.com/mungojam))
 
 ### :skull: Removed
 

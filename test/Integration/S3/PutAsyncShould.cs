@@ -166,7 +166,7 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
@@ -180,6 +180,11 @@ namespace AwsSignatureVersion4.Integration.S3
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
+
+            while (task.Status == TaskStatus.WaitingForActivation)
+            {
+                await Task.Delay(1);
+            }
 
             // Assert
             task.Status.ShouldBe(TaskStatus.Canceled);
