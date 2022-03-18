@@ -12,6 +12,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     public class GetStringAsyncShould : ApiGatewayIntegrationBase
     {
+        private static readonly string ExpectedResponseContent = new RichContent().ToJson();
+
         public GetStringAsyncShould(IntegrationTestContext context)
             : base(context)
         {
@@ -32,7 +34,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         [Theory]
@@ -48,7 +50,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         #endregion
@@ -68,7 +70,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         [Theory]
@@ -84,7 +86,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         #endregion
@@ -108,7 +110,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         [Theory]
@@ -128,7 +130,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         [Theory]
@@ -177,7 +179,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         [Theory]
@@ -197,7 +199,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         #endregion
@@ -221,7 +223,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         [Theory]
@@ -243,7 +245,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
 
         [Theory]
@@ -265,7 +267,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(new RichContent().ToJson());
+            stringContent.ShouldBe(ExpectedResponseContent);
         }
     }
 }
