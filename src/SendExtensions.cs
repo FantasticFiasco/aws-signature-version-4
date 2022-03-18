@@ -13,7 +13,7 @@ namespace System.Net.Http
     /// </summary>
     public static class SendExtensions
     {
-#region Send(HttpRequestMessage, string, string, <credentials>)
+        #region Send(HttpRequestMessage, string, string, <credentials>)
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request.
@@ -123,7 +123,7 @@ namespace System.Net.Http
 
 #endregion
 
-#region Send(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
+        #region Send(HttpRequestMessage, HttpCompletionOption, string, string, <credentials>)
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request.
@@ -243,7 +243,7 @@ namespace System.Net.Http
 
 #endregion
 
-#region Send(HttpRequestMessage, CancellationToken, string, string, <credentials>)
+        #region Send(HttpRequestMessage, CancellationToken, string, string, <credentials>)
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request.
@@ -369,7 +369,7 @@ namespace System.Net.Http
 
 #endregion
 
-#region Send(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
+        #region Send(HttpRequestMessage, HttpCompletionOption, CancellationToken, string, string, <credentials>)
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request.
