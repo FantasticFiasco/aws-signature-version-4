@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [3.0.0] - 2022-03-18
+
 ### :zap: Added
 
 - [#528](https://github.com/FantasticFiasco/aws-signature-version-4/issues/528) Add support for `HttpClient.PatchAsync` (contribution by [@mungojam](https://github.com/mungojam))
