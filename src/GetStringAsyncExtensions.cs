@@ -59,10 +59,10 @@ namespace System.Net.Http
             AWSCredentials credentials) =>
             self.GetStringAsync(
                 requestUri,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri as an asynchronous
@@ -109,10 +109,10 @@ namespace System.Net.Http
             ImmutableCredentials credentials) =>
             self.GetStringAsync(
                 requestUri,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         #endregion
 
@@ -163,10 +163,10 @@ namespace System.Net.Http
             AWSCredentials credentials) =>
             self.GetStringAsync(
                 requestUri,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri as an asynchronous
@@ -213,10 +213,10 @@ namespace System.Net.Http
             ImmutableCredentials credentials) =>
             self.GetStringAsync(
                 requestUri,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         #endregion
 
@@ -232,10 +232,6 @@ namespace System.Net.Http
         /// <param name="requestUri">
         /// The Uri the request is sent to.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -248,6 +244,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -266,16 +266,16 @@ namespace System.Net.Http
         public static Task<string> GetStringAsync(
             this HttpClient self,
             string requestUri,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
+            AWSCredentials credentials,
+            CancellationToken cancellationToken) =>
             self.GetStringAsync(
                 requestUri.ToUri(),
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
 
         /// <summary>
         /// Send a Signature Version 4 signed GET request to the specified Uri with a cancellation
@@ -287,10 +287,6 @@ namespace System.Net.Http
         /// <param name="requestUri">
         /// The Uri the request is sent to.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -303,6 +299,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -321,16 +321,16 @@ namespace System.Net.Http
         public static Task<string> GetStringAsync(
             this HttpClient self,
             string requestUri,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            ImmutableCredentials credentials) =>
+            ImmutableCredentials credentials,
+            CancellationToken cancellationToken) =>
             self.GetStringAsync(
                 requestUri.ToUri(),
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
 
         #endregion
 
@@ -346,10 +346,6 @@ namespace System.Net.Http
         /// <param name="requestUri">
         /// The Uri the request is sent to.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -362,6 +358,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -380,10 +380,10 @@ namespace System.Net.Http
         public static async Task<string> GetStringAsync(
             this HttpClient self,
             Uri requestUri,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
+            AWSCredentials credentials,
+            CancellationToken cancellationToken)
         {
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
@@ -391,10 +391,10 @@ namespace System.Net.Http
 
             var result = await self.GetStringAsync(
                 requestUri,
-                cancellationToken,
                 regionName,
                 serviceName,
-                immutableCredentials);
+                immutableCredentials,
+                cancellationToken);
 
             return result;
         }
@@ -409,10 +409,6 @@ namespace System.Net.Http
         /// <param name="requestUri">
         /// The Uri the request is sent to.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -425,6 +421,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -443,17 +443,17 @@ namespace System.Net.Http
         public static async Task<string> GetStringAsync(
             this HttpClient self,
             Uri requestUri,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            ImmutableCredentials credentials)
+            ImmutableCredentials credentials,
+            CancellationToken cancellationToken)
         {
             using var response = await self.GetAsync(
                 requestUri,
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
 
             response.EnsureSuccessStatusCode();
 

@@ -154,10 +154,10 @@ namespace AwsSignatureVersion4.Integration.S3
             var response = await HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -176,10 +176,10 @@ namespace AwsSignatureVersion4.Integration.S3
             var task = HttpClient.PutAsync(
                 $"{Context.S3BucketUrl}/{bucketObject.Key}",
                 bucketObject.StringContent,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)
             {

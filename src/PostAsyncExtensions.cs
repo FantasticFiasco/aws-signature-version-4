@@ -64,10 +64,10 @@ namespace System.Net.Http
             self.PostAsync(
                 requestUri,
                 content,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         /// <summary>
         /// Send a Signature Version 4 signed POST request to the specified Uri as an asynchronous
@@ -119,10 +119,10 @@ namespace System.Net.Http
             self.PostAsync(
                 requestUri,
                 content,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         #endregion
 
@@ -178,10 +178,10 @@ namespace System.Net.Http
             self.PostAsync(
                 requestUri,
                 content,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         /// <summary>
         /// Send a Signature Version 4 signed POST request to the specified Uri as an asynchronous
@@ -233,10 +233,10 @@ namespace System.Net.Http
             self.PostAsync(
                 requestUri,
                 content,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         #endregion
 
@@ -255,10 +255,6 @@ namespace System.Net.Http
         /// <param name="content">
         /// The HTTP request content sent to the server.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -271,6 +267,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -290,17 +290,17 @@ namespace System.Net.Http
             this HttpClient self,
             string requestUri,
             HttpContent content,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
+            AWSCredentials credentials,
+            CancellationToken cancellationToken) =>
             self.PostAsync(
                 requestUri.ToUri(),
                 content,
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
 
         /// <summary>
         /// Send a Signature Version 4 signed POST request with a cancellation token as an
@@ -315,10 +315,6 @@ namespace System.Net.Http
         /// <param name="content">
         /// The HTTP request content sent to the server.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -331,6 +327,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -350,17 +350,17 @@ namespace System.Net.Http
             this HttpClient self,
             string requestUri,
             HttpContent content,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            ImmutableCredentials credentials) =>
+            ImmutableCredentials credentials,
+            CancellationToken cancellationToken) =>
             self.PostAsync(
                 requestUri.ToUri(),
                 content,
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
 
         #endregion
 
@@ -379,10 +379,6 @@ namespace System.Net.Http
         /// <param name="content">
         /// The HTTP request content sent to the server.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -395,6 +391,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -414,10 +414,10 @@ namespace System.Net.Http
             this HttpClient self,
             Uri requestUri,
             HttpContent content,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
+            AWSCredentials credentials,
+            CancellationToken cancellationToken)
         {
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
@@ -426,10 +426,10 @@ namespace System.Net.Http
             var response = await self.PostAsync(
                 requestUri,
                 content,
-                cancellationToken,
                 regionName,
                 serviceName,
-                immutableCredentials);
+                immutableCredentials,
+                cancellationToken);
 
             return response;
         }
@@ -447,10 +447,6 @@ namespace System.Net.Http
         /// <param name="content">
         /// The HTTP request content sent to the server.
         /// </param>
-        /// <param name="cancellationToken">
-        /// A cancellation token that can be used by other objects or threads to receive notice of
-        /// cancellation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -463,6 +459,10 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// A cancellation token that can be used by other objects or threads to receive notice of
+        /// cancellation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -482,10 +482,10 @@ namespace System.Net.Http
             this HttpClient self,
             Uri requestUri,
             HttpContent content,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            ImmutableCredentials credentials)
+            ImmutableCredentials credentials,
+            CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri)
             {
@@ -494,10 +494,10 @@ namespace System.Net.Http
 
             return self.SendAsync(
                 request,
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
         }
 
         #endregion

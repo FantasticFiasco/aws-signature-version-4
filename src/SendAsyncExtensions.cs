@@ -63,10 +63,10 @@ namespace System.Net.Http
             self.SendAsync(
                 request,
                 DefaultCompletionOption,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
@@ -116,10 +116,10 @@ namespace System.Net.Http
             self.SendAsync(
                 request,
                 DefaultCompletionOption,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         #endregion
 
@@ -180,10 +180,10 @@ namespace System.Net.Http
             self.SendAsync(
                 request,
                 completionOption,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
@@ -240,10 +240,10 @@ namespace System.Net.Http
             self.SendAsync(
                 request,
                 completionOption,
-                CancellationToken.None,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                CancellationToken.None);
 
         #endregion
 
@@ -258,9 +258,6 @@ namespace System.Net.Http
         /// <param name="request">
         /// The HTTP request message to send.
         /// </param>
-        /// <param name="cancellationToken">
-        /// The cancellation token to cancel operation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -273,6 +270,9 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token to cancel operation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -294,17 +294,17 @@ namespace System.Net.Http
         public static Task<HttpResponseMessage> SendAsync(
             this HttpClient self,
             HttpRequestMessage request,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials) =>
+            AWSCredentials credentials,
+            CancellationToken cancellationToken) =>
             self.SendAsync(
                 request,
                 DefaultCompletionOption,
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
 
         /// <summary>
         /// Send an Signature Version 4 signed HTTP request as an asynchronous operation.
@@ -315,9 +315,6 @@ namespace System.Net.Http
         /// <param name="request">
         /// The HTTP request message to send.
         /// </param>
-        /// <param name="cancellationToken">
-        /// The cancellation token to cancel operation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -330,6 +327,9 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token to cancel operation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -351,17 +351,17 @@ namespace System.Net.Http
         public static Task<HttpResponseMessage> SendAsync(
             this HttpClient self,
             HttpRequestMessage request,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            ImmutableCredentials credentials) =>
+            ImmutableCredentials credentials,
+            CancellationToken cancellationToken) =>
             self.SendAsync(
                 request,
                 DefaultCompletionOption,
-                cancellationToken,
                 regionName,
                 serviceName,
-                credentials);
+                credentials,
+                cancellationToken);
 
         #endregion
 
@@ -380,9 +380,6 @@ namespace System.Net.Http
         /// When the operation should complete (as soon as a response is available or after reading
         /// the whole response content).
         /// </param>
-        /// <param name="cancellationToken">
-        /// The cancellation token to cancel operation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -395,6 +392,9 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token to cancel operation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -419,10 +419,10 @@ namespace System.Net.Http
             this HttpClient self,
             HttpRequestMessage request,
             HttpCompletionOption completionOption,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            AWSCredentials credentials)
+            AWSCredentials credentials,
+            CancellationToken cancellationToken)
         {
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
@@ -431,10 +431,10 @@ namespace System.Net.Http
             var response = await self.SendAsync(
                 request,
                 completionOption,
-                cancellationToken,
                 regionName,
                 serviceName,
-                immutableCredentials);
+                immutableCredentials,
+                cancellationToken);
 
             return response;
         }
@@ -452,9 +452,6 @@ namespace System.Net.Http
         /// When the operation should complete (as soon as a response is available or after reading
         /// the whole response content).
         /// </param>
-        /// <param name="cancellationToken">
-        /// The cancellation token to cancel operation.
-        /// </param>
         /// <param name="regionName">
         /// The system name of the AWS region associated with the endpoint, e.g. "us-east-1".
         /// </param>
@@ -467,6 +464,9 @@ namespace System.Net.Http
         /// - The AWS secret key for the account making the call, in clear text.
         /// - The session token obtained from STS if request is authenticated using temporary
         ///   security credentials, e.g. a role.
+        /// </param>
+        /// <param name="cancellationToken">
+        /// The cancellation token to cancel operation.
         /// </param>
         /// <returns>
         /// The task object representing the asynchronous operation.
@@ -491,10 +491,10 @@ namespace System.Net.Http
             this HttpClient self,
             HttpRequestMessage request,
             HttpCompletionOption completionOption,
-            CancellationToken cancellationToken,
             string regionName,
             string serviceName,
-            ImmutableCredentials credentials)
+            ImmutableCredentials credentials,
+            CancellationToken cancellationToken)
         {
             if (self == null) throw new ArgumentNullException(nameof(self));
 

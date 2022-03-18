@@ -104,10 +104,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var stringContent =  await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             stringContent.ShouldBe(ExpectedResponseContent);
@@ -124,10 +124,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var stringContent =  await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             stringContent.ShouldBe(ExpectedResponseContent);
@@ -144,10 +144,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var task = HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)
             {
@@ -173,10 +173,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var stringContent =  await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             stringContent.ShouldBe(ExpectedResponseContent);
@@ -193,10 +193,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var stringContent =  await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             stringContent.ShouldBe(ExpectedResponseContent);

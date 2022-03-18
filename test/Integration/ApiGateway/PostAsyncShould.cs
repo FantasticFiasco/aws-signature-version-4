@@ -118,10 +118,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
                 contentType.ToJsonContent(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -141,10 +141,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
                 contentType.ToJsonContent(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -164,10 +164,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var task = HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
                 contentType.ToJsonContent(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)
             {
@@ -196,10 +196,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl.ToUri(),
                 contentType.ToJsonContent(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -219,10 +219,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl.ToUri(),
                 contentType.ToJsonContent(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
