@@ -146,10 +146,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = HttpClient.Send(
                 request,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -175,10 +175,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = HttpClient.Send(
                 request,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -202,10 +202,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var response = HttpClient.Send(
                 request,
                 completionOption,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -225,10 +225,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var response = HttpClient.Send(
                 request,
                 completionOption,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);

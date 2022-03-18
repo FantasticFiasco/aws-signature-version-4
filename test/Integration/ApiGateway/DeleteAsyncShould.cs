@@ -102,10 +102,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -122,10 +122,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -146,10 +146,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -166,10 +166,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                ResolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -186,10 +186,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var task = HttpClient.DeleteAsync(
                 Context.ApiGatewayUrl,
-                ct,
                 Context.RegionName,
                 Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                ResolveMutableCredentials(iamAuthenticationType),
+                ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)
             {
