@@ -44,18 +44,20 @@ namespace AwsSignatureVersion4
         {
             RemoveHeaders(request);
 
-            var immutableCredentials = await settings.Credentials.GetCredentialsAsync();
+            var immutableCredentials = await settings.Credentials.GetCredentialsAsync().ConfigureAwait(false);
 
-            await Signer.SignAsync(
-                request,
-                null,
-                EmptyRequestHeaders,
-                DateTime.UtcNow,
-                settings.RegionName,
-                settings.ServiceName,
-                immutableCredentials);
+            await Signer
+                .SignAsync(
+                    request,
+                    null,
+                    EmptyRequestHeaders,
+                    DateTime.UtcNow,
+                    settings.RegionName,
+                    settings.ServiceName,
+                    immutableCredentials)
+                .ConfigureAwait(false);
 
-            return await base.SendAsync(request, cancellationToken);
+            return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
 #if NET5_0_OR_GREATER

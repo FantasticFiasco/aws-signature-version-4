@@ -426,15 +426,17 @@ namespace System.Net.Http
         {
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            var immutableCredentials = await credentials.GetCredentialsAsync();
+            var immutableCredentials = await credentials.GetCredentialsAsync().ConfigureAwait(false);
 
-            var response = await self.SendAsync(
-                request,
-                completionOption,
-                regionName,
-                serviceName,
-                immutableCredentials,
-                cancellationToken);
+            var response = await self
+                .SendAsync(
+                    request,
+                    completionOption,
+                    regionName,
+                    serviceName,
+                    immutableCredentials,
+                    cancellationToken)
+                .ConfigureAwait(false);
 
             return response;
         }
@@ -498,16 +500,18 @@ namespace System.Net.Http
         {
             if (self == null) throw new ArgumentNullException(nameof(self));
 
-            await Signer.SignAsync(
-                request,
-                self.BaseAddress,
-                self.DefaultRequestHeaders,
-                DateTime.UtcNow,
-                regionName,
-                serviceName,
-                credentials);
+            await Signer
+                .SignAsync(
+                    request,
+                    self.BaseAddress,
+                    self.DefaultRequestHeaders,
+                    DateTime.UtcNow,
+                    regionName,
+                    serviceName,
+                    credentials)
+                .ConfigureAwait(false);
 
-            return await self.SendAsync(request, completionOption, cancellationToken);
+            return await self.SendAsync(request, completionOption, cancellationToken).ConfigureAwait(false);
         }
 
         #endregion

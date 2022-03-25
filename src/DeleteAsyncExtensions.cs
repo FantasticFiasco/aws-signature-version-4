@@ -387,14 +387,16 @@ namespace System.Net.Http
         {
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            var immutableCredentials = await credentials.GetCredentialsAsync();
+            var immutableCredentials = await credentials.GetCredentialsAsync().ConfigureAwait(false);
 
-            var response = await self.DeleteAsync(
-                requestUri,
-                regionName,
-                serviceName,
-                immutableCredentials,
-                cancellationToken);
+            var response = await self
+                .DeleteAsync(
+                    requestUri,
+                    regionName,
+                    serviceName,
+                    immutableCredentials,
+                    cancellationToken)
+                .ConfigureAwait(false);
 
             return response;
         }
