@@ -387,14 +387,16 @@ namespace System.Net.Http
         {
             if (credentials == null) throw new ArgumentNullException(nameof(credentials));
 
-            var immutableCredentials = await credentials.GetCredentialsAsync();
+            var immutableCredentials = await credentials.GetCredentialsAsync().ConfigureAwait(false);
 
-            var result = await self.GetStringAsync(
-                requestUri,
-                regionName,
-                serviceName,
-                immutableCredentials,
-                cancellationToken);
+            var result = await self
+                .GetStringAsync(
+                    requestUri,
+                    regionName,
+                    serviceName,
+                    immutableCredentials,
+                    cancellationToken)
+                .ConfigureAwait(false);
 
             return result;
         }
@@ -448,12 +450,14 @@ namespace System.Net.Http
             ImmutableCredentials credentials,
             CancellationToken cancellationToken)
         {
-            using var response = await self.GetAsync(
-                requestUri,
-                regionName,
-                serviceName,
-                credentials,
-                cancellationToken);
+            using var response = await self
+                .GetAsync(
+                    requestUri,
+                    regionName,
+                    serviceName,
+                    credentials,
+                    cancellationToken)
+                .ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
 
@@ -464,9 +468,9 @@ namespace System.Net.Http
             }
 
 #if NET5_0_OR_GREATER
-            return await content.ReadAsStringAsync(cancellationToken);
+            return await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 #else
-            return await content.ReadAsStringAsync();
+            return await content.ReadAsStringAsync().ConfigureAwait(false);
 #endif
         }
 

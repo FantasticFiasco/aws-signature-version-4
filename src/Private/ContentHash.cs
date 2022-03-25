@@ -25,7 +25,7 @@ namespace AwsSignatureVersion4.Private
                 return AWS4Signer.EmptyBodySha256;
             }
 
-            var contentStream = await content.ReadAsStreamAsync();
+            var contentStream = await content.ReadAsStreamAsync().ConfigureAwait(false);
             var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
             return AWSSDKUtils.ToHex(hash, true);
         }

@@ -23,7 +23,7 @@ namespace AwsSignatureVersion4.Private
 
             UpdateRequestUri(request, baseAddress);
 
-            var contentHash = await ContentHash.CalculateAsync(request.Content);
+            var contentHash = await ContentHash.CalculateAsync(request.Content).ConfigureAwait(false);
 
             AddHeaders(request, now, serviceName, credentials, contentHash);
 
