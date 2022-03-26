@@ -14,7 +14,7 @@
     "lint:fix": "eslint --ext .ts --fix . && prettier --write ."
   },
   "dependencies": {
-    "aws-cdk-lib": "2.15.0",
+    "aws-cdk-lib": "2.17.0",
     "constructs": "10.0.19",
     "source-map-support": "0.5.21"
   },
