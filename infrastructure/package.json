@@ -25,7 +25,7 @@
     "eslint": "8.3.0",
     "prettier": "2.6.0",
     "rimraf": "3.0.2",
-    "typescript": "4.6.2"
+    "typescript": "4.6.3"
   },
   "resolutions": {
     "ansi-regex": ">=5.0.1",
