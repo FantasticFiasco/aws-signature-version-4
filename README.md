@@ -16,7 +16,7 @@
 
 <p align="center">
   <b>Package</b> - <a href="https://www.nuget.org/packages/AwsSignatureVersion4">AwsSignatureVersion4</a><br>
-  <b>Platforms</b> - .NET Framework 4.5, .NET Standard 2.0, .NET 5
+  <b>Platforms</b> - .NET Standard 2.0, .NET 5
 </p>
 
 ## Table of contents <!-- omit in toc -->
