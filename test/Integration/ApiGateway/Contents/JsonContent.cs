@@ -1,6 +1,6 @@
 ﻿namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
 {
-    public class RichContent
+    public class JsonContent
     {
         public string FirstName { get; set; } = "John";
 

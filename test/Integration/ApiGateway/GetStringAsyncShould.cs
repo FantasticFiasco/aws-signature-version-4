@@ -12,7 +12,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     public class GetStringAsyncShould : ApiGatewayIntegrationBase
     {
-        private static readonly string ExpectedResponseContent = new RichContent().ToJson();
+        private static readonly string ExpectedResponseContent = new JsonContent().ToJson();
 
         public GetStringAsyncShould(IntegrationTestContext context)
             : base(context)

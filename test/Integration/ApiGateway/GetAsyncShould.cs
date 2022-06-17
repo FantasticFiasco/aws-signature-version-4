@@ -9,12 +9,13 @@ using AwsSignatureVersion4.Integration.ApiGateway.Contents;
 using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
+using JsonContent = AwsSignatureVersion4.Integration.ApiGateway.Contents.JsonContent;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     public class GetAsyncShould : ApiGatewayIntegrationBase
     {
-        private static readonly RichContent ExpectedResponseContent = new();
+        private static readonly JsonContent ExpectedResponseContent = new();
 
         public GetAsyncShould(IntegrationTestContext context)
             : base(context)
@@ -37,7 +38,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -55,7 +56,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -77,7 +78,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -95,7 +96,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -121,7 +122,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -143,7 +144,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -169,7 +170,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -191,7 +192,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -217,7 +218,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -239,7 +240,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -290,7 +291,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -312,7 +313,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -340,7 +341,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -364,7 +365,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -392,7 +393,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -416,7 +417,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -442,7 +443,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -466,7 +467,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
 
@@ -490,7 +491,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
+            var content = await response.Content.ReadFromJsonAsync<JsonContent>();
             content.ShouldBeEquivalentTo(ExpectedResponseContent);
         }
     }

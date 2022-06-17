@@ -22,9 +22,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Act
@@ -41,9 +41,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Act
@@ -64,9 +64,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Act
@@ -83,9 +83,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Act
@@ -106,9 +106,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
@@ -129,9 +129,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
@@ -152,9 +152,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
@@ -184,9 +184,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
@@ -207,9 +207,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
@@ -232,9 +232,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
@@ -257,9 +257,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
@@ -282,9 +282,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
         [Theory]
         [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(RichContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange
