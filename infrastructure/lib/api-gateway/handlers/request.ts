@@ -1,3 +1,5 @@
+import { APIGatewayEvent } from "aws-lambda"
+
 interface HttpResponse {
   statusCode: number
   headers: { [name: string]: string }
@@ -10,7 +12,9 @@ const BODY = JSON.stringify({
   age: 42,
 })
 
-export const handler = async (): Promise<HttpResponse> => {
+export const handler = async (event: APIGatewayEvent): Promise<HttpResponse> => {
+  console.log(`Event: ${JSON.stringify(event, null, 2)}`);
+
   return {
     statusCode: 200,
     headers: {
