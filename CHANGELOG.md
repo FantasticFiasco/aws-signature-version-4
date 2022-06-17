@@ -6,6 +6,14 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- Support for .NET 6
+
+### :skull: Removed
+
+- [BREAKING CHANGE] Support for .NET 5 due to [deprecation as of May 10, 2022](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+
 ## [3.0.1] - 2022-03-25
 
 ### :syringe: Fixed
