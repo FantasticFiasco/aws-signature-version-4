@@ -5,7 +5,6 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
-using AwsSignatureVersion4.Integration.ApiGateway.Contents;
 using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
