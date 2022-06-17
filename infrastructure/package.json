@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "rimraf \"./cdk.out\" \"./+(bin|lib)/**/*.+(d.ts|js|js.map)\"",
     "build": "yarn clean && tsc",
-    "deploy": "yarn build && cdk deploy ApiGatewayStack S3Stack UsersStack",
+    "deploy": "yarn build && cdk deploy -all",
     "destroy": "yarn build && cdk destroy",
     "lint": "eslint --ext .ts --max-warnings=0 . && prettier --check .",
     "lint:fix": "eslint --ext .ts --fix . && prettier --write ."
