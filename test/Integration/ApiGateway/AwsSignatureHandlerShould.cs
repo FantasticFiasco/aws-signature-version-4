@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -242,7 +243,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe(method);
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters["Param1"] = "value1";
+            receivedRequest.QueryParameters.ShouldBe(new Dictionary<string, string>
+            {
+                ["Param1"] = "value1"
+            });
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -278,7 +282,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe(method);
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters["Param1"] = "Value1, value2";
+            receivedRequest.QueryParameters.ShouldBe(new Dictionary<string, string>
+            {
+                ["Param1"] = "Value1",
+                ["Param1"] = "value2"
+            });
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -314,7 +322,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe(method);
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters["Param1"] = "value2, Value1";
+            receivedRequest.QueryParameters.ShouldBe(new Dictionary<string, string>
+            {
+                ["Param1"] = "value2",
+                ["Param1"] = "Value1"
+            });
             receivedRequest.Body.ShouldBeNull();
         }
 
