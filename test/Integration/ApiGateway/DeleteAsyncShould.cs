@@ -37,6 +37,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -56,6 +59,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -79,6 +85,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -98,6 +107,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -125,6 +137,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -148,6 +163,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -175,6 +193,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -198,6 +219,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -250,7 +274,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryParameters["Param1"] = "value1";
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -276,7 +302,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryParameters["Param1"] = "Value1, value2";
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -302,7 +330,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryParameters["Param1"] = "value2, Value1";
+            receivedRequest.Body.ShouldBeNull();
         }
     }
 }
