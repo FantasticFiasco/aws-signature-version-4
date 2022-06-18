@@ -229,7 +229,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value1"
+                Query = "Param1=Value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
@@ -246,7 +246,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.QueryParameters.ShouldBe(
                 new Dictionary<string, string>
                 {
-                    ["Param1"] = "value1"
+                    ["Param1"] = "Value1"
                 });
             receivedRequest.Body.ShouldBeNull();
         }
@@ -269,11 +269,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=Value1&Param1=value2"
+                Query = "Param1=Value1&Param1=Value2"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
-            
+
             // Act
             var response = await httpClient.SendAsync(request);
 
@@ -286,7 +286,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.QueryParameters.ShouldBe(
                 new Dictionary<string, string>
                 {
-                    ["Param1"] = "Value1", ["Param1"] = "value2"
+                    ["Param1"] = "Value1",
+                    ["Param1"] = "Value2"
                 });
             receivedRequest.Body.ShouldBeNull();
         }
@@ -309,11 +310,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value2&Param1=Value1"
+                Query = "Param1=Value2&Param1=Value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
-            
+
             // Act
             var response = await httpClient.SendAsync(request);
 
@@ -326,7 +327,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.QueryParameters.ShouldBe(
                 new Dictionary<string, string>
                 {
-                    ["Param1"] = "value2", ["Param1"] = "Value1"
+                    ["Param1"] = "Value2",
+                    ["Param1"] = "Value1"
                 });
             receivedRequest.Body.ShouldBeNull();
         }
@@ -340,7 +342,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
-            
+
             // Act
             var response = await httpClient.SendAsync(request, completionOption);
 

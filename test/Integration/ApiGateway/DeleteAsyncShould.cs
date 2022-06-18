@@ -260,7 +260,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value1"
+                Query = "Param1=Value1"
             };
 
             // Act
@@ -279,7 +279,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.QueryParameters.ShouldBe(
                 new Dictionary<string, string>
                 {
-                    ["Param1"] = "value1"
+                    ["Param1"] = "Value1"
                 });
             receivedRequest.Body.ShouldBeNull();
         }
@@ -292,7 +292,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=Value1&Param1=value2"
+                Query = "Param1=Value1&Param1=Value2"
             };
 
             // Act
@@ -311,7 +311,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.QueryParameters.ShouldBe(
                 new Dictionary<string, string>
                 {
-                    ["Param1"] = "Value1", ["Param1"] = "value2"
+                    ["Param1"] = "Value1",
+                    ["Param1"] = "Value2"
                 });
             receivedRequest.Body.ShouldBeNull();
         }
@@ -324,7 +325,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value2&Param1=Value1"
+                Query = "Param1=Value2&Param1=Value1"
             };
 
             // Act
@@ -343,7 +344,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.QueryParameters.ShouldBe(
                 new Dictionary<string, string>
                 {
-                    ["Param1"] = "value2", ["Param1"] = "Value1"
+                    ["Param1"] = "Value2",
+                    ["Param1"] = "Value1"
                 });
             receivedRequest.Body.ShouldBeNull();
         }
