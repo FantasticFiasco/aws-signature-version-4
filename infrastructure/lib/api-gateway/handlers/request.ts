@@ -9,8 +9,8 @@ interface HttpResponse {
 interface ReceivedRequest {
   method: string
   path: string
-  headers: { [name: string]: string | undefined } | null
   queryParameters: { [name: string]: string | undefined } | null
+  headers: { [name: string]: string | undefined } | null
   body: string | null
 }
 
@@ -18,8 +18,8 @@ export const handler = async ({ httpMethod, path, headers, queryStringParameters
   const receivedRequest: ReceivedRequest = {
     method: httpMethod,
     path,
-    headers,
     queryParameters: queryStringParameters,
+    headers,
     body,
   }
 
