@@ -19,9 +19,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
                     }
                 });
 
+        public static string ToJsonString(this Type self) =>
+            Activator.CreateInstance(self).ToJson();
+
         public static StringContent ToJsonContent(this Type self) =>
             new(
-                Activator.CreateInstance(self).ToJson(),
+                self.ToJsonString(),
                 Encoding.UTF8,
                 "application/json");
     }
