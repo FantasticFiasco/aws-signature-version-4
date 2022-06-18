@@ -9,7 +9,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Requests
         public static async Task<ReceivedRequest> ReadReceivedRequestAsync(this HttpContent self)
         {
             var content = await self.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<ReceivedRequest>(content);
+            return content.DeserializeReceivedRequest();
         }
+
+        public static ReceivedRequest DeserializeReceivedRequest(this string self) =>
+            JsonConvert.DeserializeObject<ReceivedRequest>(self);
     }
 }
