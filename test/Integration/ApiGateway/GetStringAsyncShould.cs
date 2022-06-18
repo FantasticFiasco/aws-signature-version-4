@@ -1,273 +1,273 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
-using AwsSignatureVersion4.Integration.ApiGateway.Contents;
-using AwsSignatureVersion4.Private;
-using Shouldly;
-using Xunit;
+﻿//using System;
+//using System.Net.Http;
+//using System.Threading;
+//using System.Threading.Tasks;
+//using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+//using AwsSignatureVersion4.Integration.ApiGateway.Contents;
+//using AwsSignatureVersion4.Private;
+//using Shouldly;
+//using Xunit;
 
-namespace AwsSignatureVersion4.Integration.ApiGateway
-{
-    public class GetStringAsyncShould : ApiGatewayIntegrationBase
-    {
-        private static readonly string ExpectedResponseContent = new JsonContent().ToJson();
+//namespace AwsSignatureVersion4.Integration.ApiGateway
+//{
+//    public class GetStringAsyncShould : ApiGatewayIntegrationBase
+//    {
+//        private static readonly string ExpectedResponseContent = new JsonContent().ToJson();
 
-        public GetStringAsyncShould(IntegrationTestContext context)
-            : base(context)
-        {
-        }
+//        public GetStringAsyncShould(IntegrationTestContext context)
+//            : base(context)
+//        {
+//        }
 
-        #region GetStringAsync(string, string, string, <credentials>)
+//        #region GetStringAsync(string, string, string, <credentials>)
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType));
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveImmutableCredentials(iamAuthenticationType));
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        #endregion
+//        #endregion
 
-        #region GetStringAsync(Uri, string, string, <credentials>)
+//        #region GetStringAsync(Uri, string, string, <credentials>)
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl.ToUri(),
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType));
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl.ToUri(),
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveImmutableCredentials(iamAuthenticationType));
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        #endregion
+//        #endregion
 
-        #region GetStringAsync(string, CancellationToken, string, string, <credentials>)
+//        #region GetStringAsync(string, CancellationToken, string, string, <credentials>)
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var ct = new CancellationToken();
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var ct = new CancellationToken();
 
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
-                ct);
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType),
+//                ct);
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var ct = new CancellationToken();
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var ct = new CancellationToken();
 
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
-                ct);
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveImmutableCredentials(iamAuthenticationType),
+//                ct);
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var ct = new CancellationToken(true);
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var ct = new CancellationToken(true);
 
-            // Act
-            var task = HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
-                ct);
+//            // Act
+//            var task = HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType),
+//                ct);
 
-            while (task.Status == TaskStatus.WaitingForActivation)
-            {
-                await Task.Delay(1);
-            }
+//            while (task.Status == TaskStatus.WaitingForActivation)
+//            {
+//                await Task.Delay(1);
+//            }
 
-            // Assert
-            task.Status.ShouldBe(TaskStatus.Canceled);
-        }
+//            // Assert
+//            task.Status.ShouldBe(TaskStatus.Canceled);
+//        }
 
-        #endregion
+//        #endregion
 
-        #region GetStringAsync(Uri, CancellationToken, string, string, <credentials>)
+//        #region GetStringAsync(Uri, CancellationToken, string, string, <credentials>)
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var ct = new CancellationToken();
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var ct = new CancellationToken();
 
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
-                ct);
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl.ToUri(),
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType),
+//                ct);
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var ct = new CancellationToken();
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var ct = new CancellationToken();
 
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
-                ct);
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                Context.ApiGatewayUrl.ToUri(),
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveImmutableCredentials(iamAuthenticationType),
+//                ct);
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        #endregion
+//        #endregion
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-            {
-                Query = "Param1=value1"
-            };
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            {
+//                Query = "Param1=value1"
+//            };
 
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                uriBuilder.Uri,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType));
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-            {
-                Query = "Param1=Value1&Param1=value2"
-            };
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            {
+//                Query = "Param1=Value1&Param1=value2"
+//            };
 
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                uriBuilder.Uri,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType));
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
 
-        [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType)
-        {
-            // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-            {
-                Query = "Param1=value2&Param1=Value1"
-            };
+//        [Theory]
+//        [InlineData(IamAuthenticationType.User)]
+//        [InlineData(IamAuthenticationType.Role)]
+//        public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType)
+//        {
+//            // Arrange
+//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            {
+//                Query = "Param1=value2&Param1=Value1"
+//            };
 
-            // Act
-            var stringContent =  await HttpClient.GetStringAsync(
-                uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+//            // Act
+//            var stringContent =  await HttpClient.GetStringAsync(
+//                uriBuilder.Uri,
+//                Context.RegionName,
+//                Context.ServiceName,
+//                ResolveMutableCredentials(iamAuthenticationType));
 
-            // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
-        }
-    }
-}
+//            // Assert
+//            stringContent.ShouldBe(ExpectedResponseContent);
+//        }
+//    }
+//}
