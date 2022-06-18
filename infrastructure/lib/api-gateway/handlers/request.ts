@@ -1,4 +1,4 @@
-import { APIGatewayEvent } from "aws-lambda"
+import { APIGatewayEvent } from 'aws-lambda'
 
 interface HttpResponse {
   statusCode: number
@@ -6,7 +6,7 @@ interface HttpResponse {
   body: string
 }
 
-interface RequestDescription {
+interface ReceivedRequest {
   method: string
   path: string
   headers: { [name: string]: string | undefined } | null
@@ -14,22 +14,20 @@ interface RequestDescription {
   body: string | null
 }
 
-export const handler = async ({httpMethod, path, headers, queryStringParameters, body}: APIGatewayEvent): Promise<HttpResponse> => {
-  const requestDescription: RequestDescription = {
+export const handler = async ({ httpMethod, path, headers, queryStringParameters, body }: APIGatewayEvent): Promise<HttpResponse> => {
+  const receivedRequest: ReceivedRequest = {
     method: httpMethod,
     path,
     headers,
     queryParameters: queryStringParameters,
-    body
+    body,
   }
-
-  console.log(requestDescription)
 
   return {
     statusCode: 200,
     headers: {
       'content-type': 'application/json',
     },
-    body: JSON.stringify(requestDescription),
+    body: JSON.stringify(receivedRequest),
   }
 }
