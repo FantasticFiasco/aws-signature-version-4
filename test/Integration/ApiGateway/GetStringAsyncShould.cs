@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
-using AwsSignatureVersion4.Integration.ApiGateway.Contents;
+using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
@@ -12,8 +12,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     public class GetStringAsyncShould : ApiGatewayIntegrationBase
     {
-        private static readonly string ExpectedResponseContent = new RichContent().ToJson();
-
         public GetStringAsyncShould(IntegrationTestContext context)
             : base(context)
         {
@@ -27,14 +25,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -43,14 +45,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -63,14 +69,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl.ToUri(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -79,14 +89,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl.ToUri(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -102,7 +116,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
@@ -110,7 +124,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct);
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -122,7 +140,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl,
                 Context.RegionName,
                 Context.ServiceName,
@@ -130,7 +148,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct);
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -171,7 +193,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl.ToUri(),
                 Context.RegionName,
                 Context.ServiceName,
@@ -179,7 +201,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct);
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -191,7 +217,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 Context.ApiGatewayUrl.ToUri(),
                 Context.RegionName,
                 Context.ServiceName,
@@ -199,10 +225,37 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 ct);
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var path = "/path";
+            
+            // Act
+            var stringContent = await HttpClient.GetStringAsync(
+                Context.ApiGatewayUrl + path,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
@@ -212,18 +265,22 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value1"
+                Query = "Param1=Value1"
             };
 
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -234,18 +291,22 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=Value1&Param1=value2"
+                Query = "Param1=Value1&Param1=Value2"
             };
 
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -256,18 +317,22 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value2&Param1=Value1"
+                Query = "Param1=Value2&Param1=Value1"
             };
 
             // Act
-            var stringContent =  await HttpClient.GetStringAsync(
+            var stringContent = await HttpClient.GetStringAsync(
                 uriBuilder.Uri,
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert
-            stringContent.ShouldBe(ExpectedResponseContent);
+            var receivedRequest = stringContent.DeserializeReceivedRequest();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
+            receivedRequest.Body.ShouldBeNull();
         }
     }
 }

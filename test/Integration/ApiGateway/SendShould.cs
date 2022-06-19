@@ -2,7 +2,9 @@ using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
 using Shouldly;
@@ -26,12 +28,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenMutableCredentials(
+        public async Task SucceedGivenMutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -47,18 +51,26 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenImmutableCredentials(
+        public async Task SucceedGivenImmutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -74,6 +86,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -83,7 +101,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void SucceedGivenHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
@@ -99,12 +117,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void SucceedGivenHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
@@ -120,6 +144,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -130,12 +160,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenCancellationTokenAndMutableCredentials(
+        public async Task SucceedGivenCancellationTokenAndMutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -153,18 +185,26 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenCancellationTokenAndImmutableCredentials(
+        public async Task SucceedGivenCancellationTokenAndImmutableCredentials(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -182,6 +222,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -191,7 +237,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void SucceedGivenHttpCompletionOptionAndCancellationTokenMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
@@ -209,12 +255,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public void SucceedGivenHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
@@ -232,6 +284,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -338,12 +396,50 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenHeaderWithDuplicateValues(
+        public async Task SucceedGivenPath(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var path = "/path";
+            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl + path);
+
+            // Act
+            var response = HttpClient.Send(
+                request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenHeaderWithDuplicateValues(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -360,18 +456,27 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value2, value2" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenHeaderWithUnorderedValues(
+        public async Task SucceedGivenHeaderWithUnorderedValues(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -388,18 +493,27 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value4, value1, value3, value2" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenHeaderWithWhitespaceCharacters(
+        public async Task SucceedGivenHeaderWithWhitespaceCharacters(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
@@ -416,25 +530,34 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value1, a   b   c" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenQuery(
+        public async Task SucceedGivenQuery(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value1"
+                Query = "Param1=Value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
@@ -448,25 +571,33 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenOrderedQuery(
+        public async Task SucceedGivenOrderedQuery(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=Value1&Param1=value2"
+                Query = "Param1=Value1&Param1=Value2"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
@@ -480,25 +611,33 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
-        public void SucceedGivenUnorderedQuery(
+        public async Task SucceedGivenUnorderedQuery(
             IamAuthenticationType iamAuthenticationType,
             string method)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value2&Param1=Value1"
+                Query = "Param1=Value2&Param1=Value1"
             };
 
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
@@ -512,6 +651,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
+            receivedRequest.Body.ShouldBeNull();
         }
     }
 }

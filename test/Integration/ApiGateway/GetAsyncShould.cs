@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
-using AwsSignatureVersion4.Integration.ApiGateway.Contents;
+using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using Shouldly;
 using Xunit;
@@ -14,8 +13,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     public class GetAsyncShould : ApiGatewayIntegrationBase
     {
-        private static readonly RichContent ExpectedResponseContent = new();
-
         public GetAsyncShould(IntegrationTestContext context)
             : base(context)
         {
@@ -37,8 +34,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -55,8 +56,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -77,8 +82,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -95,8 +104,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -121,8 +134,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -143,8 +160,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -169,8 +190,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -191,8 +216,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -217,8 +246,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -239,8 +272,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -290,8 +327,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -312,8 +353,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -323,7 +368,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndCancellationTokenAndMutableCredentals(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var completionOption = HttpCompletionOption.ResponseContentRead;
@@ -340,14 +385,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndCancellationTokenAndImmutableCredentals(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestStringAndHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var completionOption = HttpCompletionOption.ResponseContentRead;
@@ -364,8 +413,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
@@ -375,7 +428,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndCancellationTokenAndMutableCredentals(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var completionOption = HttpCompletionOption.ResponseContentRead;
@@ -392,14 +445,18 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndCancellationTokenAndImmutableCredentals(IamAuthenticationType iamAuthenticationType)
+        public async Task SucceedGivenRequestUriAndHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
             var completionOption = HttpCompletionOption.ResponseContentRead;
@@ -416,11 +473,40 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
         }
 
         #endregion
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var path = "/path";
+
+            // Act
+            var response = await HttpClient.GetAsync(
+                Context.ApiGatewayUrl + path,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
         [Theory]
         [InlineData(IamAuthenticationType.User)]
@@ -430,7 +516,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value1"
+                Query = "Param1=Value1"
             };
 
             // Act
@@ -442,8 +528,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -454,7 +544,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=Value1&Param1=value2"
+                Query = "Param1=Value1&Param1=Value2"
             };
 
             // Act
@@ -466,8 +556,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
+            receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
@@ -478,7 +572,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
             {
-                Query = "Param1=value2&Param1=Value1"
+                Query = "Param1=Value2&Param1=Value1"
             };
 
             // Act
@@ -490,8 +584,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
-            var content = await response.Content.ReadFromJsonAsync<RichContent>();
-            content.ShouldBeEquivalentTo(ExpectedResponseContent);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
+            receivedRequest.Body.ShouldBeNull();
         }
     }
 }
