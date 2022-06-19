@@ -28,10 +28,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenMutableCredentials(
             IamAuthenticationType iamAuthenticationType,
@@ -61,10 +63,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenImmutableCredentials(
             IamAuthenticationType iamAuthenticationType,
@@ -156,10 +160,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenCancellationTokenAndMutableCredentials(
             IamAuthenticationType iamAuthenticationType,
@@ -191,10 +197,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenCancellationTokenAndImmutableCredentials(
             IamAuthenticationType iamAuthenticationType,
@@ -388,10 +396,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenPath(
             IamAuthenticationType iamAuthenticationType,
@@ -422,10 +432,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenHeaderWithDuplicateValues(
             IamAuthenticationType iamAuthenticationType,
@@ -457,10 +469,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenHeaderWithUnorderedValues(
             IamAuthenticationType iamAuthenticationType,
@@ -492,10 +506,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenHeaderWithWhitespaceCharacters(
             IamAuthenticationType iamAuthenticationType,
@@ -527,10 +543,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenQuery(
             IamAuthenticationType iamAuthenticationType,
@@ -565,10 +583,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenOrderedQuery(
             IamAuthenticationType iamAuthenticationType,
@@ -603,10 +623,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, "GET")]
         [InlineData(IamAuthenticationType.User, "POST")]
         [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
         [InlineData(IamAuthenticationType.User, "DELETE")]
         [InlineData(IamAuthenticationType.Role, "GET")]
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenUnorderedQuery(
             IamAuthenticationType iamAuthenticationType,
