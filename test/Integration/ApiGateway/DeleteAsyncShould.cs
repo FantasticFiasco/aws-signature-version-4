@@ -254,6 +254,31 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var path = "/path";
+
+            // Act
+            var response = await HttpClient.DeleteAsync(
+                Context.ApiGatewayUrl + path,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
         public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange

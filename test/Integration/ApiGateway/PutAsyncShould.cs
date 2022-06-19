@@ -313,6 +313,34 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
         [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
         [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
+        public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType, Type contentType)
+        {
+            // Arrange
+            var path = "/path";
+
+            // Act
+            var response = await HttpClient.PutAsync(
+                Context.ApiGatewayUrl + path,
+                contentType.ToJsonContent(),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
         public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
         {
             // Arrange

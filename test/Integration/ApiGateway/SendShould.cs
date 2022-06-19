@@ -393,6 +393,40 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [InlineData(IamAuthenticationType.Role, "POST")]
         [InlineData(IamAuthenticationType.Role, "PUT")]
         [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenPath(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var path = "/path";
+            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl + path);
+
+            // Act
+            var response = HttpClient.Send(
+                request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
         public async Task SucceedGivenHeaderWithDuplicateValues(
             IamAuthenticationType iamAuthenticationType,
             string method)
