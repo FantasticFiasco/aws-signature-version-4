@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -307,11 +306,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryStringParameters.ShouldBe(
-                new Dictionary<string, string[]>
-                {
-                    ["Param1"] = new[] { "Value1" }
-                });
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -342,11 +337,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryStringParameters.ShouldBe(
-                new Dictionary<string, string[]>
-                {
-                    ["Param1"] = new[] { "Value1", "Value2" }
-                });
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -377,11 +368,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryStringParameters.ShouldBe(
-                new Dictionary<string, string[]>
-                {
-                    ["Param1"] = new[] { "Value2", "Value1" }
-                });
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
     }
