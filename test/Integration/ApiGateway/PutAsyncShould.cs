@@ -43,7 +43,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -68,7 +68,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -97,7 +97,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -122,7 +122,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -155,7 +155,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -184,7 +184,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -213,7 +213,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -274,7 +274,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -303,7 +303,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
@@ -336,10 +336,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBe(
-                new Dictionary<string, string>
+            receivedRequest.QueryStringParameters.ShouldBe(
+                new Dictionary<string, string[]>
                 {
-                    ["Param1"] = "Value1"
+                    ["Param1"] = new[] { "Value1" }
                 });
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
@@ -371,49 +371,47 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("PUT");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBe(
-                new Dictionary<string, string>
+            receivedRequest.QueryStringParameters.ShouldBe(
+                new Dictionary<string, string[]>
                 {
-                    ["Param1"] = "Value1",
-                    ["Param1"] = "Value2"
+                    ["Param1"] = new[] { "Value1", "Value2" }
                 });
             receivedRequest.Body.ShouldBe(contentType.ToJsonString());
         }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        //[InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        //[InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        //[InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        //public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
-        //{
-        //    // Arrange
-        //    var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-        //    {
-        //        Query = "Param1=Value2&Param1=Value1"
-        //    };
+        [Theory]
+        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
+        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
+        public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            {
+                Query = "Param1=Value2&Param1=Value1"
+            };
 
-        //    // Act
-        //    var response = await HttpClient.PutAsync(
-        //        uriBuilder.Uri,
-        //        contentType.ToJsonContent(),
-        //        Context.RegionName,
-        //        Context.ServiceName,
-        //        ResolveMutableCredentials(iamAuthenticationType));
+            // Act
+            var response = await HttpClient.PutAsync(
+                uriBuilder.Uri,
+                contentType.ToJsonContent(),
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
 
-        //    // Assert
-        //    response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-        //    var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-        //    receivedRequest.Method.ShouldBe("PUT");
-        //    receivedRequest.Path.ShouldBe("/");
-        //    receivedRequest.QueryParameters.ShouldBe(
-        //        new Dictionary<string, string>
-        //        {
-        //            ["Param1"] = "Value2",
-        //            ["Param1"] = "Value1"
-        //        });
-        //    receivedRequest.Body.ShouldBe(contentType.ToJsonString());
-        //}
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBe(
+                new Dictionary<string, string[]>
+                {
+                    ["Param1"] = new[] { "Value2", "Value1" }
+                });
+            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+        }
     }
 }

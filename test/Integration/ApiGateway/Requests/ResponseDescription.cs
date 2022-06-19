@@ -11,11 +11,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Requests
         [JsonPropertyName("path")]
         public string Path { get; set; }
 
-        [JsonPropertyName("queryParameters")]
-        public Dictionary<string, string> QueryParameters { get; set; }
+        [JsonPropertyName("queryStringParameters")]
+        public Dictionary<string, string[]> QueryStringParameters { get; set; }
 
         [JsonPropertyName("headers")]
-        public Dictionary<string, string> Headers { get; set; }
+        public Dictionary<string, string[]> Headers { get; set; }
 
         [JsonPropertyName("body")]
         public string Body { get; set; }

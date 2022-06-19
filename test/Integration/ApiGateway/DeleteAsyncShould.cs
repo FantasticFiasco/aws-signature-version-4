@@ -39,7 +39,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -61,7 +61,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -87,7 +87,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -109,7 +109,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -139,7 +139,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -165,7 +165,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -195,7 +195,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -221,7 +221,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBeNull();
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
@@ -276,10 +276,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBe(
-                new Dictionary<string, string>
+            receivedRequest.QueryStringParameters.ShouldBe(
+                new Dictionary<string, string[]>
                 {
-                    ["Param1"] = "Value1"
+                    ["Param1"] = new[] { "Value1" }
                 });
             receivedRequest.Body.ShouldBeNull();
         }
@@ -308,11 +308,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBe(
-                new Dictionary<string, string>
+            receivedRequest.QueryStringParameters.ShouldBe(
+                new Dictionary<string, string[]>
                 {
-                    ["Param1"] = "Value1",
-                    ["Param1"] = "Value2"
+                    ["Param1"] = new[] { "Value1", "Value2" }
                 });
             receivedRequest.Body.ShouldBeNull();
         }
@@ -341,11 +340,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("DELETE");
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryParameters.ShouldBe(
-                new Dictionary<string, string>
+            receivedRequest.QueryStringParameters.ShouldBe(
+                new Dictionary<string, string[]>
                 {
-                    ["Param1"] = "Value2",
-                    ["Param1"] = "Value1"
+                    ["Param1"] = new[] { "Value2", "Value1" }
                 });
             receivedRequest.Body.ShouldBeNull();
         }
