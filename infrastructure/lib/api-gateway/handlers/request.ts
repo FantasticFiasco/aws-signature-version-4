@@ -9,18 +9,18 @@ interface HttpResponse {
 interface ReceivedRequest {
   method: string
   path: string
-  queryParameters: { [name: string]: string | undefined } | null
-  headers: { [name: string]: string | undefined } | null
+  queryParameters: { [name: string]: string[] | undefined; } | null
+  headers: { [name: string]: string[] | undefined; } | null
   body: string | null
 }
 
-export const handler = async ({ httpMethod, path, headers, queryStringParameters, body }: APIGatewayEvent): Promise<HttpResponse> => {
+export const handler = async (event: APIGatewayEvent): Promise<HttpResponse> => {
   const receivedRequest: ReceivedRequest = {
-    method: httpMethod,
-    path,
-    queryParameters: queryStringParameters,
-    headers,
-    body,
+    method: event.httpMethod,
+    path: event.path,
+    queryParameters: event.multiValueQueryStringParameters,
+    headers: event.multiValueHeaders,
+    body: event.body,
   }
 
   return {
