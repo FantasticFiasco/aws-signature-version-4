@@ -504,7 +504,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe("GET");
             receivedRequest.Path.ShouldBe(path);
-            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
+            receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
