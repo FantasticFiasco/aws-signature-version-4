@@ -22,7 +22,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             this.testSuiteContext = testSuiteContext;
         }
 
-        public static IEnumerable<object[]> IamAuthenticationTypeAndHttpMethod =>
+        public static IEnumerable<object[]> TestCases =>
             new[]
             {
                 new object[] { IamAuthenticationType.User, HttpMethod.Get },
@@ -128,7 +128,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenPath(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)
@@ -152,7 +152,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenHeaderWithDuplicateValues(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)
@@ -177,7 +177,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenHeaderWithUnorderedValues(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)
@@ -202,7 +202,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenHeaderWithWhitespaceCharacters(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)
@@ -227,7 +227,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenQuery(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)
@@ -256,7 +256,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenOrderedQuery(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)
@@ -285,7 +285,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenUnorderedQuery(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)
@@ -314,7 +314,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [MemberData(nameof(IamAuthenticationTypeAndHttpMethod))]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenHttpCompletionOption(
             IamAuthenticationType iamAuthenticationType,
             HttpMethod method)

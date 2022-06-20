@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -18,11 +19,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
         }
 
+        public static IEnumerable<object[]> TestCases =>
+            new[]
+            {
+                new object[] { IamAuthenticationType.User },
+                new object[] { IamAuthenticationType.Role }
+            };
+
         #region DeleteAsync(string, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
@@ -43,8 +50,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
@@ -69,8 +75,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         #region DeleteAsync(Uri, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
@@ -91,8 +96,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
@@ -117,8 +121,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         #region DeleteAsync(string, CancellationToken, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -143,8 +146,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -173,8 +175,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         #region DeleteAsync(Uri, CancellationToken, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -199,8 +200,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -225,8 +225,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -252,8 +251,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         #endregion
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -277,8 +275,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -305,8 +302,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
@@ -333,8 +329,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
