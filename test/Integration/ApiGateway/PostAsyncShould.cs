@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -19,19 +20,29 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
         }
 
+        public static IEnumerable<object[]> TestCases =>
+            new[]
+            {
+                new object[] { IamAuthenticationType.User, new EmptyJsonContent() },
+                new object[] { IamAuthenticationType.User, new RichJsonContent() },
+                new object[] { IamAuthenticationType.User, new BinaryContent() },
+                new object[] { IamAuthenticationType.Role, new EmptyJsonContent() },
+                new object[] { IamAuthenticationType.Role, new RichJsonContent() },
+                new object[] { IamAuthenticationType.Role, new BinaryContent() }
+            };
+
         #region PostAsync(string, HttpContent, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
@@ -43,20 +54,19 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveImmutableCredentials(iamAuthenticationType));
@@ -68,7 +78,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         #endregion
@@ -76,16 +86,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         #region PostAsync(Uri, HttpContent, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
@@ -97,20 +106,19 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveImmutableCredentials(iamAuthenticationType));
@@ -122,7 +130,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         #endregion
@@ -130,11 +138,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         #region PostAsync(string, HttpContent, CancellationToken, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var ct = new CancellationToken();
@@ -142,7 +149,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType),
@@ -155,15 +162,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var ct = new CancellationToken();
@@ -171,7 +177,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveImmutableCredentials(iamAuthenticationType),
@@ -184,15 +190,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task AbortGivenCanceled(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var ct = new CancellationToken(true);
@@ -200,7 +205,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var task = HttpClient.PostAsync(
                 Context.ApiGatewayUrl,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType),
@@ -220,11 +225,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         #region PostAsync(Uri, HttpContent, CancellationToken, string, string, <credentials>)
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var ct = new CancellationToken();
@@ -232,7 +236,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType),
@@ -245,15 +249,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var ct = new CancellationToken();
@@ -261,7 +264,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl.ToUri(),
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveImmutableCredentials(iamAuthenticationType),
@@ -274,17 +277,16 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         #endregion
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenPath(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var path = "/path";
@@ -292,7 +294,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 Context.ApiGatewayUrl + path,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
@@ -304,15 +306,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe(path);
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenQuery(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
@@ -323,7 +324,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 uriBuilder.Uri,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
@@ -335,15 +336,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenOrderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
@@ -354,7 +354,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 uriBuilder.Uri,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
@@ -366,15 +366,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.User, typeof(JsonContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(EmptyContent))]
-        [InlineData(IamAuthenticationType.Role, typeof(JsonContent))]
-        public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType, Type contentType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenUnorderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
         {
             // Arrange
             var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
@@ -385,7 +384,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Act
             var response = await HttpClient.PostAsync(
                 uriBuilder.Uri,
-                contentType.ToJsonContent(),
+                content.AsHttpContent(),
                 Context.RegionName,
                 Context.ServiceName,
                 ResolveMutableCredentials(iamAuthenticationType));
@@ -397,7 +396,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("POST");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
-            receivedRequest.Body.ShouldBe(contentType.ToJsonString());
+            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -19,13 +18,19 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
                     }
                 });
 
-        public static string ToJsonString(this Type self) =>
-            Activator.CreateInstance(self).ToJson();
+        public static string ToBase64(this string self)
+        {
+            var bytes = Encoding.UTF8.GetBytes(self);
+            var base64 = bytes.ToBase64();
 
-        public static StringContent ToJsonContent(this Type self) =>
-            new(
-                self.ToJsonString(),
-                Encoding.UTF8,
-                "application/json");
+            return base64;
+        }
+
+        public static string ToBase64(this byte[] self)
+        {
+            var base64 = Convert.ToBase64String(self);
+
+            return base64;
+        }
     }
 }
