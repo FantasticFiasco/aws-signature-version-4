@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway.Requests
 {
@@ -13,6 +13,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Requests
         }
 
         public static ReceivedRequest DeserializeReceivedRequest(this string self) =>
-            JsonConvert.DeserializeObject<ReceivedRequest>(self);
+            JsonSerializer.Deserialize<ReceivedRequest>(self);
     }
 }
