@@ -57,12 +57,12 @@ namespace AwsSignatureVersion4.Private
             var contentStream = content.ReadAsStream();
 
             // Save current stream position
-            var position = contentStream.Position;
+            var currentPosition = contentStream.Position;
 
             var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
 
             // Reset stream position
-            contentStream.Position = position;
+            contentStream.Position = currentPosition;
 
             return AWSSDKUtils.ToHex(hash, true);
         }
