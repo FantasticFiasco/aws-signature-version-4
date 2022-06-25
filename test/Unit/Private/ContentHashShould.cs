@@ -1,4 +1,6 @@
-﻿using System.Net.Http;
+﻿using System.IO;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Private;
 using Shouldly;
@@ -10,10 +12,10 @@ namespace AwsSignatureVersion4.Unit.Private
     {
         private const string EmptyContentHash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
 
-        #region Support null content
+        #region Support null
 
         [Fact]
-        public async Task SupportNullContentAsync()
+        public async Task SupportNullAsync()
         {
             // Act
             var actual = await ContentHash.CalculateAsync(null);
@@ -23,7 +25,7 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Fact]
-        public void SupportNullContent()
+        public void SupportNull()
         {
             // Act
             var actual = ContentHash.Calculate(null);
@@ -34,13 +36,13 @@ namespace AwsSignatureVersion4.Unit.Private
 
         #endregion
 
-        #region Support empty string content
+        #region Support empty string
 
         [Fact]
-        public async Task SupportEmptyStringContentAsync()
+        public async Task SupportEmptyStringAsync()
         {
             // Arrange
-            HttpContent content = new StringContent(string.Empty);
+            using var content = new StringContent(string.Empty);
 
             // Act
             var actual = await ContentHash.CalculateAsync(content);
@@ -50,10 +52,10 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Fact]
-        public void SupportEmptyStringContent()
+        public void SupportEmptyString()
         {
             // Arrange
-            HttpContent content = new StringContent(string.Empty);
+            using var content = new StringContent(string.Empty);
 
             // Act
             var actual = ContentHash.Calculate(content);
@@ -64,13 +66,13 @@ namespace AwsSignatureVersion4.Unit.Private
 
         #endregion
 
-        #region Calculate valid hash
+        #region Support string
 
         [Fact]
-        public async Task CalculateValidHashAsync()
+        public async Task SupportStringAsync()
         {
             // Arrange
-            HttpContent content = new StringContent("foo");
+            using var content = new StringContent("foo");
 
             // Act
             var actual = await ContentHash.CalculateAsync(content);
@@ -81,15 +83,91 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Fact]
-        public void CalculateValidHash()
+        public void SupportString()
         {
             // Arrange
-            HttpContent content = new StringContent("foo");
+            using var content = new StringContent("foo");
 
             // Act
             var actual = ContentHash.Calculate(content);
             
             // Assert
+            actual.Length.ShouldBe(64);
+            IsHex(actual).ShouldBeTrue();
+        }
+
+        #endregion
+
+        #region Support stream starting from beginning
+
+        [Fact]
+        public async Task SupportStreamStartingFromBeginningAsync()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("some bytes"));
+            using var content = new StreamContent(stream);
+
+            // Act
+            var actual = await ContentHash.CalculateAsync(content);
+
+            // Assert
+            stream.Position.ShouldBe(0);
+            actual.Length.ShouldBe(64);
+            IsHex(actual).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void SupportStreamStartingFromBeginning()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("some bytes"));
+            using var content = new StreamContent(stream);
+
+            // Act
+            var actual = ContentHash.Calculate(content);
+
+            // Assert
+            stream.Position.ShouldBe(0);
+            actual.Length.ShouldBe(64);
+            IsHex(actual).ShouldBeTrue();
+        }
+
+        #endregion
+
+        #region Support stream not starting from beginning
+
+        [Fact]
+        public async Task SupportStreamNotStartingFromBeginningAsync()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("some bytes"));
+            stream.Position = 5;
+
+            using var content = new StreamContent(stream);
+
+            // Act
+            var actual = await ContentHash.CalculateAsync(content);
+
+            // Assert
+            stream.Position.ShouldBe(5);
+            actual.Length.ShouldBe(64);
+            IsHex(actual).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void SupportStreamNotStartingFromBeginning()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("some bytes"));
+            stream.Position = 5;
+
+            using var content = new StreamContent(stream);
+
+            // Act
+            var actual = ContentHash.Calculate(content);
+
+            // Assert
+            stream.Position.ShouldBe(5);
             actual.Length.ShouldBe(64);
             IsHex(actual).ShouldBeTrue();
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,6 +21,21 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
             this.testSuiteContext = testSuiteContext;
         }
+
+        public static IEnumerable<object[]> TestCases =>
+            new[]
+            {
+                new object[] { IamAuthenticationType.User, HttpMethod.Get },
+                new object[] { IamAuthenticationType.User, HttpMethod.Post },
+                new object[] { IamAuthenticationType.User, HttpMethod.Put },
+                new object[] { IamAuthenticationType.User, HttpMethod.Patch },
+                new object[] { IamAuthenticationType.User, HttpMethod.Delete },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Get },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Post },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Put },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Patch },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Delete }
+            };
 
         [Theory]
         [InlineData("get-header-key-duplicate")]
@@ -112,24 +128,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.User, "POST")]
-        [InlineData(IamAuthenticationType.User, "PUT")]
-        [InlineData(IamAuthenticationType.User, "PATCH")]
-        [InlineData(IamAuthenticationType.User, "DELETE")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        [InlineData(IamAuthenticationType.Role, "POST")]
-        [InlineData(IamAuthenticationType.Role, "PUT")]
-        [InlineData(IamAuthenticationType.Role, "PATCH")]
-        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenPath(
             IamAuthenticationType iamAuthenticationType,
-            string method)
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
             var path = "/path";
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl + path);
+            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl + path);
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -138,31 +145,21 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe(path);
             receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.User, "POST")]
-        [InlineData(IamAuthenticationType.User, "PUT")]
-        [InlineData(IamAuthenticationType.User, "PATCH")]
-        [InlineData(IamAuthenticationType.User, "DELETE")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        [InlineData(IamAuthenticationType.Role, "POST")]
-        [InlineData(IamAuthenticationType.Role, "PUT")]
-        [InlineData(IamAuthenticationType.Role, "PATCH")]
-        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenHeaderWithDuplicateValues(
             IamAuthenticationType iamAuthenticationType,
-            string method)
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
             // Act
@@ -172,7 +169,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value2, value2" });
@@ -180,24 +177,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.User, "POST")]
-        [InlineData(IamAuthenticationType.User, "PUT")]
-        [InlineData(IamAuthenticationType.User, "PATCH")]
-        [InlineData(IamAuthenticationType.User, "DELETE")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        [InlineData(IamAuthenticationType.Role, "POST")]
-        [InlineData(IamAuthenticationType.Role, "PUT")]
-        [InlineData(IamAuthenticationType.Role, "PATCH")]
-        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenHeaderWithUnorderedValues(
             IamAuthenticationType iamAuthenticationType,
-            string method)
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
             // Act
@@ -207,7 +194,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value4, value1, value3, value2" });
@@ -215,24 +202,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.User, "POST")]
-        [InlineData(IamAuthenticationType.User, "PUT")]
-        [InlineData(IamAuthenticationType.User, "PATCH")]
-        [InlineData(IamAuthenticationType.User, "DELETE")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        [InlineData(IamAuthenticationType.Role, "POST")]
-        [InlineData(IamAuthenticationType.Role, "PUT")]
-        [InlineData(IamAuthenticationType.Role, "PATCH")]
-        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenHeaderWithWhitespaceCharacters(
             IamAuthenticationType iamAuthenticationType,
-            string method)
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
             // Act
@@ -242,7 +219,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value1, a   b   c" });
@@ -250,19 +227,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.User, "POST")]
-        [InlineData(IamAuthenticationType.User, "PUT")]
-        [InlineData(IamAuthenticationType.User, "PATCH")]
-        [InlineData(IamAuthenticationType.User, "DELETE")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        [InlineData(IamAuthenticationType.Role, "POST")]
-        [InlineData(IamAuthenticationType.Role, "PUT")]
-        [InlineData(IamAuthenticationType.Role, "PATCH")]
-        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenQuery(
             IamAuthenticationType iamAuthenticationType,
-            string method)
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
@@ -272,7 +240,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Query = "Param1=Value1"
             };
 
-            var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
+            var request = new HttpRequestMessage(method, uriBuilder.Uri);
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -281,26 +249,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
             receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.User, "POST")]
-        [InlineData(IamAuthenticationType.User, "PUT")]
-        [InlineData(IamAuthenticationType.User, "PATCH")]
-        [InlineData(IamAuthenticationType.User, "DELETE")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        [InlineData(IamAuthenticationType.Role, "POST")]
-        [InlineData(IamAuthenticationType.Role, "PUT")]
-        [InlineData(IamAuthenticationType.Role, "PATCH")]
-        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenOrderedQuery(
             IamAuthenticationType iamAuthenticationType,
-            string method)
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
@@ -310,7 +269,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Query = "Param1=Value1&Param1=Value2"
             };
 
-            var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
+            var request = new HttpRequestMessage(method, uriBuilder.Uri);
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -319,26 +278,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
             receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User, "GET")]
-        [InlineData(IamAuthenticationType.User, "POST")]
-        [InlineData(IamAuthenticationType.User, "PUT")]
-        [InlineData(IamAuthenticationType.User, "PATCH")]
-        [InlineData(IamAuthenticationType.User, "DELETE")]
-        [InlineData(IamAuthenticationType.Role, "GET")]
-        [InlineData(IamAuthenticationType.Role, "POST")]
-        [InlineData(IamAuthenticationType.Role, "PUT")]
-        [InlineData(IamAuthenticationType.Role, "PATCH")]
-        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        [MemberData(nameof(TestCases))]
         public async Task SucceedGivenUnorderedQuery(
             IamAuthenticationType iamAuthenticationType,
-            string method)
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
@@ -348,7 +298,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 Query = "Param1=Value2&Param1=Value1"
             };
 
-            var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
+            var request = new HttpRequestMessage(method, uriBuilder.Uri);
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -357,20 +307,21 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
             receivedRequest.Body.ShouldBeNull();
         }
 
         [Theory]
-        [InlineData(IamAuthenticationType.User)]
-        [InlineData(IamAuthenticationType.Role)]
-        public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenHttpCompletionOption(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
         {
             // Arrange
             using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
@@ -380,7 +331,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-            receivedRequest.Method.ShouldBe("GET");
+            receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
@@ -389,6 +340,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         private HttpRequestMessage BuildRequest(string[] scenarioName)
         {
             var request = testSuiteContext.LoadScenario(scenarioName).Request;
+
+            if (request.RequestUri == null) throw new Exception("Test suite request URI cannot be null");
 
             // Redirect the request to the AWS API Gateway
             request.RequestUri = request.RequestUri
