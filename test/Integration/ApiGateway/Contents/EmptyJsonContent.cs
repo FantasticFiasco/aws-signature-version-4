@@ -5,17 +5,16 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
 {
     public class EmptyJsonContent : IContent
     {
-        public string AsBase64()
+        public string AsString()
         {
             var json = this.ToJson();
-            var base64 = json.ToBase64();
 
-            return base64;
+            return json;
         }
 
         public HttpContent AsHttpContent()
         {
-            var json = this.ToJson();
+            var json = AsString();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             return content;

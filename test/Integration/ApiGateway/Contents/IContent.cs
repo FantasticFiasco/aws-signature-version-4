@@ -4,7 +4,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
 {
     public interface IContent
     {
-        string AsBase64();
+        string AsString();
 
         HttpContent AsHttpContent();
     }

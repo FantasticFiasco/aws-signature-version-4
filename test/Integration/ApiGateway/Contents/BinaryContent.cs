@@ -8,11 +8,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
     {
         private readonly byte[] bytes = Encoding.UTF8.GetBytes("some bytes");
 
-        public string AsBase64()
+        public string AsString()
         {
-            var base64 = bytes.ToBase64();
+            var bytesAsString = Encoding.UTF8.GetString(bytes);
 
-            return base64;
+            return bytesAsString;
         }
 
         public HttpContent AsHttpContent()

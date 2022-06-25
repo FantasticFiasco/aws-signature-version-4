@@ -54,7 +54,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -78,7 +78,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         #endregion
@@ -106,7 +106,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -130,7 +130,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         #endregion
@@ -162,7 +162,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -190,7 +190,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -249,7 +249,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -277,7 +277,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         #endregion
@@ -306,7 +306,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe(path);
             receivedRequest.QueryStringParameters.ShouldBeNull();
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -336,7 +336,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -366,7 +366,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
 
         [Theory]
@@ -396,7 +396,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe("PATCH");
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
-            receivedRequest.Body.ToBase64().ShouldBe(content.AsBase64());
+            receivedRequest.Body.ShouldBe(content.AsString());
         }
     }
 }
