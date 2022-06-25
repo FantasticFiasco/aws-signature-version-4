@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
-namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
+﻿namespace AwsSignatureVersion4.Integration.ApiGateway.Contents
 {
     public static class Extensions
     {
