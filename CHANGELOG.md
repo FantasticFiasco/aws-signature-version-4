@@ -14,6 +14,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 - [BREAKING CHANGE] Support for .NET 5 due to [deprecation as of May 10, 2022](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 
+### :syringe: Fixed
+
+- [#565](https://github.com/FantasticFiasco/aws-signature-version-4/issues/565) Unable to send binary content (contribution by [@acurrieebix](https://github.com/acurrieebix))
+
 ## [3.0.1] - 2022-03-25
 
 ### :syringe: Fixed
