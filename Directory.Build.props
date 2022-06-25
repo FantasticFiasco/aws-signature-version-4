@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <VersionPrefix>4.0.0</VersionPrefix>
-    <VersionSuffix>beta.1</VersionSuffix>
+    <VersionSuffix>beta.2</VersionSuffix>
     <!--
       Only increment the assembly version on major version changes to help users reduce binding
       redirects, and how often they're updated. For more information, please read
