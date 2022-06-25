@@ -6,10 +6,6 @@
       "groupName": "AWS CDK packages"
     },
     {
-      "matchPackageNames": ["AWSSDK.Core", "AWSSDK.S3", "AWSSDK.SecurityToken"],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)\\.(?<prerelease>.*)$"
-    },
-    {
       "matchPackagePatterns": ["eslint"],
       "groupName": "ESLint packages"
     }
