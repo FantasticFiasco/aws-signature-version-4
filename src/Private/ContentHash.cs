@@ -26,7 +26,15 @@ namespace AwsSignatureVersion4.Private
             }
 
             var contentStream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            // Save current stream position
+            var currentPosition = contentStream.Position;
+
             var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
+
+            // Reset stream position
+            contentStream.Position = currentPosition;
+
             return AWSSDKUtils.ToHex(hash, true);
         }
 
@@ -47,7 +55,15 @@ namespace AwsSignatureVersion4.Private
             }
 
             var contentStream = content.ReadAsStream();
+
+            // Save current stream position
+            var position = contentStream.Position;
+
             var hash = CryptoUtilFactory.CryptoInstance.ComputeSHA256Hash(contentStream);
+
+            // Reset stream position
+            contentStream.Position = position;
+
             return AWSSDKUtils.ToHex(hash, true);
         }
 
