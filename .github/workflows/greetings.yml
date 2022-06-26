@@ -1,11 +1,9 @@
 name: Greetings
 
-permissions: {}
+permissions: read-all
 
 on:
   - issues
-  - push
-  - workflow_dispatch
 
 jobs:
   greeting:
