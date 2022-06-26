@@ -1,6 +1,9 @@
 name: Greetings
 
-on: [issues]
+on:
+  - issues
+  - push
+  - workflow_dispatch
 
 jobs:
   greeting:
