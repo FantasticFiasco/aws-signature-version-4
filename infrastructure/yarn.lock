@@ -320,10 +320,10 @@ concat-map@0.0.1:
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
   integrity sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
 
-constructs@10.1.134:
-  version "10.1.134"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.134.tgz#4cd24425444684a11c4f3f698da2ae4858b3e450"
-  integrity sha512-2DXeZEgHZa+d0+ekRN+vvKSDLSZ0Y7DskaZZ09L99ny3A7YDJ5JUlgRE2Ee24qM9PJcuReGyBvQH+++v6nLgvQ==
+constructs@10.1.135:
+  version "10.1.135"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.135.tgz#ef503e4885cf6c97e91bfe167e7d51a0edf0e4de"
+  integrity sha512-J+DLybfvCNsu4Hyez3cs62/ZprulSH8tpHsXigGiLT708bRrdIqOKiYqCOtZ04BjA22yxUfmC4YqB0hq9sl5MA==
 
 cross-spawn@^7.0.2:
   version "7.0.3"
