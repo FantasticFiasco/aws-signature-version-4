@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.7.101.16" />
-    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.100.16" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.101.17" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.100.17" />
     <PackageReference Include="coverlet.collector" Version="3.2.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
