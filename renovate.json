@@ -2,8 +2,14 @@
   "extends": ["github>FantasticFiasco/renovate-config"],
   "packageRules": [
     {
-      "matchPackagePatterns": ["^@aws-cdk", "^aws-cdk"],
-      "groupName": "AWS CDK packages"
+      "matchPackagePatterns": ["^aws-cdk-lib"],
+      "groupName": "AWS CDK",
+      "extends": ["schedule:earlyMondays"]
+    },
+    {
+      "matchPackagePatterns": ["^constructs"],
+      "groupName": "AWS Constructs",
+      "extends": ["schedule:earlyMondays"]
     },
     {
       "matchPackagePatterns": ["eslint"],
