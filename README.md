@@ -16,7 +16,7 @@
 
 <p align="center">
   <b>Package</b> - <a href="https://www.nuget.org/packages/AwsSignatureVersion4">AwsSignatureVersion4</a><br>
-  <b>Platforms</b> - .NET Standard 2.0, .NET 5
+  <b>Platforms</b> - .NET Standard 2.0, .NET 6
 </p>
 
 ## Table of contents <!-- omit in toc -->
@@ -46,7 +46,7 @@ The best API is the one you already know. By extending both `HttpClient` and `IH
 
 ### Integration with `HttpClient`
 
-This project extends the class `HttpClient` by providing additional overloads to `DeleteAsync`, `GetAsync`, `GetStringAsync`, `PatchAsync`, `PostAsync`, `PutAsync`, `SendAsync`, and the new synchronous addition to .NET 5, `Send`. These overloads accept the following additional arguments.
+This project extends the class `HttpClient` by providing additional overloads to `DeleteAsync`, `GetAsync`, `GetStringAsync`, `PatchAsync`, `PostAsync`, `PutAsync`, `SendAsync`, and the new synchronous addition to .NET 5 and onwards, `Send`. These overloads accept the following additional arguments.
 
 - `regionName` - The name of the AWS region, e.g. `us-west-1`
 - `serviceName` - The name of the service, e.g. `execute-api` for an AWS API Gateway
