@@ -3,17 +3,22 @@
   "packageRules": [
     {
       "matchPackagePatterns": ["^aws-cdk-lib"],
-      "groupName": "AWS CDK",
+      "groupName": "AWS CDK (JS)",
+      "extends": ["schedule:earlyMondays"]
+    },
+    {
+      "matchPackagePatterns": ["^AWSSDK."],
+      "groupName": "AWS SDK (.NET)",
       "extends": ["schedule:earlyMondays"]
     },
     {
       "matchPackagePatterns": ["^constructs"],
-      "groupName": "AWS Constructs",
+      "groupName": "AWS Constructs (JS)",
       "extends": ["schedule:earlyMondays"]
     },
     {
       "matchPackagePatterns": ["eslint"],
-      "groupName": "ESLint packages"
+      "groupName": "ESLint packages (JS)"
     }
   ],
   "ignoreDeps": ["bl", "lodash", "minimist", "netmask"]
