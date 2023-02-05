@@ -98,10 +98,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@types/aws-lambda@8.10.109":
-  version "8.10.109"
-  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.109.tgz#2f434cbfafe083529e365fe9c114787827a169a8"
-  integrity sha512-/ME92FneNyXQzrAfcnQQlW1XkCZGPDlpi2ao1MJwecN+6SbeonKeggU8eybv1DfKli90FAVT1MlIZVXfwVuCyg==
+"@types/aws-lambda@8.10.110":
+  version "8.10.110"
+  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.110.tgz#32a1f9d40b855d69830243492bbb6408098f4c88"
+  integrity sha512-r6egf2Cwv/JaFTTrF9OXFVUB3j/SXTgM9BwrlbBRjWAa2Tu6GWoDoLflppAZ8uSfbUJdXvC7Br3DjuN9pQ2NUQ==
 
 "@types/json-schema@^7.0.9":
   version "7.0.9"
