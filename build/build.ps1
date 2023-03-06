@@ -29,7 +29,7 @@ Print -Message $logo
 # -------------------------------------------------------------------------------------------------
 # VARIABLES
 # -------------------------------------------------------------------------------------------------
-$git_sha = "$env:APPVEYOR_REPO_COMMIT".substring(0, 7)
+$git_sha = "$env:APPVEYOR_REPO_COMMIT".TrimStart("0").substring(0, 7)
 $is_tagged_build = If ("$env:APPVEYOR_REPO_TAG" -eq "true") { $true } Else { $false }
 $is_pull_request = If ("$env:APPVEYOR_PULL_REQUEST_NUMBER" -eq "") { $false } Else { $true }
 Print "info" "git sha: $git_sha"
