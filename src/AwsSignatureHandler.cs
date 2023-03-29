@@ -24,7 +24,7 @@ namespace AwsSignatureVersion4
     public class AwsSignatureHandler : DelegatingHandler
     {
         private static readonly KeyValuePair<string, IEnumerable<string>>[] EmptyRequestHeaders =
-            new KeyValuePair<string, IEnumerable<string>>[0];
+            Array.Empty<KeyValuePair<string, IEnumerable<string>>>();
 
         private readonly AwsSignatureHandlerSettings settings;
 
