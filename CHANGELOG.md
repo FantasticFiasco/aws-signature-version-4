@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [4.0.1] - 2023-03-29
+
 ### :syringe: Fixed
 
 - [#781](https://github.com/FantasticFiasco/aws-signature-version-4/issues/781) Remove unnecessary memory allocation (contribution by [@AgusMarquezUala](https://github.com/AgusMarquezUala))
