@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :syringe: Fixed
+
+- [#781](https://github.com/FantasticFiasco/aws-signature-version-4/issues/781) Remove unnecessary memory allocation (contribution by [@AgusMarquezUala](https://github.com/AgusMarquezUala))
+
 ## [4.0.0] - 2022-03-25
 
 ### :zap: Added
@@ -59,9 +63,9 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 - [#458](https://github.com/FantasticFiasco/aws-signature-version-4/issues/458) [BREAKING CHANGE] Improve support for AWS credentials inheriting from `Amazon.Runtime.AWSCredentials` (proposed by [@cliff-wakefield-acurus](https://github.com/cliff-wakefield-acurus))
 
-**Migration guide**
+  **Migration guide**
 
-All properties of class `AwsSignatureHandlerSettings` have had their access modifiers changed from `public` to `internal`, thus the properties have been removed from the public API. If you experience a compilation error because of this, please refactor your code to access `RegionName`, `ServiceName` and the AWS credentials by other means.
+  All properties of class `AwsSignatureHandlerSettings` have had their access modifiers changed from `public` to `internal`, thus the properties have been removed from the public API. If you experience a compilation error because of this, please refactor your code to access `RegionName`, `ServiceName` and the AWS credentials by other means.
 
 ## [1.4.1] - 2021-06-09
 
