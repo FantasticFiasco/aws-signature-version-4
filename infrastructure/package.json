@@ -6,7 +6,7 @@
     "infrastructure": "bin/infrastructure.js"
   },
   "scripts": {
-    "clean": "rimraf \"./cdk.out\" \"./+(bin|lib)/**/*.+(d.ts|js|js.map)\"",
+    "clean": "rimraf --glob \"./cdk.out\" \"./+(bin|lib)/**/*.+(d.ts|js|js.map)\"",
     "build": "yarn clean && tsc",
     "deploy": "yarn build && cdk deploy --app ./bin/infrastructure.js --all",
     "destroy": "yarn build && cdk destroy",
