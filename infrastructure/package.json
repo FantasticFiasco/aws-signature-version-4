@@ -21,8 +21,8 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.119",
     "@types/node": "18.17.1",
-    "@typescript-eslint/eslint-plugin": "6.2.0",
-    "@typescript-eslint/parser": "6.2.0",
+    "@typescript-eslint/eslint-plugin": "6.2.1",
+    "@typescript-eslint/parser": "6.2.1",
     "eslint": "8.46.0",
     "prettier": "3.0.0",
     "rimraf": "5.0.1",
