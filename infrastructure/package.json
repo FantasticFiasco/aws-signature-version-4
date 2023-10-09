@@ -2,6 +2,7 @@
   "name": "signature-version-4-infrastructure",
   "version": "1.0.0",
   "license": "Apache-2.0",
+  "packageManager": "yarn@3.6.4",
   "bin": {
     "infrastructure": "bin/infrastructure.js"
   },
