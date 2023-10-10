@@ -2,15 +2,14 @@
   "name": "signature-version-4-infrastructure",
   "version": "1.0.0",
   "license": "Apache-2.0",
-  "packageManager": "yarn@3.6.4",
   "bin": {
     "infrastructure": "bin/infrastructure.js"
   },
   "scripts": {
     "clean": "rimraf --glob \"./cdk.out\" \"./+(bin|lib)/**/*.+(d.ts|js|js.map)\"",
-    "build": "yarn clean && tsc",
-    "deploy": "yarn build && cdk deploy --app ./bin/infrastructure.js --all",
-    "destroy": "yarn build && cdk destroy",
+    "build": "npm run clean && tsc",
+    "deploy": "npm run build && cdk deploy --app ./bin/infrastructure.js --all",
+    "destroy": "npm run build && cdk destroy",
     "lint": "eslint --ext .ts --max-warnings=0 . && prettier --check .",
     "lint:fix": "eslint --ext .ts --fix . && prettier --write ."
   },

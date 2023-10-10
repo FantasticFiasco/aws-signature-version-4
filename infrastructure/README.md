@@ -5,6 +5,6 @@ The infrastructure is provisioned using the [AWS CDK](https://docs.aws.amazon.co
 Provision the infrastructure using the following commands.
 
 ```bash
-yarn
-yarn deploy
+npm install
+npm run deploy
 ```
