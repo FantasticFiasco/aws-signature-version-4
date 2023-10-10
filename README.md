@@ -9,8 +9,8 @@
 
 > The buttoned-up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.
 
-**Package: [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignatureVersion4)\
-Platforms: .NET Standard 2.0, .NET 6**
+**Package:** [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignatureVersion4)\
+**Platforms:** .NET Standard 2.0, .NET 6
 
 ## Table of contents <!-- omit in toc -->
 
