@@ -1,0 +1,27 @@
+name: infrastructure
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - .github/workflows/infrastructure.yml
+      - infrastructure/**
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: infrastructure
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v3
+      with:
+        node-version: lts/*
+        check-latest: true
+    - run: npm ci
+    - run: npm run build
+    - run: npm run lint

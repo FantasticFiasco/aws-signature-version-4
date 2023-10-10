@@ -107,12 +107,3 @@ if ($is_pull_request -eq $true) {
         AssertLastExitCode
     }
 }
-
-# -------------------------------------------------------------------------------------------------
-# INFRASTRUCTURE
-# -------------------------------------------------------------------------------------------------
-Print "infrastructure" "build started"
-Print "infrastructure" "node $(node --version)"
-cd ./infrastructure
-npm ci
-npm run build

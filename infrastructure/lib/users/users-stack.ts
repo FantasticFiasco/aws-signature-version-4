@@ -75,7 +75,7 @@ export class UsersStack extends Stack {
       new PolicyStatement({
         actions: ['execute-api:Invoke', 'execute-api:ManageConnections'],
         resources: ['arn:aws:execute-api:*:*:*'],
-      })
+      }),
     )
 
     // Create outputs
