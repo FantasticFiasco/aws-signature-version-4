@@ -1,34 +1,28 @@
-<h1 align="center">
-  AwsSignatureVersion4
-  <br>
-</h1>
+# AwsSignatureVersion4
 
-<h4 align="center">The buttoned-up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.</h4>
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/96upkt8x02mhqi5b/branch/master?svg=true)](https://ci.appveyor.com/project/FantasticFiasco/aws-signature-version-4)
+[![Codecov](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg)](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4)
+[![NuGet version](http://img.shields.io/nuget/v/AwsSignatureVersion4.svg?style=flat)](https://www.nuget.org/packages/AwsSignatureVersion4/)
+[![SemVer](https://img.shields.io/badge/%E2%9C%85-SemVer%20compatible-blue)](https://semver.org/)
+[![NuGet downloads](https://img.shields.io/nuget/dt/AwsSignatureVersion4.svg)](https://www.nuget.org/packages/AwsSignatureVersion4/)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://raw.githubusercontent.com/FantasticFiasco/aws-signature-version-4/master/LICENSE)
 
-<p align="center">
-  <a href="https://ci.appveyor.com/project/FantasticFiasco/aws-signature-version-4"><img src="https://ci.appveyor.com/api/projects/status/96upkt8x02mhqi5b/branch/master?svg=true"></a>
-  <a href="https://codecov.io/gh/FantasticFiasco/aws-signature-version-4"><img src="https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg"></a>
-  <a href="https://www.nuget.org/packages/AwsSignatureVersion4/"><img src="http://img.shields.io/nuget/v/AwsSignatureVersion4.svg?style=flat"></a>
-  <a href="https://semver.org/"><img src="https://img.shields.io/badge/%E2%9C%85-SemVer%20compatible-blue"></a>
-  <a href="https://www.nuget.org/packages/AwsSignatureVersion4/"><img src="https://img.shields.io/nuget/dt/AwsSignatureVersion4.svg"></a>
-  <a href="https://raw.githubusercontent.com/FantasticFiasco/aws-signature-version-4/master/LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
-</p>
+> The buttoned-up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.
 
-<p align="center">
-  <b>Package</b> - <a href="https://www.nuget.org/packages/AwsSignatureVersion4">AwsSignatureVersion4</a><br>
-  <b>Platforms</b> - .NET Standard 2.0, .NET 6
-</p>
+**Package:** [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignatureVersion4)\
+**Platforms:** .NET Standard 2.0, .NET 6
 
 ## Table of contents <!-- omit in toc -->
 
-- [Introduction](#introduction)
-- [Super simple to use](#super-simple-to-use)
-  - [Integration with `HttpClient`](#integration-with-httpclient)
-  - [Integration with `IHttpClientFactory`](#integration-with-ihttpclientfactory)
-- [Credentials](#credentials)
-- [The pledge](#the-pledge)
-- [Install via NuGet](#install-via-nuget)
-- [Credit](#credit)
+- [AwsSignatureVersion4](#awssignatureversion4)
+  - [Introduction](#introduction)
+  - [Super simple to use](#super-simple-to-use)
+    - [Integration with `HttpClient`](#integration-with-httpclient)
+    - [Integration with `IHttpClientFactory`](#integration-with-ihttpclientfactory)
+  - [Credentials](#credentials)
+  - [The pledge](#the-pledge)
+  - [Install via NuGet](#install-via-nuget)
+  - [Credit](#credit)
 
 ## Introduction
 
