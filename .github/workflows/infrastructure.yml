@@ -23,3 +23,6 @@ jobs:
         node-version: lts/*
         check-latest: true
     - run: yarn --version
+    - run: yarn install --immutable --immutable-cache
+    - run: yarn build
+    - run: yarn lint
