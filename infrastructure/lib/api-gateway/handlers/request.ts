@@ -9,8 +9,8 @@ interface HttpResponse {
 interface ReceivedRequest {
   method: string
   path: string
-  queryStringParameters: { [name: string]: string[] | undefined; } | null
-  headers: { [name: string]: string[] | undefined; } | null
+  queryStringParameters: { [name: string]: string[] | undefined } | null
+  headers: { [name: string]: string[] | undefined } | null
   body: string | null
 }
 
