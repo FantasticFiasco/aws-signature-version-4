@@ -113,5 +113,6 @@ if ($is_pull_request -eq $true) {
 # -------------------------------------------------------------------------------------------------
 Print "infrastructure" "build started"
 Print "infrastructure" "node $(node --version)"
-yarn --cwd ./infrastructure --immutable --immutable-cache
-yarn --cwd ./infrastructure build
+cd ./infrastructure
+npm ci
+npm run build
