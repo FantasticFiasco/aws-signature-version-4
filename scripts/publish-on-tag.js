@@ -20,7 +20,6 @@ import { fatal } from './log.js';
 const assertGitTag = () => {
     if (!GIT_TAG) {
         fatal('Aborting a deployment to GitHub Releases because this is not a tagged commit');
-        return null;
     }
 
     // Remove the 'v' prefix and assert that it's a valid SemVer version
