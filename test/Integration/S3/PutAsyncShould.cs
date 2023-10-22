@@ -8,6 +8,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.S3
 {
+    [Collection("S3")]
     public class PutAsyncShould : S3IntegrationBase
     {
         public PutAsyncShould(IntegrationTestContext context)
