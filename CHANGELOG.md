@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [4.0.2] - 2023-10-22
+
 ### :dizzy: Changed
 
 - Updated to [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core) version 3.7.204
