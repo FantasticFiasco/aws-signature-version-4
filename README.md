@@ -1,6 +1,6 @@
 # AwsSignatureVersion4
 
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/96upkt8x02mhqi5b/branch/master?svg=true)](https://ci.appveyor.com/project/FantasticFiasco/aws-signature-version-4)
+[![CI/CD](https://github.com/FantasticFiasco/aws-signature-version-4/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/FantasticFiasco/aws-signature-version-4/actions/workflows/ci-cd.yml)
 [![Codecov](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg)](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4)
 [![NuGet version](http://img.shields.io/nuget/v/AwsSignatureVersion4.svg?style=flat)](https://www.nuget.org/packages/AwsSignatureVersion4/)
 [![SemVer](https://img.shields.io/badge/%E2%9C%85-SemVer%20compatible-blue)](https://semver.org/)
