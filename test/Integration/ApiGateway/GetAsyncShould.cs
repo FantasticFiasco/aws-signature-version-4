@@ -12,6 +12,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
+    [Collection("API Gateway")]
     public class GetAsyncShould : ApiGatewayIntegrationBase
     {
         public GetAsyncShould(IntegrationTestContext context)

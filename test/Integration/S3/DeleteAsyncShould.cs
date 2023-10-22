@@ -8,6 +8,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.S3
 {
+    [Collection("S3")]
     public class DeleteAsyncShould : S3IntegrationBase
     {
         public DeleteAsyncShould(IntegrationTestContext context)

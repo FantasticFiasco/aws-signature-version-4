@@ -9,6 +9,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Integration.S3
 {
+    [Collection("S3")]
     public class SendAsyncShould : S3IntegrationBase, IClassFixture<TestSuiteContext>
     {
         private readonly TestSuiteContext testSuiteContext;

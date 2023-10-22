@@ -1,0 +1,54 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - .github/workflows/ci-cd.yml
+      - src/**
+      - scripts/**
+      - test/**
+      - Directory.Build.props
+    tags:
+      - "**"
+  workflow_dispatch:
+
+permissions:
+  contents: write  # Needed to create a GitHub Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    # Build
+    - run: dotnet build --configuration Release
+    # Test
+    - run: dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage"
+      env:
+        AWS_REGION: eu-west-1
+        AWS_USER_WITH_PERMISSIONS_ACCESS_KEY_ID: ${{ secrets.AWS_USER_WITH_PERMISSIONS_ACCESS_KEY_ID }}
+        AWS_USER_WITH_PERMISSIONS_SECRET_ACCESS_KEY: ${{ secrets.AWS_USER_WITH_PERMISSIONS_SECRET_ACCESS_KEY }}
+        AWS_USER_WITHOUT_PERMISSIONS_ACCESS_KEY_ID: ${{ secrets.AWS_USER_WITHOUT_PERMISSIONS_ACCESS_KEY_ID }}
+        AWS_USER_WITHOUT_PERMISSIONS_SECRET_ACCESS_KEY: ${{ secrets.AWS_USER_WITHOUT_PERMISSIONS_SECRET_ACCESS_KEY }}
+        AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+        AWS_API_GATEWAY_URL: ${{ secrets.AWS_API_GATEWAY_URL }}
+        AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+        AWS_S3_BUCKET_URL: ${{ secrets.AWS_S3_BUCKET_URL }}
+    - uses: codecov/codecov-action@v3
+    # Pack
+    - run: dotnet pack --configuration Release --no-build
+    - run: |
+        mkdir dist
+        mv src/bin/Release/*.nupkg ./dist
+        mv src/bin/Release/*.snupkg ./dist
+    # Release
+    - run: |
+        pushd ./scripts
+        npm ci
+        npm run release
+        popd
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
