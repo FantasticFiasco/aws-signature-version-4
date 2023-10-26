@@ -9,6 +9,8 @@ namespace AwsSignatureVersion4.Integration
         public static readonly string AwsUserWithPermissionsSecretAccessKey = GetEnvironmentVariable("AWS_USER_WITH_PERMISSIONS_SECRET_ACCESS_KEY");
         public static readonly string AwsUserWithoutPermissionsAccessKeyId = GetEnvironmentVariable("AWS_USER_WITHOUT_PERMISSIONS_ACCESS_KEY_ID");
         public static readonly string AwsUserWithoutPermissionsSecretAccessKey = GetEnvironmentVariable("AWS_USER_WITHOUT_PERMISSIONS_SECRET_ACCESS_KEY");
+        public static readonly string AwsUserWithProvisioningPermissionsAccessKeyId = GetEnvironmentVariable("AWS_USER_WITH_PROVISIONING_PERMISSIONS_ACCESS_KEY_ID");
+        public static readonly string AwsUserWithProvisioningPermissionsSecretAccessKey = GetEnvironmentVariable("AWS_USER_WITH_PROVISIONING_PERMISSIONS_SECRET_ACCCESS_KEY");
         public static readonly string AwsRoleArn = GetEnvironmentVariable("AWS_ROLE_ARN");
         public static readonly string AwsApiGatewayUrl = GetEnvironmentVariable("AWS_API_GATEWAY_URL");
         public static readonly string AwsS3BucketName = GetEnvironmentVariable("AWS_S3_BUCKET_NAME");
