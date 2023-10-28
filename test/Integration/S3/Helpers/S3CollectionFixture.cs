@@ -1,22 +1,32 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.TestSuite;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AwsSignatureVersion4.Integration.S3.Helpers
 {
     public class S3CollectionFixture : IDisposable
     {
+        private readonly IServiceCollection serviceCollection;
         private readonly IAmazonS3 client;
         private readonly S3Region region;
         private readonly string bucketName;
 
         public S3CollectionFixture()
         {
+            serviceCollection = new ServiceCollection();
+            serviceCollection
+                .AddTransient<AwsSignatureHandler>()
+                .AddHttpClient("integration")
+                .AddHttpMessageHandler<AwsSignatureHandler>();
+
             client = new AmazonS3Client(Secrets.Aws.UserWithProvisioningPermissions.Credentials);
             region = S3Region.FindValue(Secrets.Aws.Region);
             bucketName = $"sigv4-{DateTime.Now:yyyyMMdd-HH.mm.ss.ffff}";
@@ -65,7 +75,25 @@ namespace AwsSignatureVersion4.Integration.S3.Helpers
             return new Scenario(scenarioPath);
         }
 
-        public void Dispose()
+        public IHttpClientFactory HttpClientFactory(IamAuthenticationType iamAuthenticationType) =>
+            serviceCollection
+                .AddTransient(_ => new AwsSignatureHandlerSettings(
+                    RegionName,
+                    ServiceName,
+                    ResolveMutableCredentials(iamAuthenticationType)))
+                .BuildServiceProvider()
+                .GetService<IHttpClientFactory>();
+
+        private AWSCredentials ResolveMutableCredentials(
+            IamAuthenticationType iamAuthenticationType) =>
+            iamAuthenticationType switch
+            {
+                IamAuthenticationType.User => UserCredentials,
+                IamAuthenticationType.Role => RoleCredentials,
+                _ => throw new NotImplementedException($"The authentication type {iamAuthenticationType} is not implemented")
+            };
+
+    public void Dispose()
         {
             var request = new DeleteBucketRequest
             {

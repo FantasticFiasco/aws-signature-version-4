@@ -14,13 +14,10 @@ namespace AwsSignatureVersion4.Integration.S3
     public class AwsSignatureHandlerShould
     {
         private readonly S3CollectionFixture fixture;
-        private readonly Services services;
-
+        
         public AwsSignatureHandlerShould(S3CollectionFixture fixture)
         {
             this.fixture = fixture;
-
-            services = new Services();
         }
 
         [Theory]
@@ -58,13 +55,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            using var httpClient = services.HttpClientFactory(
-                IamAuthenticationType.User,
-                fixture.UserCredentials,
-                fixture.RoleCredentials,
-                fixture.RegionName,
-                fixture.ServiceName)
-                .CreateClient("integration");
+            using var httpClient = fixture.HttpClientFactory(IamAuthenticationType.User).CreateClient("integration");
             var request = BuildRequest(scenarioName);
 
             await UploadRequiredObjectAsync(scenarioName);
@@ -111,13 +102,7 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            using var httpClient = services.HttpClientFactory(
-                IamAuthenticationType.Role,
-                fixture.UserCredentials,
-                fixture.RoleCredentials,
-                fixture.RegionName,
-                fixture.ServiceName)
-                .CreateClient("integration");
+            using var httpClient = fixture.HttpClientFactory(IamAuthenticationType.Role).CreateClient("integration");
             var request = BuildRequest(scenarioName);
 
             await UploadRequiredObjectAsync(scenarioName);
@@ -137,14 +122,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Arrange
             var bucketObject = await fixture.Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
 
-            using var httpClient = services
-                .HttpClientFactory(
-                    iamAuthenticationType,
-                    fixture.UserCredentials,
-                    fixture.RoleCredentials,
-                    fixture.RegionName,
-                    fixture.ServiceName)
-                .CreateClient("integration");
+            using var httpClient = fixture.HttpClientFactory(iamAuthenticationType).CreateClient("integration");
             var requestUri = $"{fixture.S3BucketUrl}/{bucketObject.Key}";
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             var completionOption = HttpCompletionOption.ResponseContentRead;
