@@ -2,22 +2,25 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.S3.Helpers;
 using AwsSignatureVersion4.Private;
-using AwsSignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Integration.S3
 {
     [Collection("S3")]
-    public class AwsSignatureHandlerShould : S3IntegrationBase, IClassFixture<TestSuiteContext>
+    [Trait("Category", "Integration")]
+    public class AwsSignatureHandlerShould
     {
-        private readonly TestSuiteContext testSuiteContext;
+        private readonly S3CollectionFixture fixture;
+        private readonly Services services;
 
-        public AwsSignatureHandlerShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
-            : base(context)
+        public AwsSignatureHandlerShould(S3CollectionFixture fixture)
         {
-            this.testSuiteContext = testSuiteContext;
+            this.fixture = fixture;
+
+            services = new Services();
         }
 
         [Theory]
@@ -55,7 +58,13 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(IamAuthenticationType.User).CreateClient("integration");
+            using var httpClient = services.HttpClientFactory(
+                IamAuthenticationType.User,
+                fixture.UserCredentials,
+                fixture.RoleCredentials,
+                fixture.RegionName,
+                fixture.ServiceName)
+                .CreateClient("integration");
             var request = BuildRequest(scenarioName);
 
             await UploadRequiredObjectAsync(scenarioName);
@@ -102,7 +111,13 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(IamAuthenticationType.Role).CreateClient("integration");
+            using var httpClient = services.HttpClientFactory(
+                IamAuthenticationType.Role,
+                fixture.UserCredentials,
+                fixture.RoleCredentials,
+                fixture.RegionName,
+                fixture.ServiceName)
+                .CreateClient("integration");
             var request = BuildRequest(scenarioName);
 
             await UploadRequiredObjectAsync(scenarioName);
@@ -120,10 +135,17 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = await fixture.Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
 
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-            var requestUri = $"{Context.S3BucketUrl}/{bucketObject.Key}";
+            using var httpClient = services
+                .HttpClientFactory(
+                    iamAuthenticationType,
+                    fixture.UserCredentials,
+                    fixture.RoleCredentials,
+                    fixture.RegionName,
+                    fixture.ServiceName)
+                .CreateClient("integration");
+            var requestUri = $"{fixture.S3BucketUrl}/{bucketObject.Key}";
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
@@ -138,34 +160,34 @@ namespace AwsSignatureVersion4.Integration.S3
         {
             if (scenarioName[0] == "get-unreserved" || scenarioName[0] == "get-vanilla-query-unreserved")
             {
-                await Bucket.PutObjectAsync("-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+                await fixture.Bucket.PutObjectAsync("-._~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
             }
             else if (scenarioName[0] == "get-utf8" || scenarioName[0] == "get-vanilla-utf8-query")
             {
-                await Bucket.PutObjectAsync("ሴ");
+                await fixture.Bucket.PutObjectAsync("ሴ");
             }
             else if (scenarioName.Length == 2 && scenarioName[0] == "normalize-path" && scenarioName[1] == "get-slashes")
             {
-                await Bucket.PutObjectAsync("/example//");
+                await fixture.Bucket.PutObjectAsync("/example//");
             }
             else if (scenarioName.Length == 2 && scenarioName[0] == "normalize-path" && scenarioName[1] == "get-space")
             {
-                await Bucket.PutObjectAsync("example space/");
+                await fixture.Bucket.PutObjectAsync("example space/");
             }
             else
             {
-                await Bucket.PutObjectAsync("/");
+                await fixture.Bucket.PutObjectAsync("/");
             }
         }
 
         private HttpRequestMessage BuildRequest(string[] scenarioName)
         {
-            var request = testSuiteContext.LoadScenario(scenarioName).Request;
+            var request = fixture.LoadScenario(scenarioName).Request;
 
             // Redirect the request to the AWS S3 bucket
             request.RequestUri = request.RequestUri
                 .ToString()
-                .Replace("https://example.amazonaws.com", Context.S3BucketUrl)
+                .Replace("https://example.amazonaws.com", fixture.S3BucketUrl)
                 .ToUri();
 
             // The "Host" header is now invalid since we redirected the request to the AWS S3

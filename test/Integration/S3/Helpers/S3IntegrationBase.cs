@@ -1,6 +1,6 @@
 ﻿using Amazon;
 
-namespace AwsSignatureVersion4.Integration.S3
+namespace AwsSignatureVersion4.Integration.S3.Helpers
 {
     public abstract class S3IntegrationBase : IntegrationBase
     {

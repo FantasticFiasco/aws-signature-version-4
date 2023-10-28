@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.S3.Helpers;
 using Shouldly;
 using Xunit;
 
@@ -11,9 +12,12 @@ namespace AwsSignatureVersion4.Integration.S3
     [Collection("S3")]
     public class GetAsyncShould : S3IntegrationBase
     {
-        public GetAsyncShould(IntegrationTestContext context)
+        private readonly S3CollectionFixture collectionFixture;
+
+        public GetAsyncShould(IntegrationTestContext context, S3CollectionFixture collectionFixture)
             : base(context)
         {
+            this.collectionFixture = collectionFixture;
         }
 
         [Theory]

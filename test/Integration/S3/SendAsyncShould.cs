@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.S3.Helpers;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
 using Shouldly;

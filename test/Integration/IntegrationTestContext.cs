@@ -9,25 +9,21 @@ namespace AwsSignatureVersion4.Integration
     /// </summary>
     public class IntegrationTestContext : Context
     {
-        public string RegionName { get; } = Secrets.AwsRegion;
+        public string RegionName { get; } = Secrets.Aws.Region;
 
         public string ServiceName { get; set; }
 
-        public AWSCredentials UserCredentials { get; } = new BasicAWSCredentials(
-            Secrets.AwsUserWithPermissionsAccessKeyId,
-            Secrets.AwsUserWithPermissionsSecretAccessKey);
+        public AWSCredentials UserCredentials { get; } = Secrets.Aws.UserWithPermissions.Credentials;
 
         public AWSCredentials RoleCredentials { get; } = new AssumeRoleAWSCredentials(
-            new BasicAWSCredentials(
-                Secrets.AwsUserWithoutPermissionsAccessKeyId,
-                Secrets.AwsUserWithoutPermissionsSecretAccessKey),
-            Secrets.AwsRoleArn,
+            Secrets.Aws.UserWithoutPermissions.Credentials,
+            Secrets.Aws.Role.Arn,
             "signature-version-4-integration-tests");
 
-        public string ApiGatewayUrl { get; } = Secrets.AwsApiGatewayUrl;
+        public string ApiGatewayUrl { get; } = Secrets.Aws.ApiGateway.Url;
 
-        public string S3BucketName { get; } = Secrets.AwsS3BucketName;
+        public string S3BucketName { get; } = Secrets.Aws.S3.BucketName;
 
-        public string S3BucketUrl { get; } = Secrets.AwsS3BucketUrl;
+        public string S3BucketUrl { get; } = $"https://{Secrets.Aws.S3.BucketName}.s3.{Secrets.Aws.Region}.amazonaws.com";
     }
 }
