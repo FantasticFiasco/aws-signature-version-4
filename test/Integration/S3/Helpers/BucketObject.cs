@@ -4,15 +4,15 @@ namespace AwsSignatureVersion4.Integration.S3.Helpers
 {
     public class BucketObject
     {
-        public BucketObject(string key, string content = "This is some content")
+        public BucketObject(string url, string content = "This is some content")
         {
-            Key = key;
+            Url = url;
             Content = content;
             StringContent = new StringContent(content);
         }
 
-        public string Key { get; }
-
+        public string Url { get; }
+        
         public string Content { get; }
 
         public StringContent StringContent { get; }

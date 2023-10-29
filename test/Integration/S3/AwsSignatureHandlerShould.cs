@@ -123,7 +123,7 @@ namespace AwsSignatureVersion4.Integration.S3
             var bucketObject = await fixture.Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
 
             using var httpClient = fixture.HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-            var requestUri = $"{fixture.S3BucketUrl}/{bucketObject.Key}";
+            var requestUri = bucketObject.Url;
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
@@ -165,7 +165,7 @@ namespace AwsSignatureVersion4.Integration.S3
             // Redirect the request to the AWS S3 bucket
             request.RequestUri = request.RequestUri
                 .ToString()
-                .Replace("https://example.amazonaws.com", fixture.S3BucketUrl)
+                .Replace("https://example.amazonaws.com", fixture.Bucket.Url)
                 .ToUri();
 
             // The "Host" header is now invalid since we redirected the request to the AWS S3

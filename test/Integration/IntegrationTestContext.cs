@@ -9,7 +9,7 @@ namespace AwsSignatureVersion4.Integration
     /// </summary>
     public class IntegrationTestContext : Context
     {
-        public string RegionName { get; } = Secrets.Aws.Region;
+        public string RegionName { get; } = Secrets.Aws.Region.SystemName;
 
         public string ServiceName { get; set; }
 
@@ -24,6 +24,6 @@ namespace AwsSignatureVersion4.Integration
 
         public string S3BucketName { get; } = Secrets.Aws.S3.BucketName;
 
-        public string S3BucketUrl { get; } = $"https://{Secrets.Aws.S3.BucketName}.s3.{Secrets.Aws.Region}.amazonaws.com";
+        public string S3BucketUrl { get; } = $"https://{Secrets.Aws.S3.BucketName}.s3.{Secrets.Aws.Region.SystemName}.amazonaws.com";
     }
 }

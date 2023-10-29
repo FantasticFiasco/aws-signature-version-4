@@ -1,7 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Amazon.Runtime;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Integration.S3.Helpers;
 using Shouldly;
@@ -10,14 +12,22 @@ using Xunit;
 namespace AwsSignatureVersion4.Integration.S3
 {
     [Collection("S3")]
-    public class GetAsyncShould : S3IntegrationBase
+    [Trait("Category", "Integration")]
+    public class GetAsyncShould
     {
-        private readonly S3CollectionFixture collectionFixture;
-
-        public GetAsyncShould(IntegrationTestContext context, S3CollectionFixture collectionFixture)
-            : base(context)
+        private readonly Bucket bucket;
+        private readonly HttpClient httpClient;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly Func<IamAuthenticationType, AWSCredentials> resolveCredentials;
+        
+        public GetAsyncShould(S3CollectionFixture fixture)
         {
-            this.collectionFixture = collectionFixture;
+            bucket = fixture.Bucket;
+            httpClient = fixture.HttpClient;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            resolveCredentials = fixture.ResolveCredentials;
         }
 
         [Theory]
@@ -26,14 +36,14 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenNoPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
-
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -46,14 +56,14 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenSingleLevelPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithSingleLevelPrefix);
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithSingleLevelPrefix);
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -66,14 +76,14 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenMultiLevelPrefix(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithMultiLevelPrefix);
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithMultiLevelPrefix);
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -92,14 +102,14 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenSafeCharacters(IamAuthenticationType iamAuthenticationType, string key)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(key);
+            var bucketObject = await bucket.PutObjectAsync(key);
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -112,14 +122,14 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenCharactersThatRequireSpecialHandling(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithCharactersThatRequireSpecialHandling);
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithCharactersThatRequireSpecialHandling);
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -132,14 +142,14 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenUnnormalizedDelimiters(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithUnnormalizedDelimiter);
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithUnnormalizedDelimiter);
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -152,16 +162,16 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenHttpCompletionOption(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
                 completionOption,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -174,15 +184,15 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -196,17 +206,17 @@ namespace AwsSignatureVersion4.Integration.S3
         public async Task SucceedGivenHttpCompletionOptionAndCancellationToken(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var bucketObject = await bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
             var completionOption = HttpCompletionOption.ResponseContentRead;
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{bucketObject.Key}",
+            var response = await httpClient.GetAsync(
+                bucketObject.Url,
                 completionOption,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -223,11 +233,11 @@ namespace AwsSignatureVersion4.Integration.S3
             var key = "unknown.txt";
 
             // Act
-            var response = await HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.GetAsync(
+                $"{bucket.Url}/{key}",
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
@@ -243,11 +253,11 @@ namespace AwsSignatureVersion4.Integration.S3
             var ct = new CancellationToken(true);
 
             // Act
-            var task = HttpClient.GetAsync(
-                $"{Context.S3BucketUrl}/{key}",
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var task = httpClient.GetAsync(
+                $"{bucket.Url}/{key}",
+                region,
+                serviceName,
+                resolveCredentials(iamAuthenticationType),
                 ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)
