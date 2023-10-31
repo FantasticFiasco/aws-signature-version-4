@@ -21,7 +21,7 @@ namespace AwsSignatureVersion4.Integration.S3.Helpers
                 .AddHttpClient("integration")
                 .AddHttpMessageHandler<AwsSignatureHandler>();
 
-            var bucketName = $"sigv4-{DateTime.Now:yyyyMMdd-HH.mm.ss.ffff}";
+            var bucketName = $"sigv4-test-{DateTime.Now:yyyyMMdd-HH.mm.ss.ffff}";
             Bucket = Bucket.CreateAsync(bucketName, Secrets.Aws.UserWithProvisioningPermissions.Credentials, Secrets.Aws.Region).Result;
 
             HttpClient = new HttpClient();

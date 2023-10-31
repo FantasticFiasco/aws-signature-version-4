@@ -22,8 +22,8 @@ namespace AwsSignatureVersion4.Integration
 
         public string ApiGatewayUrl { get; } = Secrets.Aws.ApiGateway.Url;
 
-        public string S3BucketName { get; } = Secrets.Aws.S3.BucketName;
+        //public string S3BucketName { get; } = Secrets.Aws.S3.BucketName;
 
-        public string S3BucketUrl { get; } = $"https://{Secrets.Aws.S3.BucketName}.s3.{Secrets.Aws.Region.SystemName}.amazonaws.com";
+        //public string S3BucketUrl { get; } = $"https://{Secrets.Aws.S3.BucketName}.s3.{Secrets.Aws.Region.SystemName}.amazonaws.com";
     }
 }
