@@ -3,6 +3,7 @@ import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from 'aws-cdk
 import { Construct } from 'constructs'
 
 export class UsersStack extends Stack {
+  readonly userWithProvisioningPermissions: IUser
   readonly userWithPermissions: IUser
   readonly userWithoutPermissions: IUser
   readonly roleWithPermissions: IRole
@@ -10,9 +11,44 @@ export class UsersStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
 
+    // IAM user with permissions to provision buckets for individual test runs
+    this.userWithProvisioningPermissions = this.createUserWithProvisioningPermissions()
+
+    // IAM user with permissions to access the API Gateway
     this.userWithPermissions = this.createUserWithPermissions()
+
+    // IAM user without permissions to access the API Gateway
     this.userWithoutPermissions = this.createUserWithoutPermissions()
+
+    // IAM role with permissions to access the API Gateway
     this.roleWithPermissions = this.createRoleWithPermissions()
+  }
+
+  private createUserWithProvisioningPermissions(): IUser {
+    // Create user
+    const user = new User(this, 'UserWithProvisioningPermissions', {
+      userName: 'sigv4-UserWithProvisioningPermissions',
+    })
+
+    user.addManagedPolicy({
+      managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonS3FullAccess',
+    })
+
+    // Create access key
+    const accessKey = new CfnAccessKey(this, 'UserWithProvisioningPermissionsAccessKey', {
+      userName: user.userName,
+    })
+
+    // Create outputs
+    new CfnOutput(this, 'UserWithProvisioningPermissionsAccessKeyId', {
+      value: accessKey.ref,
+    })
+
+    new CfnOutput(this, 'UserWithProvisioningPermissionsSecretAccessKey', {
+      value: accessKey.attrSecretAccessKey,
+    })
+
+    return user
   }
 
   private createUserWithPermissions(): IUser {
