@@ -28,8 +28,8 @@
 //            var actual = HttpClient.PatchAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
 //                bucketObject.StringContent,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert

@@ -63,8 +63,8 @@
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -114,8 +114,8 @@
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -137,8 +137,8 @@
 //            var response = HttpClient.Send(
 //                request,
 //                completionOption,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert

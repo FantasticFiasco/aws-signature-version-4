@@ -1,358 +1,373 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Net;
-//using System.Net.Http;
-//using System.Threading;
-//using System.Threading.Tasks;
-//using AwsSignatureVersion4.Integration.ApiGateway.Requests;
-//using AwsSignatureVersion4.Private;
-//using Shouldly;
-//using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Amazon.Runtime;
+using AwsSignatureVersion4.Integration.ApiGateway.Fixtures;
+using AwsSignatureVersion4.Integration.ApiGateway.Requests;
+using AwsSignatureVersion4.Private;
+using Shouldly;
+using Xunit;
 
-//namespace AwsSignatureVersion4.Integration.ApiGateway
-//{
-//    [Collection("API Gateway")]
-//    public class DeleteAsyncShould : ApiGatewayIntegrationBase
-//    {
-//        public DeleteAsyncShould(IntegrationTestContext context)
-//            : base(context)
-//        {
-//        }
+namespace AwsSignatureVersion4.Integration.ApiGateway
+{
+    [Collection("API Gateway")]
+    [Trait("Category", "Integration")]
+    public class DeleteAsyncShould
+    {
+        private readonly HttpClient httpClient;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string apiGatewayUrl;
+        private readonly Func<IamAuthenticationType, AWSCredentials> resolveMutableCredentials;
+        private readonly Func<IamAuthenticationType, ImmutableCredentials> resolveImmutableCredentials;
 
-//        public static IEnumerable<object[]> TestCases =>
-//            new[]
-//            {
-//                new object[] { IamAuthenticationType.User },
-//                new object[] { IamAuthenticationType.Role }
-//            };
+        public DeleteAsyncShould(ApiGatewayCollectionFixture fixture)
+        {
+            httpClient = fixture.HttpClient;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            apiGatewayUrl = fixture.ApiGatewayUrl;
+            resolveMutableCredentials = fixture.ResolveMutableCredentials;
+            resolveImmutableCredentials = fixture.ResolveImmutableCredentials;
+        }
 
-//        #region DeleteAsync(string, string, string, <credentials>)
+        public static IEnumerable<object[]> TestCases =>
+            new[]
+            {
+                new object[] { IamAuthenticationType.User },
+                new object[] { IamAuthenticationType.Role }
+            };
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        #region DeleteAsync(string, string, string, <credentials>)
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveImmutableCredentials(iamAuthenticationType));
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        #endregion
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//        #region DeleteAsync(Uri, string, string, <credentials>)
+        #endregion
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl.ToUri(),
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        #region DeleteAsync(Uri, string, string, <credentials>)
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl.ToUri(),
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveImmutableCredentials(iamAuthenticationType));
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        #endregion
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//        #region DeleteAsync(string, CancellationToken, string, string, <credentials>)
+        #endregion
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+        #region DeleteAsync(string, CancellationToken, string, string, <credentials>)
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveImmutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        #endregion
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//        #region DeleteAsync(Uri, CancellationToken, string, string, <credentials>)
+        #endregion
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+        #region DeleteAsync(Uri, CancellationToken, string, string, <credentials>)
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl.ToUri(),
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl.ToUri(),
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveImmutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken(true);
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var task = HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task AbortGivenCanceled(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var ct = new CancellationToken(true);
 
-//            while (task.Status == TaskStatus.WaitingForActivation)
-//            {
-//                await Task.Delay(1);
-//            }
+            // Act
+            var task = httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
+                ct);
 
-//            // Assert
-//            task.Status.ShouldBe(TaskStatus.Canceled);
-//        }
+            while (task.Status == TaskStatus.WaitingForActivation)
+            {
+                await Task.Delay(1);
+            }
 
-//        #endregion
+            // Assert
+            task.Status.ShouldBe(TaskStatus.Canceled);
+        }
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var path = "/path";
+        #endregion
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                Context.ApiGatewayUrl + path,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenPath(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var path = "/path";
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl + path,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe(path);
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-//            {
-//                Query = "Param1=Value1"
-//            };
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                uriBuilder.Uri,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value1"
+            };
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                uriBuilder.Uri,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-//            {
-//                Query = "Param1=Value1&Param1=Value2"
-//            };
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                uriBuilder.Uri,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value1&Param1=Value2"
+            };
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                uriBuilder.Uri,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType)
-//        {
-//            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
-//            {
-//                Query = "Param1=Value2&Param1=Value1"
-//            };
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await HttpClient.DeleteAsync(
-//                uriBuilder.Uri,
-//                Context.RegionName,
-//                Context.ServiceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value2&Param1=Value1"
+            };
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.DeleteAsync(
+                uriBuilder.Uri,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("DELETE");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
-//    }
-//}
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("DELETE");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
+            receivedRequest.Body.ShouldBeNull();
+        }
+    }
+}

@@ -136,7 +136,7 @@
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
 //            var path = "/path";
-//            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl + path);
+//            var request = new HttpRequestMessage(method, apiGatewayUrl + path);
 
 //            // Act
 //            var response = await httpClient.SendAsync(request);
@@ -159,7 +159,7 @@
 //        {
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(method, apiGatewayUrl);
 //            request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
 //            // Act
@@ -184,7 +184,7 @@
 //        {
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(method, apiGatewayUrl);
 //            request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
 //            // Act
@@ -209,7 +209,7 @@
 //        {
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(method, apiGatewayUrl);
 //            request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
 //            // Act
@@ -235,7 +235,7 @@
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
 
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value1"
 //            };
@@ -264,7 +264,7 @@
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
 
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value1&Param1=Value2"
 //            };
@@ -293,7 +293,7 @@
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
 
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value2&Param1=Value1"
 //            };
@@ -321,7 +321,7 @@
 //        {
 //            // Arrange
 //            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(method, apiGatewayUrl);
 //            var completionOption = HttpCompletionOption.ResponseContentRead;
 
 //            // Act
@@ -346,7 +346,7 @@
 //            // Redirect the request to the AWS API Gateway
 //            request.RequestUri = request.RequestUri
 //                .ToString()
-//                .Replace("https://example.amazonaws.com", Context.ApiGatewayUrl)
+//                .Replace("https://example.amazonaws.com", apiGatewayUrl)
 //                .ToUri();
 
 //            // The "Host" header is now invalid since we redirected the request to the AWS API

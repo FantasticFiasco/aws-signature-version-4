@@ -40,13 +40,13 @@
 //            string method)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -75,13 +75,13 @@
 //            string method)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -104,15 +104,15 @@
 //        public async Task SucceedGivenHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
 //            var completionOption = HttpCompletionOption.ResponseContentRead;
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
 //                completionOption,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -131,15 +131,15 @@
 //        public async Task SucceedGivenHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
 //            var completionOption = HttpCompletionOption.ResponseContentRead;
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
 //                completionOption,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -172,14 +172,14 @@
 //            string method)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 //            var ct = new CancellationToken();
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -209,14 +209,14 @@
 //            string method)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 //            var ct = new CancellationToken();
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -240,7 +240,7 @@
 //        public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenMutableCredentials(IamAuthenticationType iamAuthenticationType)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
 //            var completionOption = HttpCompletionOption.ResponseContentRead;
 //            var ct = new CancellationToken();
 
@@ -248,8 +248,8 @@
 //            var response = HttpClient.Send(
 //                request,
 //                completionOption,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -269,7 +269,7 @@
 //        public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
 //            var completionOption = HttpCompletionOption.ResponseContentRead;
 //            var ct = new CancellationToken();
 
@@ -277,8 +277,8 @@
 //            var response = HttpClient.Send(
 //                request,
 //                completionOption,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -335,8 +335,8 @@
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -384,8 +384,8 @@
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -409,13 +409,13 @@
 //        {
 //            // Arrange
 //            var path = "/path";
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl + path);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl + path);
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -444,14 +444,14 @@
 //            string method)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 //            request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -481,14 +481,14 @@
 //            string method)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 //            request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -518,14 +518,14 @@
 //            string method)
 //        {
 //            // Arrange
-//            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+//            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 //            request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -555,7 +555,7 @@
 //            string method)
 //        {
 //            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value1"
 //            };
@@ -565,8 +565,8 @@
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -595,7 +595,7 @@
 //            string method)
 //        {
 //            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value1&Param1=Value2"
 //            };
@@ -605,8 +605,8 @@
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -635,7 +635,7 @@
 //            string method)
 //        {
 //            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value2&Param1=Value1"
 //            };
@@ -645,8 +645,8 @@
 //            // Act
 //            var response = HttpClient.Send(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert

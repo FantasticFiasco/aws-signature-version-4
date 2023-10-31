@@ -41,10 +41,10 @@
 //        {
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl,
+//                apiGatewayUrl,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -65,10 +65,10 @@
 //        {
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl,
+//                apiGatewayUrl,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -93,10 +93,10 @@
 //        {
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl.ToUri(),
+//                apiGatewayUrl.ToUri(),
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -117,10 +117,10 @@
 //        {
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl.ToUri(),
+//                apiGatewayUrl.ToUri(),
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -148,10 +148,10 @@
 
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl,
+//                apiGatewayUrl,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -176,10 +176,10 @@
 
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl,
+//                apiGatewayUrl,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -204,10 +204,10 @@
 
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl,
+//                apiGatewayUrl,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -232,10 +232,10 @@
 
 //            // Act
 //            var task = HttpClient.PutAsync(
-//                Context.ApiGatewayUrl,
+//                apiGatewayUrl,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -263,10 +263,10 @@
 
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl.ToUri(),
+//                apiGatewayUrl.ToUri(),
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -291,10 +291,10 @@
 
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl.ToUri(),
+//                apiGatewayUrl.ToUri(),
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveImmutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -321,10 +321,10 @@
 
 //            // Act
 //            var response = await HttpClient.PutAsync(
-//                Context.ApiGatewayUrl + path,
+//                apiGatewayUrl + path,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -344,7 +344,7 @@
 //            IContent content)
 //        {
 //            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value1"
 //            };
@@ -353,8 +353,8 @@
 //            var response = await HttpClient.PutAsync(
 //                uriBuilder.Uri,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -374,7 +374,7 @@
 //            IContent content)
 //        {
 //            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value1&Param1=Value2"
 //            };
@@ -383,8 +383,8 @@
 //            var response = await HttpClient.PutAsync(
 //                uriBuilder.Uri,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -404,7 +404,7 @@
 //            IContent content)
 //        {
 //            // Arrange
-//            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+//            var uriBuilder = new UriBuilder(apiGatewayUrl)
 //            {
 //                Query = "Param1=Value2&Param1=Value1"
 //            };
@@ -413,8 +413,8 @@
 //            var response = await HttpClient.PutAsync(
 //                uriBuilder.Uri,
 //                content.AsHttpContent(),
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert

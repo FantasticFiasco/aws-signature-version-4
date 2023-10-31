@@ -28,8 +28,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -47,8 +47,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -66,8 +66,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -91,8 +91,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -110,8 +110,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -129,8 +129,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -149,8 +149,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -173,8 +173,8 @@
 //            // Act
 //            var response = await HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -193,8 +193,8 @@
 //            // Act
 //            var task = HttpClient.DeleteAsync(
 //                $"{Context.S3BucketUrl}/{key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 

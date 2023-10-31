@@ -27,14 +27,16 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Fixtures
 
         public HttpClient HttpClient { get; }
 
-        public AWSCredentials ResolveCredentials(
-            IamAuthenticationType iamAuthenticationType) =>
+        public AWSCredentials ResolveMutableCredentials(IamAuthenticationType iamAuthenticationType) =>
             iamAuthenticationType switch
             {
                 IamAuthenticationType.User => UserCredentials,
                 IamAuthenticationType.Role => RoleCredentials,
-                _ => throw new NotImplementedException($"The authentication type {iamAuthenticationType} has not been implemented.")
+                _ => throw new NotImplementedException($"The authentication type {iamAuthenticationType} is not implemented")
             };
+
+        public ImmutableCredentials ResolveImmutableCredentials(IamAuthenticationType iamAuthenticationType) =>
+            ResolveMutableCredentials(iamAuthenticationType).GetCredentials();
 
         public void Dispose()
         {

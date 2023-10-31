@@ -37,8 +37,8 @@
 //        protected IHttpClientFactory HttpClientFactory(IamAuthenticationType iamAuthenticationType) =>
 //            serviceCollection
 //                .AddTransient(_ => new AwsSignatureHandlerSettings(
-//                    Context.RegionName,
-//                    Context.ServiceName,
+//                    region,
+//                    serviceName,
 //                    ResolveMutableCredentials(iamAuthenticationType)))
 //                .BuildServiceProvider()
 //                .GetService<IHttpClientFactory>();
