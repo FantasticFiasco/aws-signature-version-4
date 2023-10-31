@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Integration.S3.Helpers;
 using Shouldly;
 using Xunit;

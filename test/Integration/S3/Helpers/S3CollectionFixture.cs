@@ -3,7 +3,6 @@ using System.IO;
 using System.Net.Http;
 using Amazon;
 using Amazon.Runtime;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.TestSuite;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,15 +1,15 @@
-﻿namespace AwsSignatureVersion4.Integration.S3.Helpers
-{
-    public abstract class S3IntegrationBase : IntegrationBase
-    {
-        protected S3IntegrationBase(IntegrationTestContext context)
-            : base(context)
-        {
-            context.ServiceName = "s3";
+﻿//namespace AwsSignatureVersion4.Integration.S3.Helpers
+//{
+//    public abstract class S3IntegrationBase : IntegrationBase
+//    {
+//        protected S3IntegrationBase(IntegrationTestContext context)
+//            : base(context)
+//        {
+//            context.ServiceName = "s3";
 
-            //Bucket = new Bucket(RegionEndpoint.GetBySystemName(context.RegionName), context.S3BucketName, context.UserCredentials);
-        }
+//            //Bucket = new Bucket(RegionEndpoint.GetBySystemName(context.RegionName), context.S3BucketName, context.UserCredentials);
+//        }
 
-        protected Bucket Bucket { get; }
-    }
-}
+//        protected Bucket Bucket { get; }
+//    }
+//}

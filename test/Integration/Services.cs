@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using Amazon.Runtime;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AwsSignatureVersion4.Integration

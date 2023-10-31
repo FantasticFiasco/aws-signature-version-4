@@ -1,4 +1,4 @@
-﻿namespace AwsSignatureVersion4.Integration.ApiGateway.Authentication
+﻿namespace AwsSignatureVersion4.Integration
 {
     public enum IamAuthenticationType
     {
