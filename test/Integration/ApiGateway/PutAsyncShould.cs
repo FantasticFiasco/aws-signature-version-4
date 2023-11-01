@@ -1,430 +1,445 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Net;
-//using System.Net.Http;
-//using System.Threading;
-//using System.Threading.Tasks;
-//using AwsSignatureVersion4.Integration.ApiGateway.Contents;
-//using AwsSignatureVersion4.Integration.ApiGateway.Requests;
-//using AwsSignatureVersion4.Private;
-//using Shouldly;
-//using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
+using Amazon.Runtime;
+using AwsSignatureVersion4.Integration.ApiGateway.Contents;
+using AwsSignatureVersion4.Integration.ApiGateway.Fixtures;
+using AwsSignatureVersion4.Integration.ApiGateway.Requests;
+using AwsSignatureVersion4.Private;
+using Shouldly;
+using Xunit;
 
-//namespace AwsSignatureVersion4.Integration.ApiGateway
-//{
-//    [Collection("API Gateway")]
-//    public class PutAsyncShould : ApiGatewayIntegrationBase
-//    {
-//        public PutAsyncShould(IntegrationTestContext context)
-//            : base(context)
-//        {
-//        }
+namespace AwsSignatureVersion4.Integration.ApiGateway
+{
+    [Collection("API Gateway")]
+    [Trait("Category", "Integration")]
+    public class PutAsyncShould
+    {
+        private readonly HttpClient httpClient;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string apiGatewayUrl;
+        private readonly Func<IamAuthenticationType, AWSCredentials> resolveMutableCredentials;
+        private readonly Func<IamAuthenticationType, ImmutableCredentials> resolveImmutableCredentials;
 
-//        public static IEnumerable<object[]> TestCases =>
-//            new[]
-//            {
-//                new object[] { IamAuthenticationType.User, new EmptyJsonContent() },
-//                new object[] { IamAuthenticationType.User, new RichJsonContent() },
-//                new object[] { IamAuthenticationType.User, new BinaryContent() },
-//                new object[] { IamAuthenticationType.Role, new EmptyJsonContent() },
-//                new object[] { IamAuthenticationType.Role, new RichJsonContent() },
-//                new object[] { IamAuthenticationType.Role, new BinaryContent() }
-//            };
+        public PutAsyncShould(ApiGatewayCollectionFixture fixture)
+        {
+            httpClient = fixture.HttpClient;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            apiGatewayUrl = fixture.ApiGatewayUrl;
+            resolveMutableCredentials = fixture.ResolveMutableCredentials;
+            resolveImmutableCredentials = fixture.ResolveImmutableCredentials;
+        }
 
-//        #region PutAsync(string, HttpContent, string, string, <credentials>)
+        public static IEnumerable<object[]> TestCases =>
+            new[]
+            {
+                new object[] { IamAuthenticationType.User, new EmptyJsonContent() },
+                new object[] { IamAuthenticationType.User, new RichJsonContent() },
+                new object[] { IamAuthenticationType.User, new BinaryContent() },
+                new object[] { IamAuthenticationType.Role, new EmptyJsonContent() },
+                new object[] { IamAuthenticationType.Role, new RichJsonContent() },
+                new object[] { IamAuthenticationType.Role, new BinaryContent() }
+            };
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndMutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        #region PutAsync(string, HttpContent, string, string, <credentials>)
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndImmutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveImmutableCredentials(iamAuthenticationType));
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        #endregion
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//        #region PutAsync(Uri, HttpContent, string, string, <credentials>)
+        #endregion
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndMutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl.ToUri(),
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        #region PutAsync(Uri, HttpContent, string, string, <credentials>)
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl.ToUri(),
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndImmutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl.ToUri(),
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveImmutableCredentials(iamAuthenticationType));
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl.ToUri(),
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        #endregion
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//        #region PutAsync(string, HttpContent, CancellationToken, string, string, <credentials>)
+        #endregion
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+        #region PutAsync(string, HttpContent, CancellationToken, string, string, <credentials>)
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveImmutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestStringAndCancellationTokenAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenCancellationToken(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenCancellationToken(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task AbortGivenCanceled(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken(true);
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Act
-//            var task = HttpClient.PutAsync(
-//                apiGatewayUrl,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task AbortGivenCanceled(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var ct = new CancellationToken(true);
 
-//            while (task.Status == TaskStatus.WaitingForActivation)
-//            {
-//                await Task.Delay(1);
-//            }
+            // Act
+            var task = httpClient.PutAsync(
+                apiGatewayUrl,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
+                ct);
 
-//            // Assert
-//            task.Status.ShouldBe(TaskStatus.Canceled);
-//        }
+            while (task.Status == TaskStatus.WaitingForActivation)
+            {
+                await Task.Delay(1);
+            }
 
-//        #endregion
+            // Assert
+            task.Status.ShouldBe(TaskStatus.Canceled);
+        }
 
-//        #region PutAsync(Uri, HttpContent, CancellationToken, string, string, <credentials>)
+        #endregion
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+        #region PutAsync(Uri, HttpContent, CancellationToken, string, string, <credentials>)
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl.ToUri(),
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndMutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl.ToUri(),
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var ct = new CancellationToken();
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl.ToUri(),
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveImmutableCredentials(iamAuthenticationType),
-//                ct);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenRequestUriAndCancellationTokenAndImmutableCredentials(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var ct = new CancellationToken();
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl.ToUri(),
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
+                ct);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        #endregion
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenPath(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var path = "/path";
+        #endregion
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                apiGatewayUrl + path,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenPath(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var path = "/path";
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                apiGatewayUrl + path,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe(path);
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenQuery(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var uriBuilder = new UriBuilder(apiGatewayUrl)
-//            {
-//                Query = "Param1=Value1"
-//            };
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                uriBuilder.Uri,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenQuery(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value1"
+            };
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                uriBuilder.Uri,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenOrderedQuery(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var uriBuilder = new UriBuilder(apiGatewayUrl)
-//            {
-//                Query = "Param1=Value1&Param1=Value2"
-//            };
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                uriBuilder.Uri,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenOrderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value1&Param1=Value2"
+            };
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                uriBuilder.Uri,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenUnorderedQuery(
-//            IamAuthenticationType iamAuthenticationType,
-//            IContent content)
-//        {
-//            // Arrange
-//            var uriBuilder = new UriBuilder(apiGatewayUrl)
-//            {
-//                Query = "Param1=Value2&Param1=Value1"
-//            };
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
 
-//            // Act
-//            var response = await HttpClient.PutAsync(
-//                uriBuilder.Uri,
-//                content.AsHttpContent(),
-//                region,
-//                serviceName,
-//                ResolveMutableCredentials(iamAuthenticationType));
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenUnorderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            IContent content)
+        {
+            // Arrange
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value2&Param1=Value1"
+            };
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.PutAsync(
+                uriBuilder.Uri,
+                content.AsHttpContent(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe("PUT");
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
-//            receivedRequest.Body.ShouldBe(content.AsString());
-//        }
-//    }
-//}
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe("PUT");
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
+            receivedRequest.Body.ShouldBe(content.AsString());
+        }
+    }
+}
