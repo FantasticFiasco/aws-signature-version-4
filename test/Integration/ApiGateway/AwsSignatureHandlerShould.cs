@@ -1,360 +1,366 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Net;
-//using System.Net.Http;
-//using System.Threading.Tasks;
-//using AwsSignatureVersion4.Integration.ApiGateway.Requests;
-//using AwsSignatureVersion4.Private;
-//using AwsSignatureVersion4.TestSuite;
-//using Shouldly;
-//using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using AwsSignatureVersion4.Integration.ApiGateway.Fixtures;
+using AwsSignatureVersion4.Integration.ApiGateway.Requests;
+using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.TestSuite.Fixtures;
+using Shouldly;
+using Xunit;
 
-//namespace AwsSignatureVersion4.Integration.ApiGateway
-//{
-//    [Collection("API Gateway")]
-//    public class AwsSignatureHandlerShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
-//    {
-//        private readonly TestSuiteContext testSuiteContext;
+namespace AwsSignatureVersion4.Integration.ApiGateway
+{
+    [Collection("API Gateway")]
+    [Trait("Category", "Integration")]
+    public class AwsSignatureHandlerShould
+    {
+        private readonly Func<IamAuthenticationType, string, string, IHttpClientFactory> httpClientFactoryProvider;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string apiGatewayUrl;
+        
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly Func<HttpRequestMessage, string, HttpRequestMessage> redirectRequest;
 
-//        public AwsSignatureHandlerShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
-//            : base(context)
-//        {
-//            this.testSuiteContext = testSuiteContext;
-//        }
+        public AwsSignatureHandlerShould(ApiGatewayCollectionFixture apiGatewayCollectionFixture, TestSuiteFixture testSuiteFixture)
+        {
+            httpClientFactoryProvider = apiGatewayCollectionFixture.HttpClientFactory;
+            region = apiGatewayCollectionFixture.Region.SystemName;
+            serviceName = apiGatewayCollectionFixture.ServiceName;
+            apiGatewayUrl = apiGatewayCollectionFixture.ApiGatewayUrl;
 
-//        public static IEnumerable<object[]> TestCases =>
-//            new[]
-//            {
-//                new object[] { IamAuthenticationType.User, HttpMethod.Get },
-//                new object[] { IamAuthenticationType.User, HttpMethod.Post },
-//                new object[] { IamAuthenticationType.User, HttpMethod.Put },
-//                new object[] { IamAuthenticationType.User, HttpMethod.Patch },
-//                new object[] { IamAuthenticationType.User, HttpMethod.Delete },
-//                new object[] { IamAuthenticationType.Role, HttpMethod.Get },
-//                new object[] { IamAuthenticationType.Role, HttpMethod.Post },
-//                new object[] { IamAuthenticationType.Role, HttpMethod.Put },
-//                new object[] { IamAuthenticationType.Role, HttpMethod.Patch },
-//                new object[] { IamAuthenticationType.Role, HttpMethod.Delete }
-//            };
+            loadScenario = testSuiteFixture.LoadScenario;
+            redirectRequest = testSuiteFixture.RedirectRequest;
+        }
 
-//        [Theory]
-//        [InlineData("get-header-key-duplicate")]
-//        [InlineData("get-header-value-multiline")]
-//        [InlineData("get-header-value-order")]
-//        [InlineData("get-header-value-trim")]
-//        [InlineData("get-unreserved")]
-//        [InlineData("get-utf8")]
-//        [InlineData("get-vanilla")]
-//        [InlineData("get-vanilla-empty-query-key")]
-//        [InlineData("get-vanilla-query")]
-//        [InlineData("get-vanilla-query-order-key")]
-//        [InlineData("get-vanilla-query-order-key-case")]
-//        [InlineData("get-vanilla-query-order-value")]
-//        [InlineData("get-vanilla-query-unreserved", Skip = SkipReasons.NotSupportedByApiGateway)]
-//        [InlineData("get-vanilla-utf8-query")]
-//        [InlineData("normalize-path", "get-relative")]
-//        [InlineData("normalize-path", "get-relative-relative")]
-//        [InlineData("normalize-path", "get-slash")]
-//        [InlineData("normalize-path", "get-slash-dot-slash")]
-//        [InlineData("normalize-path", "get-slashes")]
-//        [InlineData("normalize-path", "get-slash-pointless-dot")]
-//        [InlineData("normalize-path", "get-space")]
-//        [InlineData("post-header-key-case")]
-//        [InlineData("post-header-key-sort")]
-//        [InlineData("post-header-value-case")]
-//        [InlineData("post-sts-token", "post-sts-header-after")]
-//        [InlineData("post-sts-token", "post-sts-header-before", Skip = SkipReasons.RedundantStsTokenScenario)]
-//        [InlineData("post-vanilla")]
-//        [InlineData("post-vanilla-empty-query-value")]
-//        [InlineData("post-vanilla-query")]
-//        [InlineData("post-x-www-form-urlencoded")]
-//        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
-//        public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(IamAuthenticationType.User).CreateClient("integration");
-//            var request = BuildRequest(scenarioName);
+        public static IEnumerable<object[]> TestCases =>
+            new[]
+            {
+                new object[] { IamAuthenticationType.User, HttpMethod.Get },
+                new object[] { IamAuthenticationType.User, HttpMethod.Post },
+                new object[] { IamAuthenticationType.User, HttpMethod.Put },
+                new object[] { IamAuthenticationType.User, HttpMethod.Patch },
+                new object[] { IamAuthenticationType.User, HttpMethod.Delete },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Get },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Post },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Put },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Patch },
+                new object[] { IamAuthenticationType.Role, HttpMethod.Delete }
+            };
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+        [Theory]
+        [InlineData("get-header-key-duplicate")]
+        [InlineData("get-header-value-multiline")]
+        [InlineData("get-header-value-order")]
+        [InlineData("get-header-value-trim")]
+        [InlineData("get-unreserved")]
+        [InlineData("get-utf8")]
+        [InlineData("get-vanilla")]
+        [InlineData("get-vanilla-empty-query-key")]
+        [InlineData("get-vanilla-query")]
+        [InlineData("get-vanilla-query-order-key")]
+        [InlineData("get-vanilla-query-order-key-case")]
+        [InlineData("get-vanilla-query-order-value")]
+        [InlineData("get-vanilla-query-unreserved", Skip = SkipReasons.NotSupportedByApiGateway)]
+        [InlineData("get-vanilla-utf8-query")]
+        [InlineData("normalize-path", "get-relative")]
+        [InlineData("normalize-path", "get-relative-relative")]
+        [InlineData("normalize-path", "get-slash")]
+        [InlineData("normalize-path", "get-slash-dot-slash")]
+        [InlineData("normalize-path", "get-slashes")]
+        [InlineData("normalize-path", "get-slash-pointless-dot")]
+        [InlineData("normalize-path", "get-space")]
+        [InlineData("post-header-key-case")]
+        [InlineData("post-header-key-sort")]
+        [InlineData("post-header-value-case")]
+        [InlineData("post-sts-token", "post-sts-header-after")]
+        [InlineData("post-sts-token", "post-sts-header-before", Skip = SkipReasons.RedundantStsTokenScenario)]
+        [InlineData("post-vanilla")]
+        [InlineData("post-vanilla-empty-query-value")]
+        [InlineData("post-vanilla-query")]
+        [InlineData("post-x-www-form-urlencoded")]
+        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
+        public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
+        {
+            // Arrange
+            var scenario = loadScenario(scenarioName);
+            var request = redirectRequest(scenario.Request, apiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(IamAuthenticationType.User, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
-//        }
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//        [Theory]
-//        [InlineData("get-header-key-duplicate")]
-//        [InlineData("get-header-value-multiline")]
-//        [InlineData("get-header-value-order")]
-//        [InlineData("get-header-value-trim")]
-//        [InlineData("get-unreserved")]
-//        [InlineData("get-utf8")]
-//        [InlineData("get-vanilla")]
-//        [InlineData("get-vanilla-empty-query-key")]
-//        [InlineData("get-vanilla-query")]
-//        [InlineData("get-vanilla-query-order-key")]
-//        [InlineData("get-vanilla-query-order-key-case")]
-//        [InlineData("get-vanilla-query-order-value")]
-//        [InlineData("get-vanilla-query-unreserved", Skip = SkipReasons.NotSupportedByApiGateway)]
-//        [InlineData("get-vanilla-utf8-query")]
-//        [InlineData("normalize-path", "get-relative")]
-//        [InlineData("normalize-path", "get-relative-relative")]
-//        [InlineData("normalize-path", "get-slash")]
-//        [InlineData("normalize-path", "get-slash-dot-slash")]
-//        [InlineData("normalize-path", "get-slashes")]
-//        [InlineData("normalize-path", "get-slash-pointless-dot")]
-//        [InlineData("normalize-path", "get-space")]
-//        [InlineData("post-header-key-case")]
-//        [InlineData("post-header-key-sort")]
-//        [InlineData("post-header-value-case")]
-//        [InlineData("post-sts-token", "post-sts-header-after")]
-//        [InlineData("post-sts-token", "post-sts-header-before", Skip = SkipReasons.RedundantStsTokenScenario)]
-//        [InlineData("post-vanilla")]
-//        [InlineData("post-vanilla-empty-query-value")]
-//        [InlineData("post-vanilla-query")]
-//        [InlineData("post-x-www-form-urlencoded")]
-//        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
-//        public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(IamAuthenticationType.Role).CreateClient("integration");
-//            var request = BuildRequest(scenarioName);
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+        [Theory]
+        [InlineData("get-header-key-duplicate")]
+        [InlineData("get-header-value-multiline")]
+        [InlineData("get-header-value-order")]
+        [InlineData("get-header-value-trim")]
+        [InlineData("get-unreserved")]
+        [InlineData("get-utf8")]
+        [InlineData("get-vanilla")]
+        [InlineData("get-vanilla-empty-query-key")]
+        [InlineData("get-vanilla-query")]
+        [InlineData("get-vanilla-query-order-key")]
+        [InlineData("get-vanilla-query-order-key-case")]
+        [InlineData("get-vanilla-query-order-value")]
+        [InlineData("get-vanilla-query-unreserved", Skip = SkipReasons.NotSupportedByApiGateway)]
+        [InlineData("get-vanilla-utf8-query")]
+        [InlineData("normalize-path", "get-relative")]
+        [InlineData("normalize-path", "get-relative-relative")]
+        [InlineData("normalize-path", "get-slash")]
+        [InlineData("normalize-path", "get-slash-dot-slash")]
+        [InlineData("normalize-path", "get-slashes")]
+        [InlineData("normalize-path", "get-slash-pointless-dot")]
+        [InlineData("normalize-path", "get-space")]
+        [InlineData("post-header-key-case")]
+        [InlineData("post-header-key-sort")]
+        [InlineData("post-header-value-case")]
+        [InlineData("post-sts-token", "post-sts-header-after")]
+        [InlineData("post-sts-token", "post-sts-header-before", Skip = SkipReasons.RedundantStsTokenScenario)]
+        [InlineData("post-vanilla")]
+        [InlineData("post-vanilla-empty-query-value")]
+        [InlineData("post-vanilla-query")]
+        [InlineData("post-x-www-form-urlencoded")]
+        [InlineData("post-x-www-form-urlencoded-parameters", Skip = SkipReasons.RedundantContentTypeCharset)]
+        public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
+        {
+            // Arrange
+            var scenario = loadScenario(scenarioName);
+            var request = redirectRequest(scenario.Request, apiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(IamAuthenticationType.Role, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
-//        }
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenPath(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var path = "/path";
-//            var request = new HttpRequestMessage(method, apiGatewayUrl + path);
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenPath(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var path = "/path";
+            var request = new HttpRequestMessage(method, apiGatewayUrl + path);
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe(path);
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenHeaderWithDuplicateValues(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, apiGatewayUrl);
-//            request.AddHeaders("My-Header1", new[] { "value2", "value2" });
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe(path);
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenHeaderWithDuplicateValues(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
+            request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value2, value2" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenHeaderWithUnorderedValues(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, apiGatewayUrl);
-//            request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value2, value2" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenHeaderWithUnorderedValues(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
+            request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value4, value1, value3, value2" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenHeaderWithWhitespaceCharacters(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, apiGatewayUrl);
-//            request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value4, value1, value3, value2" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenHeaderWithWhitespaceCharacters(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
+            request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value1, a   b   c" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenQuery(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Headers["My-Header1"].ShouldBe(new[] { "value1, a   b   c" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            var uriBuilder = new UriBuilder(apiGatewayUrl)
-//            {
-//                Query = "Param1=Value1"
-//            };
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenQuery(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-//            var request = new HttpRequestMessage(method, uriBuilder.Uri);
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value1"
+            };
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+            var request = new HttpRequestMessage(method, uriBuilder.Uri);
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenOrderedQuery(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            var uriBuilder = new UriBuilder(apiGatewayUrl)
-//            {
-//                Query = "Param1=Value1&Param1=Value2"
-//            };
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenOrderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-//            var request = new HttpRequestMessage(method, uriBuilder.Uri);
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value1&Param1=Value2"
+            };
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+            var request = new HttpRequestMessage(method, uriBuilder.Uri);
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenUnorderedQuery(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value1", "Value2" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            var uriBuilder = new UriBuilder(apiGatewayUrl)
-//            {
-//                Query = "Param1=Value2&Param1=Value1"
-//            };
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenUnorderedQuery(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-//            var request = new HttpRequestMessage(method, uriBuilder.Uri);
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
+            {
+                Query = "Param1=Value2&Param1=Value1"
+            };
 
-//            // Act
-//            var response = await httpClient.SendAsync(request);
+            var request = new HttpRequestMessage(method, uriBuilder.Uri);
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        [Theory]
-//        [MemberData(nameof(TestCases))]
-//        public async Task SucceedGivenHttpCompletionOption(
-//            IamAuthenticationType iamAuthenticationType,
-//            HttpMethod method)
-//        {
-//            // Arrange
-//            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-//            var request = new HttpRequestMessage(method, apiGatewayUrl);
-//            var completionOption = HttpCompletionOption.ResponseContentRead;
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
+            receivedRequest.Body.ShouldBeNull();
+        }
 
-//            // Act
-//            var response = await httpClient.SendAsync(request, completionOption);
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenHttpCompletionOption(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
+            var completionOption = HttpCompletionOption.ResponseContentRead;
 
-//            // Assert
-//            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            // Act
+            var response = await httpClient.SendAsync(request, completionOption);
 
-//            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
-//            receivedRequest.Method.ShouldBe(method.ToString());
-//            receivedRequest.Path.ShouldBe("/");
-//            receivedRequest.QueryStringParameters.ShouldBeNull();
-//            receivedRequest.Body.ShouldBeNull();
-//        }
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-//        private HttpRequestMessage BuildRequest(string[] scenarioName)
-//        {
-//            var request = testSuiteContext.LoadScenario(scenarioName).Request;
-
-//            if (request.RequestUri == null) throw new Exception("Test suite request URI cannot be null");
-
-//            // Redirect the request to the AWS API Gateway
-//            request.RequestUri = request.RequestUri
-//                .ToString()
-//                .Replace("https://example.amazonaws.com", apiGatewayUrl)
-//                .ToUri();
-
-//            // The "Host" header is now invalid since we redirected the request to the AWS API
-//            // Gateway. Lets remove the header and have the signature implementation re-add it
-//            // correctly.
-//            request.Headers.Remove("Host");
-
-//            return request;
-//        }
-//    }
-//}
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.QueryStringParameters.ShouldBeNull();
+            receivedRequest.Body.ShouldBeNull();
+        }
+    }
+}

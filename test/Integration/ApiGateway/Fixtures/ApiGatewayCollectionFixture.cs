@@ -7,36 +7,32 @@ namespace AwsSignatureVersion4.Integration.ApiGateway.Fixtures
 {
     public class ApiGatewayCollectionFixture : IDisposable
     {
+        private readonly IamCredentials credentials;
+        private readonly Services services;
+
         public ApiGatewayCollectionFixture()
         {
-            HttpClient = new HttpClient();
+            credentials = new IamCredentials();
+            services = new Services(ResolveMutableCredentials);
         }
 
-        public RegionEndpoint Region { get; } = Secrets.Aws.Region;
+        public HttpClient HttpClient => new();
 
-        public string ServiceName { get; } = "execute-api";
+        public IHttpClientFactory HttpClientFactory(
+            IamAuthenticationType iamAuthenticationType,
+            string regionName,
+            string serviceName)
+            => services.HttpClientFactory(iamAuthenticationType, regionName, serviceName);
 
-        public string ApiGatewayUrl { get; } = Secrets.Aws.ApiGateway.Url;
+        public RegionEndpoint Region => Secrets.Aws.Region;
 
-        public AWSCredentials UserCredentials { get; } = Secrets.Aws.UserWithPermissions.Credentials;
+        public string ServiceName => "execute-api";
 
-        public AWSCredentials RoleCredentials { get; } = new AssumeRoleAWSCredentials(
-            Secrets.Aws.UserWithoutPermissions.Credentials,
-            Secrets.Aws.Role.Arn,
-            "signature-version-4-integration-tests");
+        public string ApiGatewayUrl => Secrets.Aws.ApiGateway.Url;
 
-        public HttpClient HttpClient { get; }
+        public AWSCredentials ResolveMutableCredentials(IamAuthenticationType type) => credentials.ResolveMutableCredentials(type);
 
-        public AWSCredentials ResolveMutableCredentials(IamAuthenticationType iamAuthenticationType) =>
-            iamAuthenticationType switch
-            {
-                IamAuthenticationType.User => UserCredentials,
-                IamAuthenticationType.Role => RoleCredentials,
-                _ => throw new NotImplementedException($"The authentication type {iamAuthenticationType} is not implemented")
-            };
-
-        public ImmutableCredentials ResolveImmutableCredentials(IamAuthenticationType iamAuthenticationType) =>
-            ResolveMutableCredentials(iamAuthenticationType).GetCredentials();
+        public ImmutableCredentials ResolveImmutableCredentials(IamAuthenticationType type) => credentials.ResolveImmutableCredentials(type);
 
         public void Dispose()
         {
