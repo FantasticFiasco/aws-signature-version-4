@@ -3,14 +3,13 @@ using System.IO;
 using System.Net.Http;
 using Amazon;
 using Amazon.Runtime;
-using AwsSignatureVersion4.Integration;
 using AwsSignatureVersion4.Private;
 
 namespace AwsSignatureVersion4.TestSuite.Fixtures
 {
     public class TestSuiteFixture
     {
-        public RegionEndpoint Region => Secrets.Aws.Region;
+        public RegionEndpoint Region => RegionEndpoint.USEast1;
 
         public string ServiceName => "service";
 

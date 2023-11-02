@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.TestSuite;
 using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
@@ -12,11 +13,13 @@ namespace AwsSignatureVersion4.Unit.Private
     [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
     public class CanonicalRequestShould : IClassFixture<TestSuiteFixture>
     {
-        private readonly TestSuiteFixture fixture;
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly DateTime utcNow;
 
         public CanonicalRequestShould(TestSuiteFixture fixture)
         {
-            this.fixture = fixture;
+            loadScenario = fixture.LoadScenario;
+            utcNow = fixture.UtcNow;
         }
 
         [Theory]
@@ -54,10 +57,10 @@ namespace AwsSignatureVersion4.Unit.Private
         public async Task PassTestSuite(params string[] scenarioName)
         {
             // Arrange
-            var scenario = fixture.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Add header 'X-Amz-Date' since the algorithm at this point expects it on the request
-            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, fixture.UtcNow.ToIso8601BasicDateTime());
+            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, utcNow.ToIso8601BasicDateTime());
 
             // Calculate the content hash, since it's one of the parameters to the canonical request
             var contentHash = await ContentHash.CalculateAsync(scenario.Request.Content);

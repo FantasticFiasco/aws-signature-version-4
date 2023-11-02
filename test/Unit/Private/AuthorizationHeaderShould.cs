@@ -1,5 +1,8 @@
+using System;
+using Amazon.Runtime;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.TestSuite;
 using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
@@ -8,11 +11,19 @@ namespace AwsSignatureVersion4.Unit.Private
 {
     public class AuthorizationHeaderShould : IClassFixture<TestSuiteFixture>
     {
-        private readonly TestSuiteFixture fixture;
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly DateTime utcNow;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly ImmutableCredentials immutableCredentials;
 
         public AuthorizationHeaderShould(TestSuiteFixture fixture)
         {
-            this.fixture = fixture;
+            loadScenario = fixture.LoadScenario;
+            utcNow = fixture.UtcNow;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            immutableCredentials = fixture.ImmutableCredentials;
         }
 
         [Theory]
@@ -50,17 +61,17 @@ namespace AwsSignatureVersion4.Unit.Private
         public void PassTestSuite(params string[] scenarioName)
         {
             // Arrange
-            var scenario = fixture.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Add header 'X-Amz-Date' since the algorithm at this point expects it on the request
-            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, fixture.UtcNow.ToIso8601BasicDateTime());
+            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, utcNow.ToIso8601BasicDateTime());
 
             // Act
             var authorizationHeader = AuthorizationHeader.Build(
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials,
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials,
                 scenario.ExpectedSignedHeaders,
                 scenario.ExpectedCredentialScope,
                 scenario.ExpectedStringToSign);

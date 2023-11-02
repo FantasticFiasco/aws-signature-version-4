@@ -1,5 +1,7 @@
+using System;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.TestSuite;
 using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
@@ -8,11 +10,17 @@ namespace AwsSignatureVersion4.Unit.Private
 {
     public class StringToSignShould : IClassFixture<TestSuiteFixture>
     {
-        private readonly TestSuiteFixture fixture;
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly DateTime utcNow;
+        private readonly string region;
+        private readonly string serviceName;
 
         public StringToSignShould(TestSuiteFixture fixture)
         {
-            this.fixture = fixture;
+            loadScenario = fixture.LoadScenario;
+            utcNow = fixture.UtcNow;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
         }
 
         [Theory]
@@ -50,16 +58,16 @@ namespace AwsSignatureVersion4.Unit.Private
         public void PassTestSuite(params string[] scenarioName)
         {
             // Arrange
-            var scenario = fixture.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Add header 'X-Amz-Date' since the algorithm at this point expects it on the request
-            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, fixture.UtcNow.ToIso8601BasicDateTime());
+            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, utcNow.ToIso8601BasicDateTime());
 
             // Act
             var (stringToSign, credentialScope) = StringToSign.Build(
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
+                utcNow,
+                region,
+                serviceName,
                 scenario.ExpectedCanonicalRequest);
 
             // Assert

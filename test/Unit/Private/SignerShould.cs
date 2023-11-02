@@ -3,8 +3,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Amazon.Runtime;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.TestSuite;
 using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
@@ -13,14 +15,21 @@ namespace AwsSignatureVersion4.Unit.Private
 {
     public class SignerShould : IClassFixture<TestSuiteFixture>, IDisposable
     {
-        private readonly TestSuiteFixture fixture;
         private readonly HttpClient httpClient;
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly DateTime utcNow;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly ImmutableCredentials immutableCredentials;
 
         public SignerShould(TestSuiteFixture fixture)
         {
-            this.fixture = fixture;
-
             httpClient = new HttpClient();
+            loadScenario = fixture.LoadScenario;
+            utcNow = fixture.UtcNow;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            immutableCredentials = fixture.ImmutableCredentials;
         }
 
         #region Pass test suite
@@ -60,17 +69,17 @@ namespace AwsSignatureVersion4.Unit.Private
         public async Task PassTestSuiteAsync(params string[] scenarioName)
         {
             // Arrange
-            var scenario = fixture.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Act
             var actual = await Signer.SignAsync(
                 scenario.Request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.CanonicalRequest.ShouldBe(scenario.ExpectedCanonicalRequest);
@@ -115,17 +124,17 @@ namespace AwsSignatureVersion4.Unit.Private
         public void PassTestSuite(params string[] scenarioName)
         {
             // Arrange
-            var scenario = fixture.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Act
             var actual = Signer.Sign(
                 scenario.Request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.CanonicalRequest.ShouldBe(scenario.ExpectedCanonicalRequest);
@@ -159,10 +168,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.RequestUri.ShouldBe(new Uri(expectedRequestUri));
@@ -188,10 +197,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.RequestUri.ShouldBe(new Uri(expectedRequestUri));
@@ -214,10 +223,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeFalse();
@@ -234,10 +243,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeFalse();
@@ -259,10 +268,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             await actual.ShouldThrowAsync<ArgumentException>();
@@ -280,10 +289,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.ShouldThrow<ArgumentException>();
@@ -305,10 +314,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             await actual.ShouldThrowAsync<ArgumentException>();
@@ -326,10 +335,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.ShouldThrow<ArgumentException>();
@@ -351,10 +360,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             await actual.ShouldThrowAsync<ArgumentException>();
@@ -372,10 +381,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                fixture.UtcNow,
-                fixture.Region.SystemName,
-                fixture.ServiceName,
-                fixture.ImmutableCredentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.ShouldThrow<ArgumentException>();
