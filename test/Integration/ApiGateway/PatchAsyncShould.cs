@@ -25,7 +25,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         private readonly Func<IamAuthenticationType, AWSCredentials> resolveMutableCredentials;
         private readonly Func<IamAuthenticationType, ImmutableCredentials> resolveImmutableCredentials;
 
-        public PatchAsyncShould(ApiGatewayCollectionFixture fixture)
+        public PatchAsyncShould(ApiGatewayFixture fixture)
         {
             httpClient = fixture.HttpClient;
             region = fixture.Region.SystemName;

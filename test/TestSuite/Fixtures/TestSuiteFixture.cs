@@ -1,12 +1,26 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using Amazon;
+using Amazon.Runtime;
+using AwsSignatureVersion4.Integration;
 using AwsSignatureVersion4.Private;
 
 namespace AwsSignatureVersion4.TestSuite.Fixtures
 {
     public class TestSuiteFixture
     {
+        public RegionEndpoint Region => Secrets.Aws.Region;
+
+        public string ServiceName => "service";
+
+        public DateTime UtcNow => new(2015, 8, 30, 12, 36, 00, DateTimeKind.Utc);
+
+        public ImmutableCredentials ImmutableCredentials => new(
+            "AKIDEXAMPLE",
+            "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
+            null);
+
         public Scenario LoadScenario(params string[] scenarioName)
         {
             var scenarioPath = Path.Combine(

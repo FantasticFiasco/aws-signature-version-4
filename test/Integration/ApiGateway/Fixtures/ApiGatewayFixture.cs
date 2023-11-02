@@ -5,12 +5,12 @@ using Amazon.Runtime;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway.Fixtures
 {
-    public class ApiGatewayCollectionFixture : IDisposable
+    public class ApiGatewayFixture : IDisposable
     {
         private readonly IamCredentials credentials;
         private readonly Services services;
 
-        public ApiGatewayCollectionFixture()
+        public ApiGatewayFixture()
         {
             credentials = new IamCredentials();
             services = new Services(ResolveMutableCredentials);

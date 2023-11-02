@@ -25,12 +25,12 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         private readonly Func<string[], Scenario> loadScenario;
         private readonly Func<HttpRequestMessage, string, HttpRequestMessage> redirectRequest;
 
-        public AwsSignatureHandlerShould(ApiGatewayCollectionFixture apiGatewayCollectionFixture, TestSuiteFixture testSuiteFixture)
+        public AwsSignatureHandlerShould(ApiGatewayFixture apiGatewayFixture, TestSuiteFixture testSuiteFixture)
         {
-            httpClientFactoryProvider = apiGatewayCollectionFixture.HttpClientFactory;
-            region = apiGatewayCollectionFixture.Region.SystemName;
-            serviceName = apiGatewayCollectionFixture.ServiceName;
-            apiGatewayUrl = apiGatewayCollectionFixture.ApiGatewayUrl;
+            httpClientFactoryProvider = apiGatewayFixture.HttpClientFactory;
+            region = apiGatewayFixture.Region.SystemName;
+            serviceName = apiGatewayFixture.ServiceName;
+            apiGatewayUrl = apiGatewayFixture.ApiGatewayUrl;
 
             loadScenario = testSuiteFixture.LoadScenario;
             redirectRequest = testSuiteFixture.RedirectRequest;

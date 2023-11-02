@@ -67,3 +67,6 @@ indent_size = 2
 
 [*.{yaml,yml}]
 indent_size = 2
+
+[*.{authz,creq,req,sreq,sts}]
+insert_final_newline = false

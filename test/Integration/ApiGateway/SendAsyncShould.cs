@@ -28,14 +28,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         private readonly Func<string[], Scenario> loadScenario;
         private readonly Func<HttpRequestMessage, string, HttpRequestMessage> redirectRequest;
 
-        public SendAsyncShould(ApiGatewayCollectionFixture apiGatewayCollectionFixture, TestSuiteFixture testSuiteFixture)
+        public SendAsyncShould(ApiGatewayFixture apiGatewayFixture, TestSuiteFixture testSuiteFixture)
         {
-            httpClient = apiGatewayCollectionFixture.HttpClient;
-            region = apiGatewayCollectionFixture.Region.SystemName;
-            serviceName = apiGatewayCollectionFixture.ServiceName;
-            apiGatewayUrl = apiGatewayCollectionFixture.ApiGatewayUrl;
-            resolveMutableCredentials = apiGatewayCollectionFixture.ResolveMutableCredentials;
-            resolveImmutableCredentials = apiGatewayCollectionFixture.ResolveImmutableCredentials;
+            httpClient = apiGatewayFixture.HttpClient;
+            region = apiGatewayFixture.Region.SystemName;
+            serviceName = apiGatewayFixture.ServiceName;
+            apiGatewayUrl = apiGatewayFixture.ApiGatewayUrl;
+            resolveMutableCredentials = apiGatewayFixture.ResolveMutableCredentials;
+            resolveImmutableCredentials = apiGatewayFixture.ResolveImmutableCredentials;
 
             loadScenario = testSuiteFixture.LoadScenario;
             redirectRequest = testSuiteFixture.RedirectRequest;
