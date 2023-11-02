@@ -1,75 +1,72 @@
-﻿//using System;
-//using System.Net.Http;
-//using System.Threading.Tasks;
-//using AwsSignatureVersion4.Private;
-//using AwsSignatureVersion4.TestSuite;
-//using Shouldly;
-//using Xunit;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using AwsSignatureVersion4.Private;
+using AwsSignatureVersion4.TestSuite.Fixtures;
+using Shouldly;
+using Xunit;
 
-//namespace AwsSignatureVersion4.Unit.Private
-//{
-//    public class SignerGivenS3Should : IClassFixture<TestSuiteContext>, IDisposable
-//    {
-//        private readonly TestSuiteContext context;
-//        private readonly HttpClient httpClient;
+namespace AwsSignatureVersion4.Unit.Private
+{
+    public class SignerGivenS3Should : IClassFixture<TestSuiteFixture>, IDisposable
+    {
+        private readonly TestSuiteFixture fixture;
+        private readonly HttpClient httpClient;
 
-//        public SignerGivenS3Should(TestSuiteContext context)
-//        {
-//            this.context = context;
+        public SignerGivenS3Should(TestSuiteFixture fixture)
+        {
+            this.fixture = fixture;
 
-//            httpClient = new HttpClient();
+            httpClient = new HttpClient();
+        }
 
-//            context.AdjustHeaderValueSeparator();
-//        }
+        #region Add X-Amz-Content-SHA256 header
 
-//        #region Add X-Amz-Content-SHA256 header
+        [Fact]
+        public async Task AddXAmzContentHeaderAsync()
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
 
-//        [Fact]
-//        public async Task AddXAmzContentHeaderAsync()
-//        {
-//            // Arrange
-//            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
+            // Act
+            await Signer.SignAsync(
+                request,
+                httpClient.BaseAddress,
+                httpClient.DefaultRequestHeaders,
+                fixture.UtcNow,
+                fixture.Region.SystemName,
+                "s3",
+                fixture.ImmutableCredentials);
 
-//            // Act
-//            await Signer.SignAsync(
-//                request,
-//                httpClient.BaseAddress,
-//                httpClient.DefaultRequestHeaders,
-//                context.UtcNow,
-//                context.RegionName,
-//                "s3",
-//                context.Credentials);
+            // Assert
+            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
+        }
 
-//            // Assert
-//            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
-//        }
+        [Fact]
+        public void AddXAmzContentHeader()
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
 
-//        [Fact]
-//        public void AddXAmzContentHeader()
-//        {
-//            // Arrange
-//            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
+            // Act
+            Signer.Sign(
+                request,
+                httpClient.BaseAddress,
+                httpClient.DefaultRequestHeaders,
+                fixture.UtcNow,
+                fixture.Region.SystemName,
+                "s3",
+                fixture.ImmutableCredentials);
 
-//            // Act
-//            Signer.Sign(
-//                request,
-//                httpClient.BaseAddress,
-//                httpClient.DefaultRequestHeaders,
-//                context.UtcNow,
-//                context.RegionName,
-//                "s3",
-//                context.Credentials);
+            // Assert
+            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
+        }
 
-//            // Assert
-//            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
-//        }
+        #endregion
 
-//        #endregion
-
-//        public void Dispose()
-//        {
-//            httpClient?.Dispose();
-//            context.ResetHeaderValueSeparator();
-//        }
-//    }
-//}
+        public void Dispose()
+        {
+            httpClient.Dispose();
+        }
+    }
+}
