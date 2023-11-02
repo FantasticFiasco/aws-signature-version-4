@@ -1,73 +1,65 @@
-//using System;
-//using System.Net.Http;
-//using AwsSignatureVersion4.Private;
-//using AwsSignatureVersion4.TestSuite;
-//using Shouldly;
-//using Xunit;
+using System;
+using System.Net.Http;
+using AwsSignatureVersion4.Private;
+using Shouldly;
+using Xunit;
 
-//namespace AwsSignatureVersion4.Unit.Private
-//{
-//    public class CanonicalRequestGivenMonoShould : IClassFixture<TestSuiteContext>, IDisposable
-//    {
-//        private readonly TestSuiteContext context;
-//        private readonly EnvironmentProbe defaultEnvironmentProbe;
+namespace AwsSignatureVersion4.Unit.Private
+{
+    [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
+    public class CanonicalRequestGivenMonoShould : IDisposable
+    {
+        private readonly EnvironmentProbe defaultEnvironmentProbe;
 
-//        public CanonicalRequestGivenMonoShould(TestSuiteContext context)
-//        {
-//            this.context = context;
+        public CanonicalRequestGivenMonoShould()
+        {
+            // Mock Mono environment
+            defaultEnvironmentProbe = CanonicalRequest.EnvironmentProbe;
+            CanonicalRequest.EnvironmentProbe = new MonoEnvironmentProbe();
+        }
 
-//            context.AdjustHeaderValueSeparator();
+        [Fact]
+        public void RespectDefaultHeader()
+        {
+            // Arrange
+            var headers = new HttpRequestMessage().Headers;
 
-//            // Mock Mono environment
-//            defaultEnvironmentProbe = CanonicalRequest.EnvironmentProbe;
-//            CanonicalRequest.EnvironmentProbe = new MonoEnvironmentProbe();
-//        }
+            var defaultHeaders = new HttpRequestMessage().Headers;
+            defaultHeaders.Add("some-header-name", "some-header-value");
 
-//        [Fact]
-//        public void RespectDefaultHeader()
-//        {
-//            // Arrange
-//            var headers = new HttpRequestMessage().Headers;
+            // Act
+            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
 
-//            var defaultHeaders = new HttpRequestMessage().Headers;
-//            defaultHeaders.Add("some-header-name", "some-header-value");
+            // Assert
+            actual["some-header-name"].ShouldBe(new[] { "some-header-value" });
+        }
 
-//            // Act
-//            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
+        [Fact]
+        public void RespectDuplicateDefaultHeader()
+        {
+            // Arrange
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add("some-header-name", "some-header-value");
 
-//            // Assert
-//            actual["some-header-name"].ShouldBe(new[] { "some-header-value" });
-//        }
+            var defaultHeaders = new HttpRequestMessage().Headers;
+            defaultHeaders.Add("some-header-name", "some-other-header-value");
 
-//        [Fact]
-//        public void RespectDuplicateDefaultHeader()
-//        {
-//            // Arrange
-//            var headers = new HttpRequestMessage().Headers;
-//            headers.Add("some-header-name", "some-header-value");
+            // Act
+            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
 
-//            var defaultHeaders = new HttpRequestMessage().Headers;
-//            defaultHeaders.Add("some-header-name", "some-other-header-value");
+            // Assert
+            actual["some-header-name"].ShouldBe(new[] { "some-header-value", "some-other-header-value" });
+        }
 
-//            // Act
-//            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
+        public void Dispose()
+        {
+            // Reset environment probe
+            CanonicalRequest.EnvironmentProbe = defaultEnvironmentProbe;
+        }
 
-//            // Assert
-//            actual["some-header-name"].ShouldBe(new[] { "some-header-value", "some-other-header-value" });
-//        }
-
-//        public void Dispose()
-//        {
-//            // Reset header value separator
-//            context.ResetHeaderValueSeparator();
-
-//            // Reset environment probe
-//            CanonicalRequest.EnvironmentProbe = defaultEnvironmentProbe;
-//        }
-
-//        private class MonoEnvironmentProbe : EnvironmentProbe
-//        {
-//            public override bool IsMono { get; } = true;
-//        }
-//    }
-//}
+        private class MonoEnvironmentProbe : EnvironmentProbe
+        {
+            public override bool IsMono => true;
+        }
+    }
+}

@@ -9,6 +9,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Unit.Private
 {
+    [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
     public class CanonicalRequestShould : IClassFixture<TestSuiteFixture>
     {
         private readonly TestSuiteFixture fixture;
