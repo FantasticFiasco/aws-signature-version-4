@@ -7,7 +7,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 
-namespace AwsSignatureVersion4.Integration.S3.Helpers
+namespace AwsSignatureVersion4.Integration.S3.Buckets
 {
     public class Bucket : IDisposable
     {

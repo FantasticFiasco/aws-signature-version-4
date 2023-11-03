@@ -12,9 +12,9 @@
 //    [Trait("Category", "Integration")]
 //    public class AwsSignatureHandlerShould
 //    {
-//        private readonly S3CollectionFixture fixture;
+//        private readonly S3Fixture fixture;
         
-//        public AwsSignatureHandlerShould(S3CollectionFixture fixture)
+//        public AwsSignatureHandlerShould(S3Fixture fixture)
 //        {
 //            this.fixture = fixture;
 //        }
