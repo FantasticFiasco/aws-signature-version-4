@@ -13,6 +13,7 @@ using Xunit;
 
 namespace AwsSignatureVersion4.Unit.Private
 {
+    [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
     public class SignerShould : IClassFixture<TestSuiteFixture>, IDisposable
     {
         private readonly HttpClient httpClient;
@@ -21,6 +22,7 @@ namespace AwsSignatureVersion4.Unit.Private
         private readonly string region;
         private readonly string serviceName;
         private readonly ImmutableCredentials immutableCredentials;
+        private readonly Action resetHeaderValueSeparator;
 
         public SignerShould(TestSuiteFixture fixture)
         {
@@ -30,6 +32,9 @@ namespace AwsSignatureVersion4.Unit.Private
             region = fixture.Region.SystemName;
             serviceName = fixture.ServiceName;
             immutableCredentials = fixture.ImmutableCredentials;
+            resetHeaderValueSeparator = fixture.ResetHeaderValueSeparator;
+
+            fixture.AdjustHeaderValueSeparator();
         }
 
         #region Pass test suite
@@ -395,6 +400,8 @@ namespace AwsSignatureVersion4.Unit.Private
         public void Dispose()
         {
             httpClient.Dispose();
+
+            resetHeaderValueSeparator();
         }
     }
 }

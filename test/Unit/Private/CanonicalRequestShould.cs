@@ -11,15 +11,19 @@ using Xunit;
 namespace AwsSignatureVersion4.Unit.Private
 {
     [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
-    public class CanonicalRequestShould : IClassFixture<TestSuiteFixture>
+    public class CanonicalRequestShould : IClassFixture<TestSuiteFixture>, IDisposable
     {
         private readonly Func<string[], Scenario> loadScenario;
         private readonly DateTime utcNow;
+        private readonly Action resetHeaderValueSeparator;
 
         public CanonicalRequestShould(TestSuiteFixture fixture)
         {
             loadScenario = fixture.LoadScenario;
             utcNow = fixture.UtcNow;
+            resetHeaderValueSeparator = fixture.ResetHeaderValueSeparator;
+
+            fixture.AdjustHeaderValueSeparator();
         }
 
         [Theory]
@@ -222,6 +226,11 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Assert
             actual[parameterName].ShouldBe(expected);
+        }
+
+        public void Dispose()
+        {
+            resetHeaderValueSeparator();
         }
     }
 }

@@ -9,6 +9,8 @@ namespace AwsSignatureVersion4.TestSuite.Fixtures
 {
     public class TestSuiteFixture
     {
+        private string defaultHeaderValueSeparator;
+
         public RegionEndpoint Region => RegionEndpoint.USEast1;
 
         public string ServiceName => "service";
@@ -48,6 +50,26 @@ namespace AwsSignatureVersion4.TestSuite.Fixtures
             request.Headers.Remove("Host");
 
             return request;
+        }
+
+        /// <summary>
+        /// The header value separator chosen by Microsoft in .NET is ", " and not "," as defined
+        /// by the test suite. This means that we have to change the default behavior to match the
+        /// test suite.
+        /// </summary>
+        public void AdjustHeaderValueSeparator()
+        {
+            defaultHeaderValueSeparator = CanonicalRequest.HeaderValueSeparator;
+            CanonicalRequest.HeaderValueSeparator = ",";
+        }
+
+        /// <summary>
+        /// Lets reset the default header value separator before we continue with the rest of the
+        /// tests.
+        /// </summary>
+        public void ResetHeaderValueSeparator()
+        {
+            CanonicalRequest.HeaderValueSeparator = defaultHeaderValueSeparator;
         }
     }
 }
