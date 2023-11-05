@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using Amazon.Runtime;
+using AwsSignatureVersion4.Integration.ApiGateway.Fixtures;
 using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using Shouldly;
@@ -12,11 +13,24 @@ using Xunit;
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     [Collection("API Gateway")]
-    public class GetStringAsyncShould : ApiGatewayIntegrationBase
+    [Trait("Category", "Integration")]
+    public class GetStringAsyncShould
     {
-        public GetStringAsyncShould(IntegrationTestContext context)
-            : base(context)
+        private readonly HttpClient httpClient;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string apiGatewayUrl;
+        private readonly Func<IamAuthenticationType, AWSCredentials> resolveMutableCredentials;
+        private readonly Func<IamAuthenticationType, ImmutableCredentials> resolveImmutableCredentials;
+
+        public GetStringAsyncShould(ApiGatewayFixture fixture)
         {
+            httpClient = fixture.HttpClient;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            apiGatewayUrl = fixture.ApiGatewayUrl;
+            resolveMutableCredentials = fixture.ResolveMutableCredentials;
+            resolveImmutableCredentials = fixture.ResolveImmutableCredentials;
         }
 
         public static IEnumerable<object[]> TestCases =>
@@ -33,11 +47,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();
@@ -52,11 +66,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();
@@ -75,11 +89,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();
@@ -94,11 +108,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();
@@ -120,11 +134,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -143,11 +157,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -166,11 +180,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken(true);
 
             // Act
-            var task = HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var task = httpClient.GetStringAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)
@@ -194,11 +208,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -217,11 +231,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -240,13 +254,13 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
             // Arrange
             var path = "/path";
-            
+
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
-                Context.ApiGatewayUrl + path,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var stringContent = await httpClient.GetStringAsync(
+                apiGatewayUrl + path,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();
@@ -261,17 +275,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1"
             };
 
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
+            var stringContent = await httpClient.GetStringAsync(
                 uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();
@@ -286,17 +300,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1&Param1=Value2"
             };
 
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
+            var stringContent = await httpClient.GetStringAsync(
                 uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();
@@ -311,17 +325,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value2&Param1=Value1"
             };
 
             // Act
-            var stringContent = await HttpClient.GetStringAsync(
+            var stringContent = await httpClient.GetStringAsync(
                 uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             var receivedRequest = stringContent.DeserializeReceivedRequest();

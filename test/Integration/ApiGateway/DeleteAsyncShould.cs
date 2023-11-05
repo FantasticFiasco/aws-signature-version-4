@@ -4,7 +4,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using Amazon.Runtime;
+using AwsSignatureVersion4.Integration.ApiGateway.Fixtures;
 using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using Shouldly;
@@ -13,11 +14,24 @@ using Xunit;
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     [Collection("API Gateway")]
-    public class DeleteAsyncShould : ApiGatewayIntegrationBase
+    [Trait("Category", "Integration")]
+    public class DeleteAsyncShould
     {
-        public DeleteAsyncShould(IntegrationTestContext context)
-            : base(context)
+        private readonly HttpClient httpClient;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string apiGatewayUrl;
+        private readonly Func<IamAuthenticationType, AWSCredentials> resolveMutableCredentials;
+        private readonly Func<IamAuthenticationType, ImmutableCredentials> resolveImmutableCredentials;
+
+        public DeleteAsyncShould(ApiGatewayFixture fixture)
         {
+            httpClient = fixture.HttpClient;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            apiGatewayUrl = fixture.ApiGatewayUrl;
+            resolveMutableCredentials = fixture.ResolveMutableCredentials;
+            resolveImmutableCredentials = fixture.ResolveImmutableCredentials;
         }
 
         public static IEnumerable<object[]> TestCases =>
@@ -34,11 +48,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestStringAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -55,11 +69,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestStringAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -80,11 +94,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestUriAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -101,11 +115,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenRequestUriAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -129,11 +143,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -154,11 +168,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -183,11 +197,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -208,11 +222,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl.ToUri(),
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl.ToUri(),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -233,11 +247,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var ct = new CancellationToken(true);
 
             // Act
-            var task = HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+            var task = httpClient.DeleteAsync(
+                apiGatewayUrl,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)
@@ -259,11 +273,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var path = "/path";
 
             // Act
-            var response = await HttpClient.DeleteAsync(
-                Context.ApiGatewayUrl + path,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+            var response = await httpClient.DeleteAsync(
+                apiGatewayUrl + path,
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -280,17 +294,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1"
             };
 
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await httpClient.DeleteAsync(
                 uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -307,17 +321,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenOrderedQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1&Param1=Value2"
             };
 
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await httpClient.DeleteAsync(
                 uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -334,17 +348,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenUnorderedQuery(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value2&Param1=Value1"
             };
 
             // Act
-            var response = await HttpClient.DeleteAsync(
+            var response = await httpClient.DeleteAsync(
                 uriBuilder.Uri,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);

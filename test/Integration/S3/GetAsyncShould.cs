@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
-using AwsSignatureVersion4.Integration.S3.Helpers;
+using AwsSignatureVersion4.Integration.S3.Buckets;
+using AwsSignatureVersion4.Integration.S3.Fixtures;
 using Shouldly;
 using Xunit;
 
@@ -19,15 +19,15 @@ namespace AwsSignatureVersion4.Integration.S3
         private readonly HttpClient httpClient;
         private readonly string region;
         private readonly string serviceName;
-        private readonly Func<IamAuthenticationType, AWSCredentials> resolveCredentials;
+        private readonly Func<IamAuthenticationType, AWSCredentials> resolveMutableCredentials;
         
-        public GetAsyncShould(S3CollectionFixture fixture)
+        public GetAsyncShould(S3Fixture fixture)
         {
             bucket = fixture.Bucket;
             httpClient = fixture.HttpClient;
             region = fixture.Region.SystemName;
             serviceName = fixture.ServiceName;
-            resolveCredentials = fixture.ResolveCredentials;
+            resolveMutableCredentials = fixture.ResolveMutableCredentials;
         }
 
         [Theory]
@@ -43,7 +43,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Url,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -63,7 +63,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Url,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -83,7 +83,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Url,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -109,7 +109,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Url,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -129,7 +129,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Url,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -149,7 +149,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Url,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -171,7 +171,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 completionOption,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -192,7 +192,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Url,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType),
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -216,7 +216,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 completionOption,
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType),
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -237,7 +237,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{bucket.Url}/{key}",
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType));
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
@@ -257,7 +257,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 $"{bucket.Url}/{key}",
                 region,
                 serviceName,
-                resolveCredentials(iamAuthenticationType),
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             while (task.Status == TaskStatus.WaitingForActivation)

@@ -3,26 +3,38 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Amazon.Runtime;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Unit.Private
 {
-    public class SignerShould : IClassFixture<TestSuiteContext>, IDisposable
+    [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
+    public class SignerShould : IClassFixture<TestSuiteFixture>, IDisposable
     {
-        private readonly TestSuiteContext context;
         private readonly HttpClient httpClient;
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly DateTime utcNow;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly ImmutableCredentials immutableCredentials;
+        private readonly Action resetHeaderValueSeparator;
 
-        public SignerShould(TestSuiteContext context)
+        public SignerShould(TestSuiteFixture fixture)
         {
-            this.context = context;
-
             httpClient = new HttpClient();
+            loadScenario = fixture.LoadScenario;
+            utcNow = fixture.UtcNow;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            immutableCredentials = fixture.ImmutableCredentials;
+            resetHeaderValueSeparator = fixture.ResetHeaderValueSeparator;
 
-            context.AdjustHeaderValueSeparator();
+            fixture.AdjustHeaderValueSeparator();
         }
 
         #region Pass test suite
@@ -62,17 +74,17 @@ namespace AwsSignatureVersion4.Unit.Private
         public async Task PassTestSuiteAsync(params string[] scenarioName)
         {
             // Arrange
-            var scenario = context.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Act
             var actual = await Signer.SignAsync(
                 scenario.Request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.CanonicalRequest.ShouldBe(scenario.ExpectedCanonicalRequest);
@@ -117,17 +129,17 @@ namespace AwsSignatureVersion4.Unit.Private
         public void PassTestSuite(params string[] scenarioName)
         {
             // Arrange
-            var scenario = context.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Act
             var actual = Signer.Sign(
                 scenario.Request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.CanonicalRequest.ShouldBe(scenario.ExpectedCanonicalRequest);
@@ -161,10 +173,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.RequestUri.ShouldBe(new Uri(expectedRequestUri));
@@ -190,10 +202,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.RequestUri.ShouldBe(new Uri(expectedRequestUri));
@@ -204,7 +216,7 @@ namespace AwsSignatureVersion4.Unit.Private
         #region Not add X-Amz-Content-SHA256 content header
 
         // Only requests to S3 should add the "X-Amz-Content-SHA256" header
-        
+
         [Fact]
         public async Task NotAddXAmzContentHeaderAsync()
         {
@@ -216,10 +228,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeFalse();
@@ -236,10 +248,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeFalse();
@@ -261,10 +273,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             await actual.ShouldThrowAsync<ArgumentException>();
@@ -282,10 +294,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.ShouldThrow<ArgumentException>();
@@ -307,10 +319,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             await actual.ShouldThrowAsync<ArgumentException>();
@@ -328,10 +340,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.ShouldThrow<ArgumentException>();
@@ -353,10 +365,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             await actual.ShouldThrowAsync<ArgumentException>();
@@ -374,10 +386,10 @@ namespace AwsSignatureVersion4.Unit.Private
                 request,
                 httpClient.BaseAddress,
                 httpClient.DefaultRequestHeaders,
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials);
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials);
 
             // Assert
             actual.ShouldThrow<ArgumentException>();
@@ -387,8 +399,9 @@ namespace AwsSignatureVersion4.Unit.Private
 
         public void Dispose()
         {
-            httpClient?.Dispose();
-            context.ResetHeaderValueSeparator();
+            httpClient.Dispose();
+
+            resetHeaderValueSeparator();
         }
     }
 }

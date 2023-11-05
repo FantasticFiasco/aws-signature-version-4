@@ -64,8 +64,8 @@
 //            // Act
 //            var response = await HttpClient.SendAsync(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -115,8 +115,8 @@
 //            // Act
 //            var response = await HttpClient.SendAsync(
 //                request,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -138,8 +138,8 @@
 //            var response = await HttpClient.SendAsync(
 //                request,
 //                completionOption,
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert

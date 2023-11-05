@@ -4,20 +4,26 @@ using System.Threading.Tasks;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Unit.Private
 {
-    public class CanonicalRequestShould : IClassFixture<TestSuiteContext>, IDisposable
+    [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
+    public class CanonicalRequestShould : IClassFixture<TestSuiteFixture>, IDisposable
     {
-        private readonly TestSuiteContext context;
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly DateTime utcNow;
+        private readonly Action resetHeaderValueSeparator;
 
-        public CanonicalRequestShould(TestSuiteContext context)
+        public CanonicalRequestShould(TestSuiteFixture fixture)
         {
-            this.context = context;
+            loadScenario = fixture.LoadScenario;
+            utcNow = fixture.UtcNow;
+            resetHeaderValueSeparator = fixture.ResetHeaderValueSeparator;
 
-            context.AdjustHeaderValueSeparator();
+            fixture.AdjustHeaderValueSeparator();
         }
 
         [Theory]
@@ -55,10 +61,10 @@ namespace AwsSignatureVersion4.Unit.Private
         public async Task PassTestSuite(params string[] scenarioName)
         {
             // Arrange
-            var scenario = context.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Add header 'X-Amz-Date' since the algorithm at this point expects it on the request
-            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, context.UtcNow.ToIso8601BasicDateTime());
+            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, utcNow.ToIso8601BasicDateTime());
 
             // Calculate the content hash, since it's one of the parameters to the canonical request
             var contentHash = await ContentHash.CalculateAsync(scenario.Request.Content);
@@ -222,6 +228,9 @@ namespace AwsSignatureVersion4.Unit.Private
             actual[parameterName].ShouldBe(expected);
         }
 
-        public void Dispose() => context.ResetHeaderValueSeparator();
+        public void Dispose()
+        {
+            resetHeaderValueSeparator();
+        }
     }
 }

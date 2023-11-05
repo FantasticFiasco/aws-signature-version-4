@@ -27,8 +27,8 @@
 //            // Act
 //            var stringContent = await HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -46,8 +46,8 @@
 //            // Act
 //            var stringContent = await HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -65,8 +65,8 @@
 //            // Act
 //            var stringContent = await HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -90,8 +90,8 @@
 //            // Act
 //            var stringContent = await HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -109,8 +109,8 @@
 //            // Act
 //            var stringContent = await HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -128,8 +128,8 @@
 //            // Act
 //            var stringContent = await HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -148,8 +148,8 @@
 //            // Act
 //            var stringContent = await HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{bucketObject.Key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 
@@ -168,8 +168,8 @@
 //            // Act
 //            var task = HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType));
 
 //            // Assert
@@ -188,8 +188,8 @@
 //            // Act
 //            var task = HttpClient.GetStringAsync(
 //                $"{Context.S3BucketUrl}/{key}",
-//                Context.RegionName,
-//                Context.ServiceName,
+//                region,
+//                serviceName,
 //                ResolveMutableCredentials(iamAuthenticationType),
 //                ct);
 

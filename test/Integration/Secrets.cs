@@ -40,11 +40,6 @@ namespace AwsSignatureVersion4.Integration
             {
                 public static readonly string Url = GetEnvironmentVariable("AWS_API_GATEWAY_URL");
             }
-
-            public static class S3
-            {
-                public static readonly string BucketName = GetEnvironmentVariable("AWS_S3_BUCKET_NAME");
-            }
         }
 
         private static string GetEnvironmentVariable(string variable) =>

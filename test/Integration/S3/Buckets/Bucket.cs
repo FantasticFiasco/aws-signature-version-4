@@ -7,7 +7,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 
-namespace AwsSignatureVersion4.Integration.S3.Helpers
+namespace AwsSignatureVersion4.Integration.S3.Buckets
 {
     public class Bucket : IDisposable
     {
@@ -53,7 +53,7 @@ namespace AwsSignatureVersion4.Integration.S3.Helpers
             await client.PutObjectAsync(request);
             
 
-            return new BucketObject($"{Url}/{key}", content);
+            return new BucketObject($"https://s3.{client.Config.RegionEndpoint.SystemName}.amazonaws.com/{name}/key", content);
         }
 
         public async Task DeleteAsync()

@@ -1,18 +1,29 @@
+using System;
+using Amazon.Runtime;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Unit.Private
 {
-    public class AuthorizationHeaderShould : IClassFixture<TestSuiteContext>
+    public class AuthorizationHeaderShould : IClassFixture<TestSuiteFixture>
     {
-        private readonly TestSuiteContext context;
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly DateTime utcNow;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly ImmutableCredentials immutableCredentials;
 
-        public AuthorizationHeaderShould(TestSuiteContext context)
+        public AuthorizationHeaderShould(TestSuiteFixture fixture)
         {
-            this.context = context;
+            loadScenario = fixture.LoadScenario;
+            utcNow = fixture.UtcNow;
+            region = fixture.Region.SystemName;
+            serviceName = fixture.ServiceName;
+            immutableCredentials = fixture.ImmutableCredentials;
         }
 
         [Theory]
@@ -50,17 +61,17 @@ namespace AwsSignatureVersion4.Unit.Private
         public void PassTestSuite(params string[] scenarioName)
         {
             // Arrange
-            var scenario = context.LoadScenario(scenarioName);
+            var scenario = loadScenario(scenarioName);
 
             // Add header 'X-Amz-Date' since the algorithm at this point expects it on the request
-            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, context.UtcNow.ToIso8601BasicDateTime());
+            scenario.Request.AddHeader(HeaderKeys.XAmzDateHeader, utcNow.ToIso8601BasicDateTime());
 
             // Act
             var authorizationHeader = AuthorizationHeader.Build(
-                context.UtcNow,
-                context.RegionName,
-                context.ServiceName,
-                context.Credentials,
+                utcNow,
+                region,
+                serviceName,
+                immutableCredentials,
                 scenario.ExpectedSignedHeaders,
                 scenario.ExpectedCredentialScope,
                 scenario.ExpectedStringToSign);

@@ -3,24 +3,37 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using AwsSignatureVersion4.Integration.ApiGateway.Fixtures;
 using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     [Collection("API Gateway")]
-    public class AwsSignatureHandlerShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
+    [Trait("Category", "Integration")]
+    public class AwsSignatureHandlerShould
     {
-        private readonly TestSuiteContext testSuiteContext;
+        private readonly Func<IamAuthenticationType, string, string, IHttpClientFactory> httpClientFactoryProvider;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string apiGatewayUrl;
+        
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly Func<HttpRequestMessage, string, HttpRequestMessage> redirectRequest;
 
-        public AwsSignatureHandlerShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
-            : base(context)
+        public AwsSignatureHandlerShould(ApiGatewayFixture apiGatewayFixture, TestSuiteFixture testSuiteFixture)
         {
-            this.testSuiteContext = testSuiteContext;
+            httpClientFactoryProvider = apiGatewayFixture.HttpClientFactory;
+            region = apiGatewayFixture.Region.SystemName;
+            serviceName = apiGatewayFixture.ServiceName;
+            apiGatewayUrl = apiGatewayFixture.ApiGatewayUrl;
+
+            loadScenario = testSuiteFixture.LoadScenario;
+            redirectRequest = testSuiteFixture.RedirectRequest;
         }
 
         public static IEnumerable<object[]> TestCases =>
@@ -73,8 +86,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(IamAuthenticationType.User).CreateClient("integration");
-            var request = BuildRequest(scenarioName);
+            var scenario = loadScenario(scenarioName);
+            var request = redirectRequest(scenario.Request, apiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(IamAuthenticationType.User, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -118,8 +133,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(IamAuthenticationType.Role).CreateClient("integration");
-            var request = BuildRequest(scenarioName);
+            var scenario = loadScenario(scenarioName);
+            var request = redirectRequest(scenario.Request, apiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(IamAuthenticationType.Role, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -135,9 +152,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
             var path = "/path";
-            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl + path);
+            var request = new HttpRequestMessage(method, apiGatewayUrl + path);
 
             // Act
             var response = await httpClient.SendAsync(request);
@@ -159,8 +177,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
             // Act
@@ -184,8 +203,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
             // Act
@@ -209,8 +229,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
             // Act
@@ -234,9 +255,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1"
             };
@@ -263,9 +285,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1&Param1=Value2"
             };
@@ -292,9 +315,10 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
 
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value2&Param1=Value1"
             };
@@ -321,8 +345,9 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             HttpMethod method)
         {
             // Arrange
-            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
-            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+            var httpClientFactory = httpClientFactoryProvider(iamAuthenticationType, region, serviceName);
+            using var httpClient = httpClientFactory.CreateClient("integration");
+            var request = new HttpRequestMessage(method, apiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
@@ -336,26 +361,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters.ShouldBeNull();
             receivedRequest.Body.ShouldBeNull();
-        }
-
-        private HttpRequestMessage BuildRequest(string[] scenarioName)
-        {
-            var request = testSuiteContext.LoadScenario(scenarioName).Request;
-
-            if (request.RequestUri == null) throw new Exception("Test suite request URI cannot be null");
-
-            // Redirect the request to the AWS API Gateway
-            request.RequestUri = request.RequestUri
-                .ToString()
-                .Replace("https://example.amazonaws.com", Context.ApiGatewayUrl)
-                .ToUri();
-
-            // The "Host" header is now invalid since we redirected the request to the AWS API
-            // Gateway. Lets remove the header and have the signature implementation re-add it
-            // correctly.
-            request.Headers.Remove("Host");
-
-            return request;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace AwsSignatureVersion4.Integration.S3.Helpers
+﻿namespace AwsSignatureVersion4.Integration.S3.Buckets
 {
     public static class BucketObjectKey
     {

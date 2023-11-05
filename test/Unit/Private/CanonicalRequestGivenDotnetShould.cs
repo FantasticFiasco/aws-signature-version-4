@@ -1,23 +1,18 @@
 using System;
 using System.Net.Http;
 using AwsSignatureVersion4.Private;
-using AwsSignatureVersion4.TestSuite;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Unit.Private
 {
-    public class CanonicalRequestGivenDotnetShould : IClassFixture<TestSuiteContext>, IDisposable
+    [Collection("Canonical request - These tests are modifying global scope which prevents them from running in parallel with other canonical request tests")]
+    public class CanonicalRequestGivenDotnetShould : IDisposable
     {
-        private readonly TestSuiteContext context;
         private readonly EnvironmentProbe defaultEnvironmentProbe;
 
-        public CanonicalRequestGivenDotnetShould(TestSuiteContext context)
+        public CanonicalRequestGivenDotnetShould()
         {
-            this.context = context;
-
-            context.AdjustHeaderValueSeparator();
-
             // Mock .NET environment
             defaultEnvironmentProbe = CanonicalRequest.EnvironmentProbe;
             CanonicalRequest.EnvironmentProbe = new DotnetEnvironmentProbe();
@@ -58,16 +53,13 @@ namespace AwsSignatureVersion4.Unit.Private
 
         public void Dispose()
         {
-            // Reset header value separator
-            context.ResetHeaderValueSeparator();
-
             // Reset environment probe
             CanonicalRequest.EnvironmentProbe = defaultEnvironmentProbe;
         }
 
         private class DotnetEnvironmentProbe : EnvironmentProbe
         {
-            public override bool IsMono { get; } = false;
+            public override bool IsMono => false;
         }
     }
 }

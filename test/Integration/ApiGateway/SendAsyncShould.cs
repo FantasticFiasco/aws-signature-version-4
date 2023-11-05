@@ -3,24 +3,42 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
+using Amazon.Runtime;
+using AwsSignatureVersion4.Integration.ApiGateway.Fixtures;
 using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.TestSuite.Fixtures;
 using Shouldly;
 using Xunit;
 
 namespace AwsSignatureVersion4.Integration.ApiGateway
 {
     [Collection("API Gateway")]
-    public class SendAsyncShould : ApiGatewayIntegrationBase, IClassFixture<TestSuiteContext>
+    [Trait("Category", "Integration")]
+    public class SendAsyncShould
     {
-        private readonly TestSuiteContext testSuiteContext;
+        private readonly HttpClient httpClient;
+        private readonly string region;
+        private readonly string serviceName;
+        private readonly string apiGatewayUrl;
+        private readonly Func<IamAuthenticationType, AWSCredentials> resolveMutableCredentials;
+        private readonly Func<IamAuthenticationType, ImmutableCredentials> resolveImmutableCredentials;
 
-        public SendAsyncShould(IntegrationTestContext context, TestSuiteContext testSuiteContext)
-            : base(context)
+        private readonly Func<string[], Scenario> loadScenario;
+        private readonly Func<HttpRequestMessage, string, HttpRequestMessage> redirectRequest;
+
+        public SendAsyncShould(ApiGatewayFixture apiGatewayFixture, TestSuiteFixture testSuiteFixture)
         {
-            this.testSuiteContext = testSuiteContext;
+            httpClient = apiGatewayFixture.HttpClient;
+            region = apiGatewayFixture.Region.SystemName;
+            serviceName = apiGatewayFixture.ServiceName;
+            apiGatewayUrl = apiGatewayFixture.ApiGatewayUrl;
+            resolveMutableCredentials = apiGatewayFixture.ResolveMutableCredentials;
+            resolveImmutableCredentials = apiGatewayFixture.ResolveImmutableCredentials;
+
+            loadScenario = testSuiteFixture.LoadScenario;
+            redirectRequest = testSuiteFixture.RedirectRequest;
         }
 
         #region SendAsync(HttpRequestMessage, string, string, <credentials>)
@@ -41,14 +59,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -76,14 +94,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -105,16 +123,16 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenHttpCompletionOptionAndMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
                 completionOption,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -132,16 +150,16 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenHttpCompletionOptionAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
                 completionOption,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -173,15 +191,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -210,15 +228,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -241,17 +259,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenMutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
                 completionOption,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType),
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -270,17 +288,17 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task SucceedGivenHttpCompletionOptionAndCancellationTokenAndImmutableCredentials(IamAuthenticationType iamAuthenticationType)
         {
             // Arrange
-            var request = new HttpRequestMessage(HttpMethod.Get, Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(HttpMethod.Get, apiGatewayUrl);
             var completionOption = HttpCompletionOption.ResponseContentRead;
             var ct = new CancellationToken();
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
                 completionOption,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveImmutableCredentials(iamAuthenticationType),
+                region,
+                serviceName,
+                resolveImmutableCredentials(iamAuthenticationType),
                 ct);
 
             // Assert
@@ -330,15 +348,16 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenUserWithPermissions(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(testSuiteContext, Context, scenarioName);
+            var scenario = loadScenario(scenarioName);
+            var request = redirectRequest(scenario.Request, apiGatewayUrl);
             var iamAuthenticationType = IamAuthenticationType.User;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -379,15 +398,16 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         public async Task PassTestSuiteGivenAssumedRole(params string[] scenarioName)
         {
             // Arrange
-            var request = BuildRequest(testSuiteContext, Context, scenarioName);
+            var scenario = loadScenario(scenarioName);
+            var request = redirectRequest(scenario.Request, apiGatewayUrl);
             var iamAuthenticationType = IamAuthenticationType.Role;
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -410,14 +430,14 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
             // Arrange
             var path = "/path";
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl + path);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl + path);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -445,15 +465,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value2", "value2" });
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -482,15 +502,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value4", "value1", "value3", "value2" });
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -519,15 +539,15 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+            var request = new HttpRequestMessage(new HttpMethod(method), apiGatewayUrl);
             request.AddHeaders("My-Header1", new[] { "value1", "a   b   c" });
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -556,7 +576,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1"
             };
@@ -564,11 +584,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -596,7 +616,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value1&Param1=Value2"
             };
@@ -604,11 +624,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -636,7 +656,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             string method)
         {
             // Arrange
-            var uriBuilder = new UriBuilder(Context.ApiGatewayUrl)
+            var uriBuilder = new UriBuilder(apiGatewayUrl)
             {
                 Query = "Param1=Value2&Param1=Value1"
             };
@@ -644,11 +664,11 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var request = new HttpRequestMessage(new HttpMethod(method), uriBuilder.Uri);
 
             // Act
-            var response = await HttpClient.SendAsync(
+            var response = await httpClient.SendAsync(
                 request,
-                Context.RegionName,
-                Context.ServiceName,
-                ResolveMutableCredentials(iamAuthenticationType));
+                region,
+                serviceName,
+                resolveMutableCredentials(iamAuthenticationType));
 
             // Assert
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
@@ -656,29 +676,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             var receivedRequest = await response.Content.ReadReceivedRequestAsync();
             receivedRequest.Method.ShouldBe(method);
             receivedRequest.Path.ShouldBe("/");
-            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2","Value1" });
+            receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
             receivedRequest.Body.ShouldBeNull();
-        }
-
-        internal static HttpRequestMessage BuildRequest(
-            TestSuiteContext testSuiteContext,
-            IntegrationTestContext integrationTestContext,
-            string[] scenarioName)
-        {
-            var request = testSuiteContext.LoadScenario(scenarioName).Request;
-
-            // Redirect the request to the AWS API Gateway
-            request.RequestUri = request.RequestUri
-                .ToString()
-                .Replace("https://example.amazonaws.com", integrationTestContext.ApiGatewayUrl)
-                .ToUri();
-
-            // The "Host" header is now invalid since we redirected the request to the AWS API
-            // Gateway. Lets remove the header and have the signature implementation re-add it
-            // correctly.
-            request.Headers.Remove("Host");
-
-            return request;
         }
     }
 }
