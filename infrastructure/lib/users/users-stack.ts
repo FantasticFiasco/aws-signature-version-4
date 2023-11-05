@@ -1,27 +1,39 @@
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib'
-import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
+import { CfnAccessKey, Effect, IRole, IUser, ManagedPolicy, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 
 export class UsersStack extends Stack {
-  readonly userWithProvisioningPermissions: IUser
-  readonly userWithPermissions: IUser
-  readonly userWithoutPermissions: IUser
-  readonly roleWithPermissions: IRole
-
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
 
+    // Policy that grants full access to test buckets
+    const testBucketPolicy = this.createS3FullAccessPolicy()
+
     // IAM user with permissions to provision buckets for individual test runs
-    this.userWithProvisioningPermissions = this.createUserWithProvisioningPermissions()
+    this.createUserWithProvisioningPermissions()
 
     // IAM user with permissions to access the API Gateway
-    this.userWithPermissions = this.createUserWithPermissions()
+    this.createUserWithPermissions(testBucketPolicy)
 
     // IAM user without permissions to access the API Gateway
-    this.userWithoutPermissions = this.createUserWithoutPermissions()
+    const userWithoutPermissions = this.createUserWithoutPermissions()
 
     // IAM role with permissions to access the API Gateway
-    this.roleWithPermissions = this.createRoleWithPermissions()
+    this.createRoleWithPermissions(userWithoutPermissions, testBucketPolicy)
+  }
+
+  private createS3FullAccessPolicy(): ManagedPolicy {
+    return new ManagedPolicy(this, 'TestBucketPolicy', {
+      managedPolicyName: 'sigv4-TestBucketPolicy',
+      statements: [
+        new PolicyStatement({
+          effect: Effect.ALLOW,
+          actions: ['s3:*'],
+          // resources: ['arn:aws:s3:::sigv4-test-*']
+          resources: ['*'],
+        }),
+      ],
+    })
   }
 
   private createUserWithProvisioningPermissions(): IUser {
@@ -51,15 +63,19 @@ export class UsersStack extends Stack {
     return user
   }
 
-  private createUserWithPermissions(): IUser {
+  private createUserWithPermissions(testBucketPolicy: ManagedPolicy): IUser {
     // Create user
     const user = new User(this, 'UserWithPermissions', {
       userName: 'sigv4-UserWithPermissions',
     })
 
+    // API Gateway permissions
     user.addManagedPolicy({
       managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess',
     })
+
+    // S3 permissions
+    user.addManagedPolicy(testBucketPolicy)
 
     // Create access key
     const accessKey = new CfnAccessKey(this, 'UserWithPermissionsAccessKey', {
@@ -101,12 +117,13 @@ export class UsersStack extends Stack {
     return user
   }
 
-  private createRoleWithPermissions(): IRole {
-    const role = new Role(this, 'ApiGatewayRole', {
-      assumedBy: this.userWithoutPermissions,
-      roleName: 'sigv4-ApiGatewayInvoke',
+  private createRoleWithPermissions(user: IUser, testBucketPolicy: ManagedPolicy): IRole {
+    const role = new Role(this, 'RoleWithPermissions', {
+      assumedBy: user,
+      roleName: 'sigv4-RoleWithPermissions',
     })
 
+    // API Gateway permissions
     role.addToPolicy(
       new PolicyStatement({
         actions: ['execute-api:Invoke', 'execute-api:ManageConnections'],
@@ -114,8 +131,11 @@ export class UsersStack extends Stack {
       }),
     )
 
+    // S3 permissions
+    role.addManagedPolicy(testBucketPolicy)
+
     // Create outputs
-    new CfnOutput(this, 'ApiGatewayRoleArn', {
+    new CfnOutput(this, 'RoleWithPermissionsArn', {
       value: role.roleArn,
     })
 
