@@ -19,7 +19,7 @@
     "source-map-support": "0.5.21"
   },
   "devDependencies": {
-    "@types/aws-lambda": "8.10.126",
+    "@types/aws-lambda": "8.10.128",
     "@types/node": "20.9.3",
     "@typescript-eslint/eslint-plugin": "6.12.0",
     "@typescript-eslint/parser": "6.12.0",
