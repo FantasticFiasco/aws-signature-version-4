@@ -11,7 +11,7 @@ export class ApiGatewayStack extends Stack {
     const requestHandler = new Function(this, 'ApiRequestHandler', {
       code: Code.fromAsset(`${__dirname}/handlers`),
       handler: 'request.handler',
-      runtime: Runtime.NODEJS_14_X,
+      runtime: Runtime.NODEJS_LATEST,
     })
 
     // Create API Gateway
