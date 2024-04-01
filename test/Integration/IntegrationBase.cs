@@ -19,37 +19,23 @@ namespace AwsSignatureVersion4.Integration
         {
             Context = context;
 
-            var retryPolicy = HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .WaitAndRetryAsync(
-                    new[]
-                    {
-                        TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10)
-                    });
-
-            var socketHandler = new SocketsHttpHandler
+            var sleepDurations = new[]
             {
-                PooledConnectionLifetime = TimeSpan.FromMinutes(5),
+                TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10)
             };
 
-            var pollyHandler = new PolicyHttpMessageHandler(retryPolicy)
-            {
-                InnerHandler = socketHandler,
-            };
-
-            HttpClient = new HttpClient(pollyHandler);
+            HttpClient = new HttpClient(
+                new PolicyHttpMessageHandler(
+                    HttpPolicyExtensions
+                        .HandleTransientHttpError()
+                        .WaitAndRetryAsync(sleepDurations)));
 
             serviceCollection = new ServiceCollection();
             serviceCollection
                 .AddTransient<AwsSignatureHandler>()
                 .AddHttpClient("integration")
                 .AddHttpMessageHandler<AwsSignatureHandler>()
-                .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(new[]
-                {
-                    TimeSpan.FromSeconds(1),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(10)
-                }));
+                .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(sleepDurations));
         }
 
         protected IntegrationTestContext Context { get; }
