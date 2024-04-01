@@ -24,11 +24,19 @@ namespace AwsSignatureVersion4.Integration
                 TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10)
             };
 
+
+
             HttpClient = new HttpClient(
                 new PolicyHttpMessageHandler(
                     HttpPolicyExtensions
                         .HandleTransientHttpError()
-                        .WaitAndRetryAsync(sleepDurations)));
+                        .WaitAndRetryAsync(sleepDurations))
+                {
+                    InnerHandler = new SocketsHttpHandler
+                    {
+                        PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+                    }
+                });
 
             serviceCollection = new ServiceCollection();
             serviceCollection
