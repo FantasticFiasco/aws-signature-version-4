@@ -3,6 +3,9 @@ using System.Net.Http;
 using Amazon.Runtime;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
+using Polly;
+using Polly.Extensions.Http;
 using Xunit;
 
 namespace AwsSignatureVersion4.Integration
@@ -16,13 +19,31 @@ namespace AwsSignatureVersion4.Integration
         {
             Context = context;
 
-            HttpClient = new HttpClient();
+            var sleepDurations = new[]
+            {
+                TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10)
+            };
+
+
+
+            HttpClient = new HttpClient(
+                new PolicyHttpMessageHandler(
+                    HttpPolicyExtensions
+                        .HandleTransientHttpError()
+                        .WaitAndRetryAsync(sleepDurations))
+                {
+                    InnerHandler = new SocketsHttpHandler
+                    {
+                        PooledConnectionLifetime = TimeSpan.FromMinutes(2),
+                    }
+                });
 
             serviceCollection = new ServiceCollection();
             serviceCollection
                 .AddTransient<AwsSignatureHandler>()
                 .AddHttpClient("integration")
-                .AddHttpMessageHandler<AwsSignatureHandler>();
+                .AddHttpMessageHandler<AwsSignatureHandler>()
+                .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(sleepDurations));
         }
 
         protected IntegrationTestContext Context { get; }
