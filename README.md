@@ -1,4 +1,4 @@
-# AwsSignatureVersion4
+# AwsSignatureVersion4 <!-- omit in toc -->
 
 [![CI/CD](https://github.com/FantasticFiasco/aws-signature-version-4/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/FantasticFiasco/aws-signature-version-4/actions/workflows/ci-cd.yml)
 [![Codecov](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4/branch/master/graph/badge.svg)](https://codecov.io/gh/FantasticFiasco/aws-signature-version-4)
@@ -14,15 +14,14 @@
 
 ## Table of contents <!-- omit in toc -->
 
-- [AwsSignatureVersion4](#awssignatureversion4)
-  - [Introduction](#introduction)
-  - [Super simple to use](#super-simple-to-use)
-    - [Integration with `HttpClient`](#integration-with-httpclient)
-    - [Integration with `IHttpClientFactory`](#integration-with-ihttpclientfactory)
-  - [Credentials](#credentials)
-  - [The pledge](#the-pledge)
-  - [Install via NuGet](#install-via-nuget)
-  - [Credit](#credit)
+- [Introduction](#introduction)
+- [Super simple to use](#super-simple-to-use)
+  - [Integration with `HttpClient`](#integration-with-httpclient)
+  - [Integration with `IHttpClientFactory`](#integration-with-ihttpclientfactory)
+- [Credentials](#credentials)
+- [The pledge](#the-pledge)
+- [Install via NuGet](#install-via-nuget)
+- [Credit](#credit)
 
 ## Introduction
 
