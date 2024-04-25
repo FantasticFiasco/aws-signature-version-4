@@ -104,7 +104,7 @@ This project comes with a pledge, providing transparency on supported and unsupp
 - :white_check_mark: ~300 integration tests targeting an IAM authenticated AWS S3 bucket are passing before a release
 - :white_check_mark: No [steps of the signing algorithm](https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html) have deliberately been left out
 - :white_check_mark: [AWSSDK.Core](https://www.nuget.org/packages/AWSSDK.Core/) is reused as much as possible, thus the dependency
-- :white_check_mark: [Signature Version 4 Test Suite](https://docs.aws.amazon.com/general/latest/gr/signature-v4-test-suite.html) scenarios are passing, with the following exceptions:
+- :white_check_mark: Signature Version 4 Test Suite scenarios are passing, with the following exceptions:
   - General
     - :x: `get-utf8` - The signing algorithm states the following: _'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'_. This scenario does not URL encode the path segments twice, only once.
     - :x: `normalize-path/get-space` - The signing algorithm states the following: _'Each path segment must be URI-encoded twice except for Amazon S3 which only gets URI-encoded once.'_. This scenario does not URL encode the path segments twice, only once.
