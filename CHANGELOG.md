@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [4.0.4] - 2024-05-01
+
 ### :syringe: Fixed
 
 - [#1067](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1067) `X-Amz-Content-SHA256` header should be present when querying [Amazon OpenSearch Serverless](https://aws.amazon.com/opensearch-service/features/serverless/) (contribution by [@JCKortlang](https://github.com/JCKortlang) and [@95horatio](https://github.com/95horatio))
