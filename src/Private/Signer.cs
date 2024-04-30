@@ -135,6 +135,7 @@ namespace AwsSignatureVersion4.Private
             // Add conditional headers
             request.AddHeaderIf(credentials.UseToken, HeaderKeys.XAmzSecurityTokenHeader, credentials.Token);
             request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri!.Host);
+            request.AddHeaderIf(serviceName == ServiceName.OpenSearchServerless, HeaderKeys.XAmzContentSha256Header, contentHash);
             request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
         }
 
