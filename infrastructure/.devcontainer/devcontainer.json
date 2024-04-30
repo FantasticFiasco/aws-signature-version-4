@@ -1,0 +1,21 @@
+// For format details, see https://aka.ms/devcontainer.json.
+{
+  "name": "Node.js",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/aws-cdk:2": {}
+  },
+  "postCreateCommand": "npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint", // ESLint
+        "editorconfig.editorconfig", // EditorConfig for VS Code
+        "esbenp.prettier-vscode", // Prettier - Code formatter
+        "streetsidesoftware.code-spell-checker" // Code Spell Checker
+      ]
+    }
+  }
+}

@@ -8,6 +8,6 @@
     "release": "node ./publish-on-tag.js"
   },
   "devDependencies": {
-    "@octokit/rest": "20.0.2"
+    "@octokit/rest": "20.1.0"
   }
 }
