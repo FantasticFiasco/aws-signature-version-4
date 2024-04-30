@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
-## [4.0.4] - 2024-05-01
+## [4.0.5] - 2024-05-01
 
 ### :syringe: Fixed
 
