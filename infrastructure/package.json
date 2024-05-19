@@ -25,7 +25,7 @@
     "@typescript-eslint/parser": "7.8.0",
     "eslint": "8.57.0",
     "prettier": "3.2.5",
-    "rimraf": "5.0.6",
+    "rimraf": "5.0.7",
     "typescript": "5.4.5"
   },
   "resolutions": {
