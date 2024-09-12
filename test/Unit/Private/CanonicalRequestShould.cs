@@ -23,6 +23,7 @@ namespace AwsSignatureVersion4.Unit.Private
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
+        [InlineData("get-header-value-multiple-user-agent")]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]

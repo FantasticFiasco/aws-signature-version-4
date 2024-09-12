@@ -112,7 +112,8 @@ namespace AwsSignatureVersion4.Private
 
             foreach (var header in sortedHeaders)
             {
-                builder.Append($"{header.Key}:{string.Join(HeaderValueSeparator, header.Value)}\n");
+                var headerValueSeparator = header.Key.ToLowerInvariant() == "user-agent" ? " " : HeaderValueSeparator;
+                builder.Append($"{header.Key}:{string.Join(headerValueSeparator, header.Value)}\n");
             }
 
             builder.Append('\n');
