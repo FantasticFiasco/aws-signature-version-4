@@ -112,7 +112,10 @@ namespace AwsSignatureVersion4.Private
 
             foreach (var header in sortedHeaders)
             {
-                builder.Append($"{header.Key}:{string.Join(HeaderValueSeparator, header.Value)}\n");
+                // The 'user-agent' header should be treated differently, as discovered in
+                // https://github.com/FantasticFiasco/aws-signature-version-4/issues/1155
+                var separator = header.Key.ToLowerInvariant() == "user-agent" ? " " : HeaderValueSeparator;
+                builder.Append($"{header.Key}:{string.Join(separator, header.Value)}\n");
             }
 
             builder.Append('\n');
