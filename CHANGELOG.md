@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [4.0.6] - 2024-09-18
+
 ### :syringe: Fixed
 
 - [#1155](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1155) Multi-part user-agent header is joined incorrectly leading to AWS signature failures (contribution by [@mungojam](https://github.com/mungojam))
