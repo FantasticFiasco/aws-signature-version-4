@@ -5,3 +5,6 @@ node_modules
 # CDK
 .cdk.staging
 cdk.out
+
+# ESLint
+!eslint.config.js
