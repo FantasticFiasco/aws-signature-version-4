@@ -2,6 +2,7 @@ import { APIGatewayEvent } from 'aws-lambda'
 
 interface HttpResponse {
   statusCode: number
+  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
   headers: { [name: string]: string }
   body: string
 }
@@ -9,7 +10,9 @@ interface HttpResponse {
 interface ReceivedRequest {
   method: string
   path: string
+  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
   queryStringParameters: { [name: string]: string[] | undefined } | null
+  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
   headers: { [name: string]: string[] | undefined } | null
   body: string | null
 }

@@ -10,8 +10,8 @@
     "build": "npm run clean && tsc",
     "deploy": "npm run build && cdk deploy --app ./bin/infrastructure.js --all",
     "destroy": "npm run build && cdk destroy",
-    "lint": "eslint --ext .ts --max-warnings=0 . && prettier --check .",
-    "lint:fix": "eslint --ext .ts --fix . && prettier --write ."
+    "lint": "eslint --max-warnings=0 . && prettier --check .",
+    "lint:fix": "eslint --fix . && prettier --write ."
   },
   "dependencies": {
     "aws-cdk-lib": "2.145.0",
@@ -19,14 +19,14 @@
     "source-map-support": "0.5.21"
   },
   "devDependencies": {
+    "@eslint/js": "9.11.0",
     "@types/aws-lambda": "8.10.145",
     "@types/node": "20.16.5",
-    "@typescript-eslint/eslint-plugin": "8.5.0",
-    "@typescript-eslint/parser": "8.5.0",
     "eslint": "9.10.0",
     "prettier": "3.3.3",
     "rimraf": "6.0.1",
-    "typescript": "5.6.2"
+    "typescript": "5.6.2",
+    "typescript-eslint": "8.6.0"
   },
   "resolutions": {
     "ansi-regex": ">=5.0.1",
