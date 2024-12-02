@@ -183,12 +183,18 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Theory]
+        [InlineData("Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ=")]
         [InlineData("Connection", "keep-alive")]
         [InlineData("Expect", "100-continue")]
         [InlineData("Keep-Alive", "timeout=5")]
         [InlineData("Proxy-Authenticate", "Basic")]
+        [InlineData("Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ=")]
+        [InlineData("Proxy-Connection", "keep-alive")]
         [InlineData("Range", "bytes=500-999")]
         [InlineData("TE", "gzip")]
+        [InlineData("Trailer", "Expires")]
+        [InlineData("Transfer-Encoding", "gzip")]
+        [InlineData("Upgrade", "websocket")]
         public void RemoveUnsignableHeaders(string headerName, string headerValue)
         {
             // Arrange
@@ -199,7 +205,7 @@ namespace AwsSignatureVersion4.Unit.Private
             var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
-            actual.ShouldNotContainKey(headerName.ToLowerInvariant());
+            actual.ShouldBeEmpty();
         }
 
         [Theory]
