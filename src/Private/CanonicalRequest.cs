@@ -32,8 +32,8 @@ namespace AwsSignatureVersion4.Private
 
         // Including most headers from
         // https://github.com/smithy-lang/smithy-typescript/blob/430021abf44f8a4d6c24de2dfa25709bf91a92c8/packages/signature-v4/src/constants.ts#L19-L35
-        private static readonly HashSet<string> UnsignableHeaders = new(StringComparer.OrdinalIgnoreCase)
-        {
+        private static readonly HashSet<string> UnsignableHeaders =
+        [
             "authorization",
             "connection",
             "expect",
@@ -46,8 +46,8 @@ namespace AwsSignatureVersion4.Private
             "trailer",
             "transfer-encoding",
             "upgrade",
-            HeaderKeys.XAmznTraceIdHeader,
-        };
+            HeaderKeys.XAmznTraceIdHeader
+        ];
 
         /// <returns>
         /// The first value is the canonical request, the second value is the signed headers.
