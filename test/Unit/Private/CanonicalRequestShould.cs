@@ -109,7 +109,7 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add(headerName, "some header value");
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual.Keys.ShouldBe(new[] { expected });
@@ -133,7 +133,7 @@ namespace AwsSignatureVersion4.Unit.Private
             }
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual.Keys.ShouldBe(expected);
@@ -156,7 +156,7 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
@@ -176,10 +176,36 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
+        }
+
+        [Theory]
+        [InlineData("Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ=")]
+        [InlineData("Connection", "keep-alive")]
+        [InlineData("Expect", "100-continue")]
+        [InlineData("Keep-Alive", "timeout=5")]
+        [InlineData("Proxy-Authenticate", "Basic")]
+        [InlineData("Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ=")]
+        [InlineData("Proxy-Connection", "keep-alive")]
+        [InlineData("Range", "bytes=500-999")]
+        [InlineData("TE", "gzip")]
+        [InlineData("Trailer", "Expires")]
+        [InlineData("Transfer-Encoding", "gzip")]
+        [InlineData("Upgrade", "websocket")]
+        public void RemoveUnsignableHeaders(string headerName, string headerValue)
+        {
+            // Arrange
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add(headerName, headerValue);
+
+            // Act
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
+
+            // Assert
+            actual.ShouldBeEmpty();
         }
 
         [Theory]
