@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Util;
@@ -19,6 +20,23 @@ namespace AwsSignatureVersion4.Unit.Private
 
             context.AdjustHeaderValueSeparator();
         }
+
+        public static IEnumerable<object[]> UnsignableHeadersTestCases =>
+            new[]
+            {
+                new[] { "Connection", "keep-alive"},
+                new[] { "Expect", "100-continue"},
+                new[] { "Keep-Alive", "timeout=5"},
+                new[] { "Proxy-Authenticate", "Basic"},
+                new[] { "Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="},
+                new[] { "Proxy-Connection", "keep-alive"},
+                new[] { "Range", "bytes=0-499"},
+                new[] { "TE", "gzip"},
+                new[] { "Trailer", "Expires"},
+                new[] { "Transfer-Encoding", "gzip"},
+                new[] { "Upgrade", "websocket"}
+            };
+        
 
         [Theory]
         [InlineData("get-header-key-duplicate")]
@@ -183,18 +201,7 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         [Theory]
-        [InlineData("Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ=")]
-        [InlineData("Connection", "keep-alive")]
-        [InlineData("Expect", "100-continue")]
-        [InlineData("Keep-Alive", "timeout=5")]
-        [InlineData("Proxy-Authenticate", "Basic")]
-        [InlineData("Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ=")]
-        [InlineData("Proxy-Connection", "keep-alive")]
-        [InlineData("Range", "bytes=500-999")]
-        [InlineData("TE", "gzip")]
-        [InlineData("Trailer", "Expires")]
-        [InlineData("Transfer-Encoding", "gzip")]
-        [InlineData("Upgrade", "websocket")]
+        [MemberData(nameof(UnsignableHeadersTestCases))]
         public void RemoveUnsignableHeaders(string headerName, string headerValue)
         {
             // Arrange

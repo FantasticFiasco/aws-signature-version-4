@@ -7,6 +7,7 @@ using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.Unit.Private;
 using Shouldly;
 using Xunit;
 
@@ -662,6 +663,54 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Body.ShouldBeNull();
         }
 
+        [Theory]
+        [InlineData(IamAuthenticationType.User, "GET")]
+        [InlineData(IamAuthenticationType.User, "POST")]
+        [InlineData(IamAuthenticationType.User, "PUT")]
+        [InlineData(IamAuthenticationType.User, "PATCH")]
+        [InlineData(IamAuthenticationType.User, "DELETE")]
+        [InlineData(IamAuthenticationType.Role, "GET")]
+        [InlineData(IamAuthenticationType.Role, "POST")]
+        [InlineData(IamAuthenticationType.Role, "PUT")]
+        [InlineData(IamAuthenticationType.Role, "PATCH")]
+        [InlineData(IamAuthenticationType.Role, "DELETE")]
+        public async Task SucceedGivenUnsignableHeaders(
+            IamAuthenticationType iamAuthenticationType,
+            string method)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
+
+            foreach (var testCase in CanonicalRequestShould.UnsignableHeadersTestCases)
+            {
+                var headerName = (string)testCase[0];
+                var headerValue = (string)testCase[0];
+
+                // Exclude the following headers due to them failing
+                if (headerValue is "Range" or "Transfer-Encoding")
+                {
+                    continue;
+                }
+
+                request.Headers.Add(headerName, headerValue);
+            }
+
+            // Act
+            var response = await HttpClient.SendAsync(
+                request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method);
+            receivedRequest.Path.ShouldBe("/");
+            receivedRequest.Body.ShouldBeNull();
+        }
+
         internal static HttpRequestMessage BuildRequest(
             TestSuiteContext testSuiteContext,
             IntegrationTestContext integrationTestContext,
@@ -676,7 +725,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
                 .ToUri();
 
             // The "Host" header is now invalid since we redirected the request to the AWS API
-            // Gateway. Lets remove the header and have the signature implementation re-add it
+            // Gateway. Let's remove the header and have the signature implementation re-add it
             // correctly.
             request.Headers.Remove("Host");
 
