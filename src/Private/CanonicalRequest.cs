@@ -30,6 +30,24 @@ namespace AwsSignatureVersion4.Private
         /// </summary>
         public static string HeaderValueSeparator { get; set; } = ", ";
 
+        // Including most headers from
+        // https://github.com/smithy-lang/smithy-typescript/blob/430021abf44f8a4d6c24de2dfa25709bf91a92c8/packages/signature-v4/src/constants.ts#L19-L35
+        private static readonly HashSet<string> UnsignableHeaders =
+        [
+            "connection",
+            "expect",
+            "keep-alive",
+            "proxy-authenticate",
+            "proxy-authorization",
+            "proxy-connection",
+            "range",
+            "te",
+            "trailer",
+            "transfer-encoding",
+            "upgrade",
+            HeaderKeys.XAmznTraceIdHeader
+        ];
+
         /// <returns>
         /// The first value is the canonical request, the second value is the signed headers.
         /// </returns>
@@ -91,8 +109,10 @@ namespace AwsSignatureVersion4.Private
             builder.Append($"{string.Join("&", parameters)}\n");
 
             // Add the canonical headers, followed by a newline character. The canonical headers
-            // consist of a list of all the HTTP headers that you are including with the signed
-            // request.
+            // consist of a list of HTTP headers that you are including with the signed request.
+            //
+            // Some headers are unsignable, i.e. signatures including them are always deemed invalid.
+            // They are excluded from the canonical headers (but will be kept in the HTTP request).
             //
             // To create the canonical headers list, convert all header names to lowercase and
             // remove leading spaces and trailing spaces. Convert sequential spaces in the header
@@ -108,7 +128,7 @@ namespace AwsSignatureVersion4.Private
             //   PLEASE NOTE: Microsoft has chosen to separate the header values with ", ", not ","
             //   as defined by the Canonical Request algorithm.
             // - Append a new line ('\n').
-            var sortedHeaders = SortHeaders(request.Headers, defaultHeaders);
+            var sortedHeaders = PruneAndSortHeaders(request.Headers, defaultHeaders);
 
             foreach (var header in sortedHeaders)
             {
@@ -187,7 +207,7 @@ namespace AwsSignatureVersion4.Private
             return sortedQueryParameters;
         }
 
-        public static SortedDictionary<string, List<string>> SortHeaders(
+        public static SortedDictionary<string, List<string>> PruneAndSortHeaders(
             HttpRequestHeaders headers,
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultHeaders)
         {
@@ -201,6 +221,11 @@ namespace AwsSignatureVersion4.Private
             void AddHeader(KeyValuePair<string, IEnumerable<string>> header)
             {
                 var headerName = FormatHeaderName(header.Key);
+
+                if (UnsignableHeaders.Contains(headerName))
+                {
+                    return;
+                }
 
                 // Create header if it doesn't already exist
                 if (!sortedHeaders.TryGetValue(headerName, out var headerValues))

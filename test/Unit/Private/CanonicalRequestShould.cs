@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Util;
@@ -19,6 +20,23 @@ namespace AwsSignatureVersion4.Unit.Private
 
             context.AdjustHeaderValueSeparator();
         }
+
+        public static IEnumerable<object[]> UnsignableHeadersTestCases =>
+            new[]
+            {
+                new[] { "Connection", "keep-alive"},
+                new[] { "Expect", "100-continue"},
+                new[] { "Keep-Alive", "timeout=5"},
+                new[] { "Proxy-Authenticate", "Basic"},
+                new[] { "Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="},
+                new[] { "Proxy-Connection", "keep-alive"},
+                new[] { "Range", "bytes=0-499"},
+                new[] { "TE", "gzip"},
+                new[] { "Trailer", "Expires"},
+                new[] { "Transfer-Encoding", "gzip"},
+                new[] { "Upgrade", "websocket"}
+            };
+        
 
         [Theory]
         [InlineData("get-header-key-duplicate")]
@@ -109,7 +127,7 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add(headerName, "some header value");
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual.Keys.ShouldBe(new[] { expected });
@@ -133,7 +151,7 @@ namespace AwsSignatureVersion4.Unit.Private
             }
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual.Keys.ShouldBe(expected);
@@ -156,7 +174,7 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
@@ -176,10 +194,25 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
+        }
+
+        [Theory]
+        [MemberData(nameof(UnsignableHeadersTestCases))]
+        public void RemoveUnsignableHeaders(string headerName, string headerValue)
+        {
+            // Arrange
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add(headerName, headerValue);
+
+            // Act
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
+
+            // Assert
+            actual.ShouldBeEmpty();
         }
 
         [Theory]
@@ -221,6 +254,23 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Assert
             actual[parameterName].ShouldBe(expected);
+        }
+
+        internal static void AddUnsignableHeaders(HttpRequestMessage request)
+        {
+            foreach (var testCase in UnsignableHeadersTestCases)
+            {
+                var headerName = (string)testCase[0];
+                var headerValue = (string)testCase[0];
+
+                // Exclude the following headers due to them failing
+                if (headerValue is "Range" or "Transfer-Encoding")
+                {
+                    continue;
+                }
+
+                request.Headers.Add(headerName, headerValue);
+            }
         }
 
         public void Dispose() => context.ResetHeaderValueSeparator();

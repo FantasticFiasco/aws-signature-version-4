@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.Unit.Private;
 using Shouldly;
 using Xunit;
 
@@ -112,6 +113,28 @@ namespace AwsSignatureVersion4.Integration.S3
 
             await SendAsyncShould.UploadRequiredObjectAsync(Bucket, scenarioName);
 
+            // Act
+            var response = HttpClient.Send(
+                request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenUnsignableHeaders(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var requestUri = $"{Context.S3BucketUrl}/{bucketObject.Key}";
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            CanonicalRequestShould.AddUnsignableHeaders(request);
+            
             // Act
             var response = HttpClient.Send(
                 request,
