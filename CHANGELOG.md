@@ -6,6 +6,14 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- Support for .NET 8
+
+### :skull: Removed
+
+- [BREAKING CHANGE] Support for .NET 6 due to [deprecation as of November 12, 2024](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+
 ### :syringe: Fixed
 
 - [#1198](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1198) Requests with certain HTTP headers are rejected by API Gateway. (contribution by [@cfbao](https://github.com/cfbao))
