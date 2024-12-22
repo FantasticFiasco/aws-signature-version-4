@@ -680,21 +680,8 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         {
             // Arrange
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
-
-            foreach (var testCase in CanonicalRequestShould.UnsignableHeadersTestCases)
-            {
-                var headerName = (string)testCase[0];
-                var headerValue = (string)testCase[0];
-
-                // Exclude the following headers due to them failing
-                if (headerValue is "Range" or "Transfer-Encoding")
-                {
-                    continue;
-                }
-
-                request.Headers.Add(headerName, headerValue);
-            }
-
+            CanonicalRequestShould.AddUnsignableHeaders(request);
+            
             // Act
             var response = HttpClient.Send(
                 request,

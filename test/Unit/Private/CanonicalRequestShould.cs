@@ -256,6 +256,23 @@ namespace AwsSignatureVersion4.Unit.Private
             actual[parameterName].ShouldBe(expected);
         }
 
+        internal static void AddUnsignableHeaders(HttpRequestMessage request)
+        {
+            foreach (var testCase in UnsignableHeadersTestCases)
+            {
+                var headerName = (string)testCase[0];
+                var headerValue = (string)testCase[0];
+
+                // Exclude the following headers due to them failing
+                if (headerValue is "Range" or "Transfer-Encoding")
+                {
+                    continue;
+                }
+
+                request.Headers.Add(headerName, headerValue);
+            }
+        }
+
         public void Dispose() => context.ResetHeaderValueSeparator();
     }
 }
