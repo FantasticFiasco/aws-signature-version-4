@@ -45,6 +45,11 @@ namespace AwsSignatureVersion4.Private
             "trailer",
             "transfer-encoding",
             "upgrade",
+            "user-agent",
+            "via",
+            "x-forwarded-for",
+            "x-forwarded-port",
+            "x-forwarded-proto",
             HeaderKeys.XAmznTraceIdHeader
         ];
 

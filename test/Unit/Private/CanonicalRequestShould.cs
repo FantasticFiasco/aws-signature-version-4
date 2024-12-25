@@ -34,9 +34,14 @@ namespace AwsSignatureVersion4.Unit.Private
                 new[] { "TE", "gzip"},
                 new[] { "Trailer", "Expires"},
                 new[] { "Transfer-Encoding", "gzip"},
-                new[] { "Upgrade", "websocket"}
+                new[] { "Upgrade", "websocket"},
+                new[] { "User-Agent", "curl/7.64.1"},
+                new[] { "Via", "HTTP/1.1 my_proxy"},
+                new[] { "X-Forwarded-For", "203.0.113.195"},
+                new[] { "X-Forwarded-Port", "443"},
+                new[] { "X-Forwarded-Proto", "http"},
             };
-        
+
 
         [Theory]
         [InlineData("get-header-key-duplicate")]
@@ -261,7 +266,7 @@ namespace AwsSignatureVersion4.Unit.Private
             foreach (var testCase in UnsignableHeadersTestCases)
             {
                 var headerName = (string)testCase[0];
-                var headerValue = (string)testCase[0];
+                var headerValue = (string)testCase[1];
 
                 // Exclude the following headers due to them failing
                 if (headerValue is "Range" or "Transfer-Encoding")
