@@ -19,6 +19,10 @@
             "tokens, e.g. by assuming a role. This scenario is already covered by numerous other " +
             "integration tests and can because of this safely be ignored.";
 
+        public const string UnsignedUserAgentHeader =
+            "This scenario is using the User-Agent header, which this library ignores for reasons " +
+            "specified in https://github.com/FantasticFiasco/aws-signature-version-4/issues/1208.";
+
         public const string NotSupportedByApiGateway =
             "This scenario defines a request that isn't supported by AWS API Gateway.";
 
