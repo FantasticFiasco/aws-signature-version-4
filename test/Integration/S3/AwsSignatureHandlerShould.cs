@@ -24,7 +24,6 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent", Skip = SkipReasons.UnsignedUserAgentHeader)]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -72,7 +71,6 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent", Skip = SkipReasons.UnsignedUserAgentHeader)]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -149,7 +147,7 @@ namespace AwsSignatureVersion4.Integration.S3
             var requestUri = $"{Context.S3BucketUrl}/{bucketObject.Key}";
             var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
             CanonicalRequestShould.AddUnsignableHeaders(request);
-            
+
             // Act
             var response = await httpClient.SendAsync(request);
 

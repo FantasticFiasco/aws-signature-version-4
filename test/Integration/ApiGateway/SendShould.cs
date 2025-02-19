@@ -299,7 +299,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent", Skip = SkipReasons.UnsignedUserAgentHeader)]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -349,7 +348,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent", Skip = SkipReasons.UnsignedUserAgentHeader)]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -681,7 +679,7 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             // Arrange
             var request = new HttpRequestMessage(new HttpMethod(method), Context.ApiGatewayUrl);
             CanonicalRequestShould.AddUnsignableHeaders(request);
-            
+
             // Act
             var response = HttpClient.Send(
                 request,
