@@ -267,7 +267,7 @@ namespace AwsSignatureVersion4.Unit.Private
                 var headerValue = (string)testCase[1];
 
                 // Exclude the following headers due to them failing
-                if (headerValue is "Range" or "Transfer-Encoding")
+                if (headerName is "Range" or "Transfer-Encoding")
                 {
                     continue;
                 }
