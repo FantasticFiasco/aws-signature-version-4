@@ -22,26 +22,29 @@ namespace AwsSignatureVersion4.Unit.Private
         }
 
         public static IEnumerable<object[]> UnsignableHeadersTestCases =>
-            new[]
-            {
-                new[] { "Connection", "keep-alive"},
-                new[] { "Expect", "100-continue"},
-                new[] { "Keep-Alive", "timeout=5"},
-                new[] { "Proxy-Authenticate", "Basic"},
-                new[] { "Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="},
-                new[] { "Proxy-Connection", "keep-alive"},
-                new[] { "Range", "bytes=0-499"},
-                new[] { "TE", "gzip"},
-                new[] { "Trailer", "Expires"},
-                new[] { "Transfer-Encoding", "gzip"},
-                new[] { "Upgrade", "websocket"}
-            };
-        
+        [
+            ["Connection", "keep-alive"],
+            ["Expect", "100-continue"],
+            ["Keep-Alive", "timeout=5"],
+            ["Proxy-Authenticate", "Basic"],
+            ["Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="],
+            ["Proxy-Connection", "keep-alive"],
+            ["Range", "bytes=0-499"],
+            ["TE", "gzip"],
+            ["Trailer", "Expires"],
+            ["Transfer-Encoding", "gzip"],
+            ["Upgrade", "websocket"],
+            ["User-Agent", "curl/7.64.1"],
+            ["Via", "HTTP/1.1 my_proxy"],
+            ["X-Forwarded-For", "203.0.113.195"],
+            ["X-Forwarded-Port", "443"],
+            ["X-Forwarded-Proto", "http"]
+        ];
+
 
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent")]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -130,7 +133,7 @@ namespace AwsSignatureVersion4.Unit.Private
             var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
-            actual.Keys.ShouldBe(new[] { expected });
+            actual.Keys.ShouldBe([expected]);
         }
 
         [Theory]
@@ -261,10 +264,10 @@ namespace AwsSignatureVersion4.Unit.Private
             foreach (var testCase in UnsignableHeadersTestCases)
             {
                 var headerName = (string)testCase[0];
-                var headerValue = (string)testCase[0];
+                var headerValue = (string)testCase[1];
 
                 // Exclude the following headers due to them failing
-                if (headerValue is "Range" or "Transfer-Encoding")
+                if (headerName is "Range" or "Transfer-Encoding")
                 {
                     continue;
                 }

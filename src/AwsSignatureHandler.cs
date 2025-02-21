@@ -87,7 +87,7 @@ namespace AwsSignatureVersion4
 
         /// <summary>
         /// Given the idempotent nature of message handlers, lets remove request headers that
-        /// might have been added by an prior attempt to send the request.
+        /// might have been added by a prior attempt to send the request.
         /// </summary>
         private static void RemoveHeaders(HttpRequestMessage request)
         {
