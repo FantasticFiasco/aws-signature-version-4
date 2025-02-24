@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [5.0.1] - 2025-02-24
+
 ### :syringe: Fixed
 
 - [#1231](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1231) Requests with certain HTTP headers are rejected by API Gateway. (contribution by [@cfbao](https://github.com/cfbao))
