@@ -19,14 +19,14 @@
     "source-map-support": "0.5.21"
   },
   "devDependencies": {
-    "@eslint/js": "9.25.0",
+    "@eslint/js": "9.25.1",
     "@types/aws-lambda": "8.10.149",
     "@types/node": "22.14.1",
-    "eslint": "9.25.0",
+    "eslint": "9.25.1",
     "prettier": "3.5.3",
     "rimraf": "6.0.1",
     "typescript": "5.8.3",
-    "typescript-eslint": "8.30.1"
+    "typescript-eslint": "8.31.0"
   },
   "resolutions": {
     "ansi-regex": ">=5.0.1",
