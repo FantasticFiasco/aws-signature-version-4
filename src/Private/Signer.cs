@@ -23,7 +23,9 @@ namespace AwsSignatureVersion4.Private
 
             UpdateRequestUri(request, baseAddress);
 
-            var contentHash = await ContentHash.CalculateAsync(request.Content).ConfigureAwait(false);
+            var contentHash = serviceName == ServiceName.VpcLatticeService ?
+                "UNSIGNED-PAYLOAD" :
+                await ContentHash.CalculateAsync(request.Content).ConfigureAwait(false);
 
             AddHeaders(request, now, serviceName, credentials, contentHash);
 
@@ -136,6 +138,7 @@ namespace AwsSignatureVersion4.Private
             request.AddHeaderIf(credentials.UseToken, HeaderKeys.XAmzSecurityTokenHeader, credentials.Token);
             request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri!.Host);
             request.AddHeaderIf(serviceName == ServiceName.OpenSearchServerless, HeaderKeys.XAmzContentSha256Header, contentHash);
+            request.AddHeaderIf(serviceName == ServiceName.VpcLatticeService, HeaderKeys.XAmzContentSha256Header, contentHash);
             request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
         }
 
