@@ -186,17 +186,32 @@ namespace AwsSignatureVersion4.Private
 
             foreach (string parameterName in queryParameters)
             {
-                // Create query parameter if it doesn't already exist
-                if (!sortedQueryParameters.TryGetValue(parameterName, out var parameterValues))
+                // Flag parameter keys are collated comma separated with a null parameter name
+                if (parameterName == null)
                 {
-                    parameterValues = new List<string>();
-                    sortedQueryParameters.Add(parameterName, parameterValues);
+                    string? flags = queryParameters[ null ];
+                    flags?.Split(',')?.ToList().ForEach( x =>
+                    {
+                        if (!sortedQueryParameters.TryGetValue(x, out _))
+                        {
+                            sortedQueryParameters.Add(x, new List<string>() { string.Empty });
+                        }
+                    } );
                 }
-
-                var queryParameterValues = queryParameters.GetValues(parameterName);
-                if (queryParameterValues?.Length > 0)
+                else
                 {
-                    parameterValues.AddRange(queryParameterValues);
+                    // Create query parameter if it doesn't already exist
+                    if (!sortedQueryParameters.TryGetValue(parameterName, out var parameterValues))
+                    {
+                        parameterValues = new List<string>();
+                        sortedQueryParameters.Add(parameterName, parameterValues);
+                    }
+    
+                    var queryParameterValues = queryParameters.GetValues(parameterName);
+                    if (queryParameterValues?.Length > 0)
+                    {
+                        parameterValues.AddRange(queryParameterValues);
+                    }
                 }
             }
 
