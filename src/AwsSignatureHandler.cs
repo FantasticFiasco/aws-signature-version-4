@@ -60,8 +60,6 @@ namespace AwsSignatureVersion4
             return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
-#if NET5_0_OR_GREATER
-
         /// <inheritdoc />
         protected override HttpResponseMessage Send(
             HttpRequestMessage request,
@@ -82,8 +80,6 @@ namespace AwsSignatureVersion4
 
             return base.Send(request, cancellationToken);
         }
-
-#endif
 
         /// <summary>
         /// Given the idempotent nature of message handlers, lets remove request headers that

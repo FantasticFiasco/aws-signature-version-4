@@ -38,8 +38,6 @@ namespace AwsSignatureVersion4.Private
             return AWSSDKUtils.ToHex(hash, true);
         }
 
-#if NET5_0_OR_GREATER
-
         /// <remarks>This method has a asynchronous alternative.</remarks>
         public static string Calculate(HttpContent? content)
         {
@@ -66,7 +64,5 @@ namespace AwsSignatureVersion4.Private
 
             return AWSSDKUtils.ToHex(hash, true);
         }
-
-#endif
     }
 }

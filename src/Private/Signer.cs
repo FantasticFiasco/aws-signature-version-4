@@ -54,8 +54,6 @@ namespace AwsSignatureVersion4.Private
             return new Result(canonicalRequest, stringToSign, authorizationHeader);
         }
 
-#if NET5_0_OR_GREATER
-
         /// <remarks>This method has a asynchronous alternative.</remarks>
         public static Result Sign(
             HttpRequestMessage request,
@@ -100,8 +98,6 @@ namespace AwsSignatureVersion4.Private
 
             return new Result(canonicalRequest, stringToSign, authorizationHeader);
         }
-
-#endif
 
         private static void ValidateArguments(
             HttpRequestMessage request,

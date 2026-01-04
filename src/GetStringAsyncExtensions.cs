@@ -467,11 +467,7 @@ namespace System.Net.Http
                 return string.Empty;
             }
 
-#if NET5_0_OR_GREATER
             return await content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-#else
-            return await content.ReadAsStringAsync().ConfigureAwait(false);
-#endif
         }
 
         #endregion

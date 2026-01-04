@@ -1,6 +1,4 @@
-﻿#if NET5_0_OR_GREATER
-
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using AwsSignatureVersion4.Private;
@@ -521,5 +519,3 @@ namespace System.Net.Http
         #endregion
     }
 }
-
-#endif
