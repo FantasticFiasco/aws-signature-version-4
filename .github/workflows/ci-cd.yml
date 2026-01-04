@@ -21,8 +21,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-    - uses: actions/setup-dotnet@v4
+    - uses: actions/checkout@v6
+    - uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 8.x
     # Build
@@ -39,7 +39,7 @@ jobs:
         AWS_API_GATEWAY_URL: ${{ secrets.AWS_API_GATEWAY_URL }}
         AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
         AWS_S3_BUCKET_URL: ${{ secrets.AWS_S3_BUCKET_URL }}
-    - uses: codecov/codecov-action@v4
+    - uses: codecov/codecov-action@v5
     # Pack
     - run: dotnet pack --configuration Release --no-build
     - run: |

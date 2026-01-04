@@ -6,6 +6,12 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [5.0.2] - 2025-12-28
+
+### :policeman: Security
+
+- Fixed security vulnerabilities in direct and transient dependencies
+
 ## [5.0.1] - 2025-02-24
 
 ### :syringe: Fixed
