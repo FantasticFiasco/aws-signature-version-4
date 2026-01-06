@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Amazon.Runtime;
+using Amazon.SecurityToken.Model;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using Shouldly;
 using Xunit;
@@ -50,7 +51,7 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData(IamAuthenticationType.User)]
         [InlineData(IamAuthenticationType.Role)]
-        public async Task Succeed(IamAuthenticationType iamAuthenticationType)
+        public async Task Complete(IamAuthenticationType iamAuthenticationType)
         {
             var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
 
@@ -75,62 +76,96 @@ namespace AwsSignatureVersion4.Integration.S3
                 uploadedParts.Add(new KeyValuePair<int, string>(partNumber, eTag));
             }
 
-            // Step 3 - Complete the multipart upload
+            // Step 3 - Complete multipart upload
             var actualKey = await CompleteAsync(
                 bucketObject.Key,
                 uploadId,
                 uploadedParts,
                 ResolveMutableCredentials(iamAuthenticationType));
 
+            // Assert that the returned object key matches the original object key
             actualKey.ShouldBe(bucketObject.Key);
         }
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public async Task AbortMultipartUpload(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // 1. Initiate the upload
-        //    // 2. Upload some of the object parts
-        //    //   - Part number between 1 and 10,000
-        //    // 3. Abort the multipart upload
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task Abort(IamAuthenticationType iamAuthenticationType)
+        {
+            var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
 
-        //    // Verification: Assert that all parts have been removed, and there is no combined object.
+            // Step 1 - Initiate the upload
+            var uploadId = await InitiateAsync(
+                bucketObject.Key,
+                ResolveMutableCredentials(iamAuthenticationType));
 
-        //    throw new NotImplementedException();
-        //}
+            // Step 2 - Upload a single part (part number can be from 1 and 10,000)
+            var partNumber = 1;
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public async Task ListOngoingMultipartUploads(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // 1. Initiate the upload
-        //    // 2. Upload some of the object parts
-        //    //   - Part number between 1 and 10,000
-        //    // 3. List ongoing multipart uploads
-        //    // 4. Abort the multipart upload
+            await UploadPartAsync(
+                bucketObject.Key,
+                uploadId,
+                partNumber,
+                bucketObject.MultipartUploadParts[partNumber - 1],
+                ResolveMutableCredentials(iamAuthenticationType));
 
-        //    // Verification: Assert that ongoing upload is listed.
+            // Step 3 - Abort multipart upload
+            await AbortAsync(
+                bucketObject.Key,
+                uploadId,
+                ResolveMutableCredentials(iamAuthenticationType));
+        }
 
-        //    throw new NotImplementedException();
-        //}
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task ListOngoing(IamAuthenticationType iamAuthenticationType)
+        {
+            var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
 
-        //[Theory]
-        //[InlineData(IamAuthenticationType.User)]
-        //[InlineData(IamAuthenticationType.Role)]
-        //public async Task ListMultipartUploadParts(IamAuthenticationType iamAuthenticationType)
-        //{
-        //    // 1. Initiate the upload
-        //    // 2. Upload some of the object parts
-        //    //   - Part number between 1 and 10,000
-        //    // 3. List multipart upload parts
-        //    // 4. Abort the multipart upload
+            // Step 1 - Initiate the upload
+            var uploadId = await InitiateAsync(
+                bucketObject.Key,
+                ResolveMutableCredentials(iamAuthenticationType));
 
-        //    // Verification: Assert that the uploaded parts are listed.
+            // Step 2 - List ongoing multipart uploads
+            var uploadIds = await ListOngoingAsync(ResolveMutableCredentials(iamAuthenticationType));
 
-        //    throw new NotImplementedException();
-        //}
+            // Assert that the current upload ID is listed
+            uploadIds.ShouldContain(uploadId);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task ListParts(IamAuthenticationType iamAuthenticationType)
+        {
+            var bucketObject = new BucketObject(BucketObjectKey.WithoutPrefix);
+
+            // Step 1 - Initiate the upload
+            var uploadId = await InitiateAsync(
+                bucketObject.Key,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Step 2 - Upload a single part (part number can be from 1 and 10,000)
+            var partNumber = 1;
+
+            await UploadPartAsync(
+                bucketObject.Key,
+                uploadId,
+                partNumber,
+                bucketObject.MultipartUploadParts[partNumber - 1],
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Step 3 - List parts
+            var actualPartNumbers = await ListPartsAsync(
+                bucketObject.Key,
+                uploadId,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert that no more or no less than the uploaded part is listed
+            actualPartNumbers.ShouldBe([partNumber]);
+        }
 
         /// <returns>The upload ID.</returns>
         private async Task<string> InitiateAsync(string key, AWSCredentials credentials)
@@ -195,7 +230,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             var document = XDocument.Parse(await response.Content.ReadAsStringAsync());
 
-            return document.Root.Element(ns + "Key").Value;            
+            return document.Root.Element(ns + "Key").Value;
         }
 
         private async Task AbortAsync(
@@ -210,6 +245,28 @@ namespace AwsSignatureVersion4.Integration.S3
                 credentials);
 
             response.EnsureSuccessStatusCode();
+        }
+
+        /// <returns>An array of part IDs</returns>
+        private async Task<int[]> ListPartsAsync(
+            string key,
+            string uploadId,
+            AWSCredentials credentials)
+        {
+            var response = await HttpClient.GetAsync(
+                $"{Context.S3BucketUrl}/{key}?uploadId={uploadId}",
+                Context.RegionName,
+                Context.ServiceName,
+                credentials);
+
+            response.EnsureSuccessStatusCode();
+
+            var document = XDocument.Parse(await response.Content.ReadAsStringAsync());
+
+            return document.Root
+                .Descendants(ns + "PartNumber")
+                .Select(element => int.Parse(element.Value))
+                .ToArray();
         }
 
         /// <returns>An array with upload IDs.</returns>
