@@ -184,34 +184,38 @@ namespace AwsSignatureVersion4.Private
             var sortedQueryParameters = new SortedList<string, List<string>>(StringComparer.Ordinal);
             var queryParameters = HttpUtility.ParseQueryString(query);
 
+            // The HttpUtility.ParseQueryString method stores query parameters without values under the null key.
+            // For example, given the query string "?a=1&b&c", the resulting NameValueCollection will contain:
+            //   "a": "1"
+            //   null: "b,c"
+            //
+            // To address this, we extract these parameters and re-add them using their names with empty values.
+            var parametersWithoutValue = queryParameters.Get(null);
+            if (parametersWithoutValue != null)
+            {
+                // Let's start by removing the null key
+                queryParameters.Remove(null);
+
+                // Now, re-add each parameter with an empty string as its value
+                foreach (var parameterName in parametersWithoutValue.Split(','))
+                {
+                    queryParameters.Add(parameterName, string.Empty);
+                }
+            }
+
             foreach (string parameterName in queryParameters)
             {
-                // Flag parameter keys are collated comma separated with a null parameter name
-                if (parameterName == null)
+                // Create query parameter if it doesn't already exist
+                if (!sortedQueryParameters.TryGetValue(parameterName, out var parameterValues))
                 {
-                    string? flags = queryParameters[ null ];
-                    flags?.Split(',')?.ToList().ForEach( x =>
-                    {
-                        if (!sortedQueryParameters.TryGetValue(x, out _))
-                        {
-                            sortedQueryParameters.Add(x, new List<string>() { string.Empty });
-                        }
-                    } );
+                    parameterValues = new List<string>();
+                    sortedQueryParameters.Add(parameterName, parameterValues);
                 }
-                else
+
+                var queryParameterValues = queryParameters.GetValues(parameterName);
+                if (queryParameterValues?.Length > 0)
                 {
-                    // Create query parameter if it doesn't already exist
-                    if (!sortedQueryParameters.TryGetValue(parameterName, out var parameterValues))
-                    {
-                        parameterValues = new List<string>();
-                        sortedQueryParameters.Add(parameterName, parameterValues);
-                    }
-    
-                    var queryParameterValues = queryParameters.GetValues(parameterName);
-                    if (queryParameterValues?.Length > 0)
-                    {
-                        parameterValues.AddRange(queryParameterValues);
-                    }
+                    parameterValues.AddRange(queryParameterValues);
                 }
             }
 
