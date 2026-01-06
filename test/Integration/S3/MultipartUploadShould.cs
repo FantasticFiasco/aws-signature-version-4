@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -12,13 +13,38 @@ using Xunit;
 namespace AwsSignatureVersion4.Integration.S3
 {
     [Collection("S3")]
-    public class MultipartUploadShould : S3IntegrationBase
+    public class MultipartUploadShould : S3IntegrationBase, IAsyncLifetime
     {
         private static readonly XNamespace ns = "http://s3.amazonaws.com/doc/2006-03-01/";
 
         public MultipartUploadShould(IntegrationTestContext context)
             : base(context)
         {
+        }
+
+        public Task InitializeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Clean up any lingering multipart uploads after each test run.
+        /// </summary>
+        public async Task DisposeAsync()
+        {
+            // Use the user credentials to list and abort ongoing multipart uploads. Using the role
+            // credentials would have been equally fine, but let's settle on one.
+            var credentials = Context.UserCredentials;
+
+            var uploadIds = await ListOngoingAsync(credentials);
+
+            foreach (var uploadId in uploadIds)
+            {
+                await AbortAsync(
+                    BucketObjectKey.WithoutPrefix,
+                    uploadId,
+                    credentials);
+            }
         }
 
         [Theory]
@@ -50,7 +76,7 @@ namespace AwsSignatureVersion4.Integration.S3
             }
 
             // Step 3 - Complete the multipart upload
-            var actualKey = await Complete(
+            var actualKey = await CompleteAsync(
                 bucketObject.Key,
                 uploadId,
                 uploadedParts,
@@ -145,7 +171,7 @@ namespace AwsSignatureVersion4.Integration.S3
         }
 
         /// <returns>The object key.</returns>
-        private async Task<string> Complete(
+        private async Task<string> CompleteAsync(
             string key,
             string uploadId,
             List<KeyValuePair<int, string>> parts,
@@ -170,6 +196,39 @@ namespace AwsSignatureVersion4.Integration.S3
             var document = XDocument.Parse(await response.Content.ReadAsStringAsync());
 
             return document.Root.Element(ns + "Key").Value;            
+        }
+
+        private async Task AbortAsync(
+            string key,
+            string uploadId,
+            AWSCredentials credentials)
+        {
+            var response = await HttpClient.DeleteAsync(
+                $"{Context.S3BucketUrl}/{key}?uploadId={uploadId}",
+                Context.RegionName,
+                Context.ServiceName,
+                credentials);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        /// <returns>An array with upload IDs.</returns>
+        private async Task<string[]> ListOngoingAsync(AWSCredentials credentials)
+        {
+            var response = await HttpClient.GetAsync(
+                $"{Context.S3BucketUrl}/?uploads",
+                Context.RegionName,
+                Context.ServiceName,
+                credentials);
+
+            response.EnsureSuccessStatusCode();
+
+            var document = XDocument.Parse(await response.Content.ReadAsStringAsync());
+
+            return document.Root
+                .Descendants(ns + "UploadId")
+                .Select(element => element.Value)
+                .ToArray();
         }
     }
 }
