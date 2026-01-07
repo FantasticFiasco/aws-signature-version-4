@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- [#1394](https://github.com/FantasticFiasco/aws-signature-version-4/pull/1394) Add support for [Amazon S3 multipart upload](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html) (contribution by [@jimp100](https://github.com/jimp100))
+
 ## [5.0.2] - 2025-12-28
 
 ### :policeman: Security
