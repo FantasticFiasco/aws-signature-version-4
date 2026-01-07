@@ -41,10 +41,7 @@ namespace AwsSignatureVersion4.Integration.S3
 
             foreach (var (Key, UploadId) in ongoingUploads)
             {
-                await AbortAsync(
-                    Key,
-                    UploadId,
-                    credentials);
+                await AbortAsync(Key, UploadId, credentials);
             }
         }
 
@@ -60,8 +57,8 @@ namespace AwsSignatureVersion4.Integration.S3
                 bucketObject.Key,
                 ResolveMutableCredentials(iamAuthenticationType));
 
-            // Keep track of the uploaded parts, where the key is the part number and the value is the ETag
-            var uploadedParts = new List<KeyValuePair<int, string>>();
+            // Keep track of the uploaded parts
+            var uploadedParts = new List<(int PartNumber, string ETag)>();
 
             // Step 2 - Upload the object parts (part number can be from 1 and 10,000)
             for (var partNumber = 1; partNumber <= bucketObject.MultipartUploadParts.Length; partNumber++)
@@ -73,7 +70,7 @@ namespace AwsSignatureVersion4.Integration.S3
                     bucketObject.MultipartUploadParts[partNumber - 1],
                     ResolveMutableCredentials(iamAuthenticationType));
 
-                uploadedParts.Add(new KeyValuePair<int, string>(partNumber, eTag));
+                uploadedParts.Add((PartNumber: partNumber, ETag: eTag));
             }
 
             // Step 3 - Complete multipart upload
@@ -209,15 +206,15 @@ namespace AwsSignatureVersion4.Integration.S3
         private async Task<string> CompleteAsync(
             string key,
             string uploadId,
-            List<KeyValuePair<int, string>> parts,
+            List<(int PartNumber, string ETag)> parts,
             AWSCredentials credentials)
         {
             var xml = new XDocument(
                 new XElement(ns + "CompleteMultipartUpload",
                     parts.ConvertAll(part =>
                         new XElement(ns + "Part",
-                            new XElement(ns + "PartNumber", part.Key),
-                            new XElement(ns + "ETag", part.Value)))));
+                            new XElement(ns + "PartNumber", part.PartNumber),
+                            new XElement(ns + "ETag", part.ETag)))));
 
             var response = await HttpClient.PostAsync(
                 $"{Context.S3BucketUrl}/{key}?uploadId={uploadId}",
