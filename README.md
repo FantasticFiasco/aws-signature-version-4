@@ -164,9 +164,3 @@ You can also install AwsSignatureVersion4 using the `dotnet` command line interf
 ```bash
 dotnet add package AwsSignatureVersion4
 ```
-
-## Credit
-
-Thank you [JetBrains](https://www.jetbrains.com/) for your important initiative to support the open source community with free licenses to your products.
-
-![JetBrains](./doc/resources/jetbrains.png)
