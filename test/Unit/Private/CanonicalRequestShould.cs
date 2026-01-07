@@ -233,6 +233,19 @@ namespace AwsSignatureVersion4.Unit.Private
         [InlineData("?C=3&B=2&A=1", new[] { "A", "B", "C" })]
         // Upper case characters have a lower code point than lower case characters
         [InlineData("?a=1&B=2&C=3", new[] { "B", "C", "a" })]
+        // No values
+        [InlineData("?a&b&c", new[] { "a", "b", "c" })]
+        [InlineData("?a&c&b", new[] { "a", "b", "c" })]
+        [InlineData("?b&a&c", new[] { "a", "b", "c" })]
+        [InlineData("?b&c&a", new[] { "a", "b", "c" })]
+        [InlineData("?c&a&b", new[] { "a", "b", "c" })]
+        [InlineData("?c&b&a", new[] { "a", "b", "c" })]
+        [InlineData("?A&B&C", new[] { "A", "B", "C" })]
+        [InlineData("?A&C&B", new[] { "A", "B", "C" })]
+        [InlineData("?B&A&C", new[] { "A", "B", "C" })]
+        [InlineData("?B&C&A", new[] { "A", "B", "C" })]
+        [InlineData("?C&A&B", new[] { "A", "B", "C" })]
+        [InlineData("?C&B&A", new[] { "A", "B", "C" })]
         public void SortQueryParameterNames(string query, string[] expected)
         {
             // Act
@@ -250,6 +263,14 @@ namespace AwsSignatureVersion4.Unit.Private
         [InlineData("?A=1&A=3&A=2", "A", new[] { "1", "2", "3" })]
         [InlineData("?A=2&A=1&A=3", "A", new[] { "1", "2", "3" })]
         [InlineData("?a=1&b=10&a=3&b=13&a=2&b=12", "a", new[] { "1", "2", "3" })]
+        // Some parameters have no value
+        [InlineData("?a=1&a=2&a", "a", new[] { "", "1", "2" })]
+        [InlineData("?a=1&a&a=2", "a", new[] { "", "1", "2" })]
+        [InlineData("?a=2&a=1&a", "a", new[] { "", "1", "2" })]
+        [InlineData("?A=1&A=2&A", "A", new[] { "", "1", "2" })]
+        [InlineData("?A=1&A&A=2", "A", new[] { "", "1", "2" })]
+        [InlineData("?A=2&A=1&A", "A", new[] { "", "1", "2" })]
+        [InlineData("?a=1&b=10&a&b=13&a=2&b=12", "a", new[] { "", "1", "2" })]
         public void SortQueryParameterValues(string query, string parameterName, string[] expected)
         {
             // Act
