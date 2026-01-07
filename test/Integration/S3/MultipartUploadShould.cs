@@ -37,13 +37,13 @@ namespace AwsSignatureVersion4.Integration.S3
             // credentials would have been equally fine, but let's settle on one.
             var credentials = Context.UserCredentials;
 
-            var uploadIds = await ListOngoingAsync(credentials);
+            var ongoingUploads = await ListOngoingAsync(credentials);
 
-            foreach (var uploadId in uploadIds)
+            foreach (var (Key, UploadId) in ongoingUploads)
             {
                 await AbortAsync(
-                    BucketObjectKey.WithoutPrefix,
-                    uploadId,
+                    Key,
+                    UploadId,
                     credentials);
             }
         }
@@ -129,10 +129,10 @@ namespace AwsSignatureVersion4.Integration.S3
                 ResolveMutableCredentials(iamAuthenticationType));
 
             // Step 2 - List ongoing multipart uploads
-            var uploadIds = await ListOngoingAsync(ResolveMutableCredentials(iamAuthenticationType));
+            var ongoingUploads = await ListOngoingAsync(ResolveMutableCredentials(iamAuthenticationType));
 
             // Assert that the current upload ID is listed
-            uploadIds.ShouldContain(uploadId);
+            ongoingUploads.ShouldContain((Key: bucketObject.Key, UploadId: uploadId));
         }
 
         [Theory]
@@ -269,8 +269,7 @@ namespace AwsSignatureVersion4.Integration.S3
                 .ToArray();
         }
 
-        /// <returns>An array with upload IDs.</returns>
-        private async Task<string[]> ListOngoingAsync(AWSCredentials credentials)
+        private async Task<(string Key, string UploadId)[]> ListOngoingAsync(AWSCredentials credentials)
         {
             var response = await HttpClient.GetAsync(
                 $"{Context.S3BucketUrl}/?uploads",
@@ -283,8 +282,13 @@ namespace AwsSignatureVersion4.Integration.S3
             var document = XDocument.Parse(await response.Content.ReadAsStringAsync());
 
             return document.Root
-                .Descendants(ns + "UploadId")
-                .Select(element => element.Value)
+                .Descendants(ns + "Upload")
+                .Select(upload =>
+                {
+                    return (
+                        Key: upload.Element(ns + "Key").Value,
+                        UploadId: upload.Element(ns + "UploadId").Value);
+                })
                 .ToArray();
         }
     }
