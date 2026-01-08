@@ -7,6 +7,7 @@ using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Integration.ApiGateway.Requests;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.Unit.Private;
 using Shouldly;
 using Xunit;
 
@@ -41,7 +42,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent")]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -87,7 +87,6 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent")]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -313,6 +312,30 @@ namespace AwsSignatureVersion4.Integration.ApiGateway
             receivedRequest.Method.ShouldBe(method.ToString());
             receivedRequest.Path.ShouldBe("/");
             receivedRequest.QueryStringParameters["Param1"].ShouldBe(new[] { "Value2", "Value1" });
+            receivedRequest.Body.ShouldBeNull();
+        }
+
+        [Theory]
+        [MemberData(nameof(TestCases))]
+        public async Task SucceedGivenUnsignableHeaders(
+            IamAuthenticationType iamAuthenticationType,
+            HttpMethod method)
+        {
+            // Arrange
+            using var httpClient = HttpClientFactory(iamAuthenticationType).CreateClient("integration");
+
+            var request = new HttpRequestMessage(method, Context.ApiGatewayUrl);
+            CanonicalRequestShould.AddUnsignableHeaders(request);
+
+            // Act
+            var response = await httpClient.SendAsync(request);
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var receivedRequest = await response.Content.ReadReceivedRequestAsync();
+            receivedRequest.Method.ShouldBe(method.ToString());
+            receivedRequest.Path.ShouldBe("/");
             receivedRequest.Body.ShouldBeNull();
         }
 

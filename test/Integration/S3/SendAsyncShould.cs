@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
+using AwsSignatureVersion4.Unit.Private;
 using Shouldly;
 using Xunit;
 
@@ -23,7 +24,6 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent")]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -75,7 +75,6 @@ namespace AwsSignatureVersion4.Integration.S3
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent")]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -112,6 +111,28 @@ namespace AwsSignatureVersion4.Integration.S3
             var iamAuthenticationType = IamAuthenticationType.Role;
 
             await UploadRequiredObjectAsync(Bucket, scenarioName);
+
+            // Act
+            var response = await HttpClient.SendAsync(
+                request,
+                Context.RegionName,
+                Context.ServiceName,
+                ResolveMutableCredentials(iamAuthenticationType));
+
+            // Assert
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData(IamAuthenticationType.User)]
+        [InlineData(IamAuthenticationType.Role)]
+        public async Task SucceedGivenUnsignableHeaders(IamAuthenticationType iamAuthenticationType)
+        {
+            // Arrange
+            var bucketObject = await Bucket.PutObjectAsync(BucketObjectKey.WithoutPrefix);
+            var requestUri = $"{Context.S3BucketUrl}/{bucketObject.Key}";
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            CanonicalRequestShould.AddUnsignableHeaders(request);
 
             // Act
             var response = await HttpClient.SendAsync(

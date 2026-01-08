@@ -6,6 +6,38 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+## [5.1.0] - 2026-01-07
+
+### :zap: Added
+
+- [#1394](https://github.com/FantasticFiasco/aws-signature-version-4/pull/1394) Add support for [Amazon S3 multipart upload](https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html) (contribution by [@jimp100](https://github.com/jimp100))
+
+## [5.0.2] - 2025-12-28
+
+### :policeman: Security
+
+- Fixed security vulnerabilities in direct and transient dependencies
+
+## [5.0.1] - 2025-02-24
+
+### :syringe: Fixed
+
+- [#1231](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1231) Requests with certain HTTP headers are rejected by API Gateway. (contribution by [@cfbao](https://github.com/cfbao))
+
+## [5.0.0] - 2024-12-22
+
+### :zap: Added
+
+- Support for .NET 8
+
+### :skull: Removed
+
+- [BREAKING CHANGE] Support for .NET 6 due to [deprecation as of November 12, 2024](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+
+### :syringe: Fixed
+
+- [#1198](https://github.com/FantasticFiasco/aws-signature-version-4/issues/1198) Requests with certain HTTP headers are rejected by API Gateway. (contribution by [@cfbao](https://github.com/cfbao))
+
 ## [4.0.6] - 2024-09-18
 
 ### :syringe: Fixed

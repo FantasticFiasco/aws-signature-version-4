@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Amazon.Util;
@@ -20,10 +21,30 @@ namespace AwsSignatureVersion4.Unit.Private
             context.AdjustHeaderValueSeparator();
         }
 
+        public static IEnumerable<object[]> UnsignableHeadersTestCases =>
+        [
+            ["Connection", "keep-alive"],
+            ["Expect", "100-continue"],
+            ["Keep-Alive", "timeout=5"],
+            ["Proxy-Authenticate", "Basic"],
+            ["Proxy-Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="],
+            ["Proxy-Connection", "keep-alive"],
+            ["Range", "bytes=0-499"],
+            ["TE", "gzip"],
+            ["Trailer", "Expires"],
+            ["Transfer-Encoding", "gzip"],
+            ["Upgrade", "websocket"],
+            ["User-Agent", "curl/7.64.1"],
+            ["Via", "HTTP/1.1 my_proxy"],
+            ["X-Forwarded-For", "203.0.113.195"],
+            ["X-Forwarded-Port", "443"],
+            ["X-Forwarded-Proto", "http"]
+        ];
+
+
         [Theory]
         [InlineData("get-header-key-duplicate")]
         [InlineData("get-header-value-multiline")]
-        [InlineData("get-header-value-multiple-user-agent")]
         [InlineData("get-header-value-order")]
         [InlineData("get-header-value-trim")]
         [InlineData("get-unreserved")]
@@ -109,10 +130,10 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add(headerName, "some header value");
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
-            actual.Keys.ShouldBe(new[] { expected });
+            actual.Keys.ShouldBe([expected]);
         }
 
         [Theory]
@@ -133,7 +154,7 @@ namespace AwsSignatureVersion4.Unit.Private
             }
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual.Keys.ShouldBe(expected);
@@ -156,7 +177,7 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
@@ -176,10 +197,25 @@ namespace AwsSignatureVersion4.Unit.Private
             headers.Add("some-header-name", headerValue);
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, null);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { expected });
+        }
+
+        [Theory]
+        [MemberData(nameof(UnsignableHeadersTestCases))]
+        public void RemoveUnsignableHeaders(string headerName, string headerValue)
+        {
+            // Arrange
+            var headers = new HttpRequestMessage().Headers;
+            headers.Add(headerName, headerValue);
+
+            // Act
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, null);
+
+            // Assert
+            actual.ShouldBeEmpty();
         }
 
         [Theory]
@@ -197,6 +233,19 @@ namespace AwsSignatureVersion4.Unit.Private
         [InlineData("?C=3&B=2&A=1", new[] { "A", "B", "C" })]
         // Upper case characters have a lower code point than lower case characters
         [InlineData("?a=1&B=2&C=3", new[] { "B", "C", "a" })]
+        // No values
+        [InlineData("?a&b&c", new[] { "a", "b", "c" })]
+        [InlineData("?a&c&b", new[] { "a", "b", "c" })]
+        [InlineData("?b&a&c", new[] { "a", "b", "c" })]
+        [InlineData("?b&c&a", new[] { "a", "b", "c" })]
+        [InlineData("?c&a&b", new[] { "a", "b", "c" })]
+        [InlineData("?c&b&a", new[] { "a", "b", "c" })]
+        [InlineData("?A&B&C", new[] { "A", "B", "C" })]
+        [InlineData("?A&C&B", new[] { "A", "B", "C" })]
+        [InlineData("?B&A&C", new[] { "A", "B", "C" })]
+        [InlineData("?B&C&A", new[] { "A", "B", "C" })]
+        [InlineData("?C&A&B", new[] { "A", "B", "C" })]
+        [InlineData("?C&B&A", new[] { "A", "B", "C" })]
         public void SortQueryParameterNames(string query, string[] expected)
         {
             // Act
@@ -214,6 +263,14 @@ namespace AwsSignatureVersion4.Unit.Private
         [InlineData("?A=1&A=3&A=2", "A", new[] { "1", "2", "3" })]
         [InlineData("?A=2&A=1&A=3", "A", new[] { "1", "2", "3" })]
         [InlineData("?a=1&b=10&a=3&b=13&a=2&b=12", "a", new[] { "1", "2", "3" })]
+        // Some parameters have no value
+        [InlineData("?a=1&a=2&a", "a", new[] { "", "1", "2" })]
+        [InlineData("?a=1&a&a=2", "a", new[] { "", "1", "2" })]
+        [InlineData("?a=2&a=1&a", "a", new[] { "", "1", "2" })]
+        [InlineData("?A=1&A=2&A", "A", new[] { "", "1", "2" })]
+        [InlineData("?A=1&A&A=2", "A", new[] { "", "1", "2" })]
+        [InlineData("?A=2&A=1&A", "A", new[] { "", "1", "2" })]
+        [InlineData("?a=1&b=10&a&b=13&a=2&b=12", "a", new[] { "", "1", "2" })]
         public void SortQueryParameterValues(string query, string parameterName, string[] expected)
         {
             // Act
@@ -221,6 +278,23 @@ namespace AwsSignatureVersion4.Unit.Private
 
             // Assert
             actual[parameterName].ShouldBe(expected);
+        }
+
+        internal static void AddUnsignableHeaders(HttpRequestMessage request)
+        {
+            foreach (var testCase in UnsignableHeadersTestCases)
+            {
+                var headerName = (string)testCase[0];
+                var headerValue = (string)testCase[1];
+
+                // Exclude the following headers due to them failing
+                if (headerName is "Range" or "Transfer-Encoding")
+                {
+                    continue;
+                }
+
+                request.Headers.Add(headerName, headerValue);
+            }
         }
 
         public void Dispose() => context.ResetHeaderValueSeparator();

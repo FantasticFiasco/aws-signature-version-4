@@ -1,25 +1,46 @@
 {
-  "extends": ["github>FantasticFiasco/renovate-config"],
+  "extends": [
+    "github>FantasticFiasco/renovate-config"
+  ],
   "packageRules": [
     {
-      "matchPackagePatterns": ["^aws-cdk-lib"],
       "groupName": "AWS CDK (JS)",
-      "extends": ["schedule:earlyMondays"]
+      "extends": [
+        "schedule:earlyMondays"
+      ],
+      "matchPackageNames": [
+        "/^aws-cdk-lib/"
+      ]
     },
     {
-      "matchPackagePatterns": ["^AWSSDK."],
       "groupName": "AWS SDK (.NET)",
-      "extends": ["schedule:earlyMondays"]
+      "extends": [
+        "schedule:earlyMondays"
+      ],
+      "matchPackageNames": [
+        "/^AWSSDK./"
+      ]
     },
     {
-      "matchPackagePatterns": ["^constructs"],
       "groupName": "AWS Constructs (JS)",
-      "extends": ["schedule:earlyMondays"]
+      "extends": [
+        "schedule:earlyMondays"
+      ],
+      "matchPackageNames": [
+        "/^constructs/"
+      ]
     },
     {
-      "matchPackagePatterns": ["eslint"],
-      "groupName": "ESLint packages (JS)"
+      "groupName": "ESLint packages (JS)",
+      "matchPackageNames": [
+        "/eslint/"
+      ]
     }
   ],
-  "ignoreDeps": ["bl", "lodash", "minimist", "netmask"]
+  "ignoreDeps": [
+    "bl",
+    "lodash",
+    "minimist",
+    "netmask"
+  ]
 }

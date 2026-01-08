@@ -33,7 +33,7 @@ namespace AwsSignatureVersion4.Unit.Private
             defaultHeaders.Add("some-header-name", "some-header-value");
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, defaultHeaders);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { "some-header-value" });
@@ -50,7 +50,7 @@ namespace AwsSignatureVersion4.Unit.Private
             defaultHeaders.Add("some-header-name", "some-ignored-header-value");
 
             // Act
-            var actual = CanonicalRequest.SortHeaders(headers, defaultHeaders);
+            var actual = CanonicalRequest.PruneAndSortHeaders(headers, defaultHeaders);
 
             // Assert
             actual["some-header-name"].ShouldBe(new[] { "some-header-value" });

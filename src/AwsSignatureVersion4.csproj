@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>The buttoned-up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.</Description>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.7.400.36" />
+    <PackageReference Include="AWSSDK.Core" Version="3.7.400.64" />
   </ItemGroup>
 
   <ItemGroup>

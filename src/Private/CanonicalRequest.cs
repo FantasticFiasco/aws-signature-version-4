@@ -30,6 +30,29 @@ namespace AwsSignatureVersion4.Private
         /// </summary>
         public static string HeaderValueSeparator { get; set; } = ", ";
 
+        // Including most headers from
+        // https://github.com/smithy-lang/smithy-typescript/blob/430021abf44f8a4d6c24de2dfa25709bf91a92c8/packages/signature-v4/src/constants.ts#L19-L35
+        private static readonly HashSet<string> UnsignableHeaders =
+        [
+            "connection",
+            "expect",
+            "keep-alive",
+            "proxy-authenticate",
+            "proxy-authorization",
+            "proxy-connection",
+            "range",
+            "te",
+            "trailer",
+            "transfer-encoding",
+            "upgrade",
+            "user-agent",
+            "via",
+            "x-forwarded-for",
+            "x-forwarded-port",
+            "x-forwarded-proto",
+            HeaderKeys.XAmznTraceIdHeader
+        ];
+
         /// <returns>
         /// The first value is the canonical request, the second value is the signed headers.
         /// </returns>
@@ -91,8 +114,10 @@ namespace AwsSignatureVersion4.Private
             builder.Append($"{string.Join("&", parameters)}\n");
 
             // Add the canonical headers, followed by a newline character. The canonical headers
-            // consist of a list of all the HTTP headers that you are including with the signed
-            // request.
+            // consist of a list of HTTP headers that you are including with the signed request.
+            //
+            // Some headers are unsignable, i.e. signatures including them are always deemed invalid.
+            // They are excluded from the canonical headers (but will be kept in the HTTP request).
             //
             // To create the canonical headers list, convert all header names to lowercase and
             // remove leading spaces and trailing spaces. Convert sequential spaces in the header
@@ -108,14 +133,11 @@ namespace AwsSignatureVersion4.Private
             //   PLEASE NOTE: Microsoft has chosen to separate the header values with ", ", not ","
             //   as defined by the Canonical Request algorithm.
             // - Append a new line ('\n').
-            var sortedHeaders = SortHeaders(request.Headers, defaultHeaders);
+            var sortedHeaders = PruneAndSortHeaders(request.Headers, defaultHeaders);
 
             foreach (var header in sortedHeaders)
             {
-                // The 'user-agent' header should be treated differently, as discovered in
-                // https://github.com/FantasticFiasco/aws-signature-version-4/issues/1155
-                var separator = header.Key.ToLowerInvariant() == "user-agent" ? " " : HeaderValueSeparator;
-                builder.Append($"{header.Key}:{string.Join(separator, header.Value)}\n");
+                builder.Append($"{header.Key}:{string.Join(HeaderValueSeparator, header.Value)}\n");
             }
 
             builder.Append('\n');
@@ -162,6 +184,25 @@ namespace AwsSignatureVersion4.Private
             var sortedQueryParameters = new SortedList<string, List<string>>(StringComparer.Ordinal);
             var queryParameters = HttpUtility.ParseQueryString(query);
 
+            // The HttpUtility.ParseQueryString method stores query parameters without values under the null key.
+            // For example, given the query string "?a=1&b&c", the resulting NameValueCollection will contain:
+            //   "a": "1"
+            //   null: "b,c"
+            //
+            // To address this, we extract these parameters and re-add them using their names with empty values.
+            var parametersWithoutValue = queryParameters.Get(null);
+            if (parametersWithoutValue != null)
+            {
+                // Let's start by removing the null key
+                queryParameters.Remove(null);
+
+                // Now, re-add each parameter with an empty string as its value
+                foreach (var parameterName in parametersWithoutValue.Split(','))
+                {
+                    queryParameters.Add(parameterName, string.Empty);
+                }
+            }
+
             foreach (string parameterName in queryParameters)
             {
                 // Create query parameter if it doesn't already exist
@@ -187,7 +228,7 @@ namespace AwsSignatureVersion4.Private
             return sortedQueryParameters;
         }
 
-        public static SortedDictionary<string, List<string>> SortHeaders(
+        public static SortedDictionary<string, List<string>> PruneAndSortHeaders(
             HttpRequestHeaders headers,
             IEnumerable<KeyValuePair<string, IEnumerable<string>>> defaultHeaders)
         {
@@ -201,6 +242,11 @@ namespace AwsSignatureVersion4.Private
             void AddHeader(KeyValuePair<string, IEnumerable<string>> header)
             {
                 var headerName = FormatHeaderName(header.Key);
+
+                if (UnsignableHeaders.Contains(headerName))
+                {
+                    return;
+                }
 
                 // Create header if it doesn't already exist
                 if (!sortedHeaders.TryGetValue(headerName, out var headerValues))

@@ -10,7 +10,7 @@
 > The buttoned-up and boring, but deeply analyzed, implementation of Signature Version 4 (SigV4) in .NET.
 
 **Package:** [AwsSignatureVersion4](https://www.nuget.org/packages/AwsSignatureVersion4)\
-**Platforms:** .NET Standard 2.0, .NET 6
+**Platforms:** .NET Standard 2.0, .NET 8
 
 ## Table of contents <!-- omit in toc -->
 
@@ -164,9 +164,3 @@ You can also install AwsSignatureVersion4 using the `dotnet` command line interf
 ```bash
 dotnet add package AwsSignatureVersion4
 ```
-
-## Credit
-
-Thank you [JetBrains](https://www.jetbrains.com/) for your important initiative to support the open source community with free licenses to your products.
-
-![JetBrains](./doc/resources/jetbrains.png)
