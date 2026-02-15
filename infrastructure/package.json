@@ -27,13 +27,5 @@
     "rimraf": "6.1.2",
     "typescript": "5.9.3",
     "typescript-eslint": "8.54.0"
-  },
-  "resolutions": {
-    "ansi-regex": ">=5.0.1",
-    "bl": ">=4.0.3",
-    "lodash": ">=4.17.13",
-    "netmask": ">=2.0.1",
-    "pac-resolver": ">=5.0.0",
-    "vm2": ">=3.9.4"
   }
 }
