@@ -1,5 +1,5 @@
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib'
-import { CfnAccessKey, IRole, IUser, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
+import { CfnAccessKey, IRole, IUser, ManagedPolicy, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 
 export class UsersStack extends Stack {
@@ -21,9 +21,9 @@ export class UsersStack extends Stack {
       userName: 'sigv4-UserWithPermissions',
     })
 
-    user.addManagedPolicy({
-      managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess',
-    })
+    user.addManagedPolicy(
+      ManagedPolicy.fromManagedPolicyArn(this, 'ApiGatewayInvokeFullAccess', 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'),
+    )
 
     // Create access key
     const accessKey = new CfnAccessKey(this, 'UserWithPermissionsAccessKey', {
