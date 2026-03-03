@@ -22,11 +22,7 @@ export class UsersStack extends Stack {
     })
 
     user.addManagedPolicy(
-      ManagedPolicy.fromManagedPolicyArn(
-        this,
-        'ApiGatewayInvokeFullAccess',
-        'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess',
-      ),
+      ManagedPolicy.fromManagedPolicyArn(this, 'ApiGatewayInvokeFullAccess', 'arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess'),
     )
 
     // Create access key
