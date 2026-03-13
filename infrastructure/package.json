@@ -21,7 +21,7 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/aws-lambda": "8.10.161",
-    "@types/node": "24.11.0",
+    "@types/node": "24.12.0",
     "eslint": "10.0.2",
     "prettier": "3.8.1",
     "rimraf": "6.1.3",
