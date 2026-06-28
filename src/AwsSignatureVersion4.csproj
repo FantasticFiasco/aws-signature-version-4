@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="4.0.9.2" />
+    <PackageReference Include="AWSSDK.Core" Version="4.0.9.6" />
   </ItemGroup>
 
   <ItemGroup>
