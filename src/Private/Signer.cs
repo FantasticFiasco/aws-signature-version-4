@@ -23,7 +23,15 @@ namespace AwsSignatureVersion4.Private
 
             UpdateRequestUri(request, baseAddress);
 
-            var contentHash = await ContentHash.CalculateAsync(request.Content).ConfigureAwait(false);
+            var contentHash = serviceName switch
+            {
+                // Amazon VPC Lattice requires the payload to be unsigned. See
+                // https://docs.aws.amazon.com/vpc-lattice/latest/ug/sigv4-authenticated-requests.html
+                // for more information.
+                ServiceName.VpcLattice => "UNSIGNED-PAYLOAD",
+
+                _ => await ContentHash.CalculateAsync(request.Content).ConfigureAwait(false),
+            };
 
             AddHeaders(request, now, serviceName, credentials, contentHash);
 
@@ -136,6 +144,7 @@ namespace AwsSignatureVersion4.Private
             request.AddHeaderIf(!request.Headers.Contains(HeaderKeys.HostHeader), HeaderKeys.HostHeader, request.RequestUri!.Host);
             request.AddHeaderIf(serviceName == ServiceName.OpenSearchServerless, HeaderKeys.XAmzContentSha256Header, contentHash);
             request.AddHeaderIf(serviceName == ServiceName.S3, HeaderKeys.XAmzContentSha256Header, contentHash);
+            request.AddHeaderIf(serviceName == ServiceName.VpcLattice, HeaderKeys.XAmzContentSha256Header, contentHash);
         }
 
         private static void UpdateRequestUri(HttpRequestMessage request, Uri? baseAddress)
