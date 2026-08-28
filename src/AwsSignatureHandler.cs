@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Amazon.Runtime;
+using Amazon.Runtime.Credentials;
 using Amazon.Util;
 using AwsSignatureVersion4.Private;
 
@@ -44,7 +46,7 @@ namespace AwsSignatureVersion4
         {
             RemoveHeaders(request);
 
-            var immutableCredentials = await settings.Credentials.GetCredentialsAsync().ConfigureAwait(false);
+            var immutableCredentials = await GetImmutableCredentialsAsync().ConfigureAwait(false);
 
             await Signer
                 .SignAsync(
@@ -69,7 +71,7 @@ namespace AwsSignatureVersion4
         {
             RemoveHeaders(request);
 
-            var immutableCredentials = settings.Credentials.GetCredentials();
+            var immutableCredentials = GetImmutableCredentials();
 
             Signer.Sign(
                 request,
@@ -81,6 +83,37 @@ namespace AwsSignatureVersion4
                 immutableCredentials);
 
             return base.Send(request, cancellationToken);
+        }
+
+#endif
+
+        /// <summary>
+        /// Resolves the credentials to sign the request with. When <see cref="AwsSignatureHandlerSettings.Credentials"/>
+        /// is null, falls back to the default AWS credential search order, resolved just before
+        /// signing rather than up front. <see cref="DefaultAWSCredentialsIdentityResolver"/>
+        /// caches the credentials it resolves, and only re-resolves them when the environment or
+        /// the credential/config files backing them change, so calling it on every request is
+        /// cheap.
+        /// </summary>
+        private async Task<ImmutableCredentials> GetImmutableCredentialsAsync()
+        {
+            var credentials = settings.Credentials ?? await DefaultAWSCredentialsIdentityResolver
+                .GetCredentialsAsync()
+                .ConfigureAwait(false);
+
+            return await credentials.GetCredentialsAsync().ConfigureAwait(false);
+        }
+
+#if NET5_0_OR_GREATER
+
+        /// <summary>
+        /// Synchronous counterpart to <see cref="GetImmutableCredentialsAsync"/>.
+        /// </summary>
+        private ImmutableCredentials GetImmutableCredentials()
+        {
+            var credentials = settings.Credentials ?? DefaultAWSCredentialsIdentityResolver.GetCredentials();
+
+            return credentials.GetCredentials();
         }
 
 #endif
