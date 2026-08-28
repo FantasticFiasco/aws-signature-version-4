@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Amazon.Util;
+using AwsSignatureVersion4.Integration.ApiGateway.Authentication;
 using AwsSignatureVersion4.Private;
 using AwsSignatureVersion4.TestSuite;
 using Shouldly;
@@ -201,9 +202,57 @@ namespace AwsSignatureVersion4.Unit.Private
 
         #endregion
 
-        #region Not add X-Amz-Content-SHA256 content header
+        #region Add X-Amz-Content-SHA256 content header when targeting specific services
 
-        // Only requests to S3 should add the "X-Amz-Content-SHA256" header
+        [Theory]
+        [InlineData(ServiceName.OpenSearchServerless)]
+        [InlineData(ServiceName.S3)]
+        [InlineData(ServiceName.VpcLattice)]
+        public async Task AddXAmzContentHeaderAsync(string serviceName)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
+
+            // Act
+            await Signer.SignAsync(
+                request,
+                httpClient.BaseAddress,
+                httpClient.DefaultRequestHeaders,
+                context.UtcNow,
+                context.RegionName,
+                serviceName,
+                context.Credentials);
+
+            // Assert
+            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
+        }
+
+        [Theory]
+        [InlineData(ServiceName.OpenSearchServerless)]
+        [InlineData(ServiceName.S3)]
+        [InlineData(ServiceName.VpcLattice)]
+        public void AddXAmzContentHeader(string serviceName)
+        {
+            // Arrange
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://github.com/FantasticFiasco");
+
+            // Act
+            Signer.Sign(
+                request,
+                httpClient.BaseAddress,
+                httpClient.DefaultRequestHeaders,
+                context.UtcNow,
+                context.RegionName,
+                serviceName,
+                context.Credentials);
+
+            // Assert
+            request.Headers.Contains("X-Amz-Content-SHA256").ShouldBeTrue();
+        }
+
+        #endregion
+
+        #region Not add X-Amz-Content-SHA256 content header otherwise
 
         [Fact]
         public async Task NotAddXAmzContentHeaderAsync()
