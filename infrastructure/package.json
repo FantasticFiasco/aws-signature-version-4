@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
-    "@types/aws-lambda": "8.10.163",
+    "@types/aws-lambda": "8.10.164",
     "@types/node": "24.19.0",
     "eslint": "10.11.0",
     "prettier": "3.9.9",
