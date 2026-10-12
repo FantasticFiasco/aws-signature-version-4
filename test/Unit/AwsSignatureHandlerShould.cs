@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Reflection;
@@ -156,6 +157,82 @@ namespace AwsSignatureVersion4.Unit
 
         #endregion
 
+        #region Default credentials
+
+        [Fact]
+        public async Task SetHeadersUsingDefaultCredentialsAsync()
+        {
+            // Arrange
+            using var environment = new EnvironmentCredentialsScope();
+
+            var handler = new AwsSignatureHandler(new AwsSignatureHandlerSettings("us-east-1", "execute-api"))
+            {
+                InnerHandler = sinkHandler
+            };
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                new Uri("https://example.amazonaws.com/resource/path"));
+
+            var ct = new CancellationToken();
+
+            // Act
+            await InvokeSendAsync(handler, request, ct);
+
+            // Assert
+            sinkHandler.Request.Headers.Contains(HeaderKeys.AuthorizationHeader).ShouldBeTrue();
+            sinkHandler
+                .Request
+                .Headers
+                .GetValues(HeaderKeys.AuthorizationHeader)
+                .Single()
+                .ShouldContain(environment.AccessKeyId);
+            sinkHandler
+                .Request
+                .Headers
+                .GetValues(HeaderKeys.XAmzSecurityTokenHeader)
+                .Single()
+                .ShouldBe(environment.SessionToken);
+        }
+
+        [Fact]
+        public void SetHeadersUsingDefaultCredentials()
+        {
+            // Arrange
+            using var environment = new EnvironmentCredentialsScope();
+
+            var handler = new AwsSignatureHandler(new AwsSignatureHandlerSettings("us-east-1", "execute-api"))
+            {
+                InnerHandler = sinkHandler
+            };
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                new Uri("https://example.amazonaws.com/resource/path"));
+
+            var ct = new CancellationToken();
+
+            // Act
+            InvokeSend(handler, request, ct);
+
+            // Assert
+            sinkHandler.Request.Headers.Contains(HeaderKeys.AuthorizationHeader).ShouldBeTrue();
+            sinkHandler
+                .Request
+                .Headers
+                .GetValues(HeaderKeys.AuthorizationHeader)
+                .Single()
+                .ShouldContain(environment.AccessKeyId);
+            sinkHandler
+                .Request
+                .Headers
+                .GetValues(HeaderKeys.XAmzSecurityTokenHeader)
+                .Single()
+                .ShouldBe(environment.SessionToken);
+        }
+
+        #endregion
+
         private static AwsSignatureHandlerSettings CreateSettings(string serviceName) =>
             new(
                 "us-east-1",
@@ -201,6 +278,48 @@ namespace AwsSignatureVersion4.Unit
                 Request = request;
 
                 return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+        }
+
+        /// <summary>
+        /// Sets the AWS environment variable credentials for the duration of the scope, and
+        /// restores the previous values on disposal. Used to exercise the default AWS credential
+        /// search order deterministically, without relying on the test environment already
+        /// having credentials configured.
+        /// </summary>
+        private class EnvironmentCredentialsScope : IDisposable
+        {
+            private const string AccessKeyIdVariable = "AWS_ACCESS_KEY_ID";
+            private const string SecretAccessKeyVariable = "AWS_SECRET_ACCESS_KEY";
+            private const string SessionTokenVariable = "AWS_SESSION_TOKEN";
+
+            private readonly string previousAccessKeyId;
+            private readonly string previousSecretAccessKey;
+            private readonly string previousSessionToken;
+
+            public EnvironmentCredentialsScope()
+            {
+                previousAccessKeyId = Environment.GetEnvironmentVariable(AccessKeyIdVariable);
+                previousSecretAccessKey = Environment.GetEnvironmentVariable(SecretAccessKeyVariable);
+                previousSessionToken = Environment.GetEnvironmentVariable(SessionTokenVariable);
+
+                AccessKeyId = $"some access key id {Guid.NewGuid()}";
+                SessionToken = $"some token {Guid.NewGuid()}";
+
+                Environment.SetEnvironmentVariable(AccessKeyIdVariable, AccessKeyId);
+                Environment.SetEnvironmentVariable(SecretAccessKeyVariable, "some secret access key");
+                Environment.SetEnvironmentVariable(SessionTokenVariable, SessionToken);
+            }
+
+            public string AccessKeyId { get; }
+
+            public string SessionToken { get; }
+
+            public void Dispose()
+            {
+                Environment.SetEnvironmentVariable(AccessKeyIdVariable, previousAccessKeyId);
+                Environment.SetEnvironmentVariable(SecretAccessKeyVariable, previousSecretAccessKey);
+                Environment.SetEnvironmentVariable(SessionTokenVariable, previousSessionToken);
             }
         }
     }
