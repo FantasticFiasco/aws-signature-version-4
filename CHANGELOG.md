@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/) and is followi
 
 ## Unreleased
 
+### :zap: Added
+
+- [#1214](https://github.com/FantasticFiasco/aws-signature-version-4/pull/1214) Add support for [Amazon VPC Lattice](https://docs.aws.amazon.com/vpc-lattice/) (contribution by [@sseelbach-27](https://github.com/sseelbach-27))
+
 ## [5.1.0] - 2026-01-07
 
 ### :zap: Added
